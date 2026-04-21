@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Banner Manager</title>
+  <link rel="stylesheet" href="../css/banner.css">
+</head>
+
+<body>
+
+<h2>🎯 Banner Manager</h2>
+
+<div class="form">
+  <input type="text" id="title" placeholder="Banner Title">
+
+  <select id="type">
+    <option value="slider">Slider Banner</option>
+    <option value="small">Small Box</option>
+  </select>
+
+  <select id="redirectType">
+  <option value="category">Category</option>
+  <option value="product">Product</option>
+</select>
+
+<input type="text" id="redirectValue" placeholder="Enter Category Name or Product ID">
+
+  <input type="file" id="image">
+
+  <button onclick="addBanner()">Add Banner</button>
+</div>
+
+<hr>
+
+<h3>🔥 Slider Preview</h3>
+<div id="sliderPreview" class="slider-container"></div>
+
+<h3>📦 Small Banner Preview</h3>
+<div id="smallPreview" class="small-container"></div>
+
+<script src="../js/banner.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,402 @@
+/* 🔥 BODY */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #0f172a;
+  color: white;
+  margin: 0;
+  padding: 20px;
+}
+
+/* 🔥 TOP BAR */
+.top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: calc(100% - 350px); /* form ka space chhoda */
+  
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  background: #0f172a;
+  z-index: 1000;
+}
+
+.top-bar input {
+  flex: 1;
+}
+
+/* 🔥 MAIN LAYOUT */
+.container {
+  display: flex;
+  justify-content: flex-end;  
+  align-items: flex-start;
+  padding: 0;                  
+  margin: 0;
+}
+
+/* 🔥 LEFT FORM */
+.form-section {
+  width: 350px;
+  position: fixed;
+  left: 0;
+  top: 80px;
+
+  height: 80vh;          
+  overflow-y: auto;      
+
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 12px 0 0 12px;
+}
+
+/* 🔥 RIGHT LIST */
+.list-section {
+  flex: 1;
+  margin-left: 370px;   
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; 
+}
+
+/* 🔥 HEADINGS */
+h2, h3 {
+  color: #22c55e;
+  text-align: center;
+}
+
+/* 🔥 INPUTS */
+input, select, textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background: #0f172a;
+  color: white;
+}
+
+/* 🔥 BUTTON */
+button {
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background: #22c55e;
+  color: white;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #16a34a;
+}
+
+/* 🔥 PRODUCT GRID */
+.product-grid {
+  display: flex;
+  flex-wrap: wrap;      
+  gap: 20px;
+  justify-content: flex-start; 
+}
+
+/* 🔥 CARD */
+.card {
+  background: #1e293b;
+  padding: 12px;
+  border-radius: 12px;
+  text-align: center;
+  transition: 0.3s;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+/* 🔥 IMAGE */
+.slider img {
+  width: 100%;
+  height: 140px;
+  object-fit: contain;   /* 🔥 full image dikhegi */
+  background: #fff;
+  border-radius: 10px;
+}
+
+/* 🔥 PRICE */
+.card del {
+  color: gray;
+}
+
+/* 🔥 BUTTONS */
+.card button {
+  width: 45%;
+  margin: 5px;
+}
+
+.card .edit {
+  background: #3b82f6;
+}
+
+.card .delete {
+  background: #ef4444;
+}
+
+/* 🔥 STOCK */
+.low-stock {
+  color: red;
+  font-weight: bold;
+}
+
+.in-stock {
+  color: lightgreen;
+}
+
+/* 🔥 SLIDER */
+.slider {
+  display: flex;
+  overflow-x: auto;
+  gap: 5px;
+  scroll-behavior: smooth;
+}
+
+.slider img {
+  width: 120px;
+  height: 120px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+/* 🔥 SLIDER CONTAINER */
+.slider-container {
+  position: relative;
+}
+
+/* 🔥 ARROWS */
+.prev, .next {
+  position: absolute;
+  top: 40%;
+  background: rgba(0,0,0,0.6);
+  border: none;
+  color: white;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.prev { left: 0; }
+.next { right: 0; }
+
+/* 🔥 DOTS */
+.dots {
+  text-align: center;
+  margin-top: 5px;
+}
+
+.dots span {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin: 2px;
+  background: gray;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+
+
+/* 🔥 TOP BAR BOX DESIGN */
+.top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: calc(100% - 350px);
+
+  display: flex;
+  gap: 10px;
+  padding: 15px;
+
+  background: rgba(30, 41, 59, 0.9); /* glass effect */
+  backdrop-filter: blur(10px);
+
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  z-index: 1000;
+}
+
+/* 🔥 INPUT BOX STYLE */
+.top-bar input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+
+  background: #0f172a;
+  color: white;
+
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+}
+
+/* 🔥 SELECT BOX STYLE */
+.top-bar select {
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+
+  background: #0f172a;
+  color: white;
+
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+}
+
+
+
+
+
+
+
+
+
+/* ===== PRODUCT CARD ===== */
+.card {
+  width: 220px;
+  height: 320px; /* fixed size */
+  background: #1e293b;
+  border-radius: 12px;
+  padding: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* ===== IMAGE ===== */
+.slider img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* ===== PRODUCT NAME ===== */
+.card b {
+  font-size: 14px;
+  margin-top: 5px;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* max 2 line */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ===== TEXT ===== */
+.card {
+  color: white;
+  font-size: 13px;
+}
+
+/* ===== PRICE ===== */
+.card del {
+  color: #888;
+  font-size: 12px;
+}
+
+/* ===== BUTTONS ===== */
+.card button {
+  width: 80px;
+  padding: 6px;
+  border-radius: 6px;
+  font-size: 12px;
+  border: none;
+  cursor: pointer;
+  margin: 3px;
+}
+
+/* ===== BUTTON COLORS ===== */
+.card button:nth-child(1) {
+  background: #22c55e;
+  color: white;
+}
+
+.card button:nth-child(2) {
+  background: #ef4444;
+  color: white;
+}
+
+/* ===== BUTTON CONTAINER ===== */
+.card .btns {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+
+
+
+
+
+.slider-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.slider {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+}
+
+.slider img {
+  min-width: 100%;
+  height: 120px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* buttons */
+.prev, .next {
+  position: absolute;
+  top: 40%;
+  z-index: 10;
+  background: black;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.prev {
+  left: 5px;
+}
+
+.next {
+  right: 5px;
+}
+
+
+/* 🔥 TOP BAR FIX */
+.top-bar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* 🔍 SEARCH BOX */
+#search {
+  flex: 1;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+/* 📂 FILTER DROPDOWN */
+#filterCategory {
+  width: 180px;       /* 👈 chota size */
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Products</title>
+
+  <link rel="stylesheet" href="../css/products.css">
+</head>
+
+<body>
+
+<div class="top-bar">
+  <h2 class="title">🔥 Product Panel</h2>
+
+  <input id="search" placeholder="Search..." oninput="searchProduct()">
+
+
+  <select id="filterCategory">
+    <option value="">All Categories</option> 
+  </select>
+</div>
+
+<div class="container">
+
+  <!-- LEFT FORM -->
+  <div class="form-section">
+
+    <h3>Add / Edit Product</h3>
+
+    <input id="name" placeholder="Product Name">
+
+   <select id="category">
+  <option value="">Select Category</option>
+</select>
+
+<select id="subCategory">
+  <option value="">Select Subcategory</option>
+</select>
+
+<input id="subCategoryInput" type="text" placeholder="Or type custom subcategory">
+
+    <input id="brand" type="text" placeholder="Brand">
+
+    <input id="mrp" type="number" placeholder="MRP">
+    <input id="price" type="number" placeholder="Selling Price">
+    <input id="stock" type="number" placeholder="Stock">
+
+    <input id="weight" type="text" placeholder="Weight (kg/g)">
+    <textarea id="description" placeholder="Description"></textarea>
+
+    <input type="file" id="images" multiple accept="image/*">
+
+<button id="saveBtn" type="button" class="save-btn" onclick="addOrUpdateProduct()">
+  Save Product
+</button>
+
+  </div>
+
+  <div class="list-section">
+    <h3>Products</h3>
+    <div id="productList" class="product-grid"></div>
+  </div>
+
+</div>
+
+<script src="../js/product.js"></script>
+
+</body>
+</html>

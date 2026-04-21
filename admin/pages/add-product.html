@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add Product</title>
+
+  <link rel="stylesheet" href="../css/products.css">
+</head>
+
+<body>
+
+
+<div class="container">
+  
+  <div class="form-section">
+
+      <h2>Add Product</h2> 
+
+<input id="name" placeholder="Product Name">
+
+<select id="category">
+  <option value="">Select Category</option>
+  <option>Grocery</option>
+  <option>Snacks</option>
+  <option>Beverages</option>
+  <option>Dairy</option>
+  <option>Personal Care</option>
+</select>
+
+<input id="brand" placeholder="Brand">
+
+<input id="mrp" placeholder="MRP">
+<input id="price" placeholder="Selling Price">
+<input id="stock" placeholder="Stock">
+
+<input id="weight" placeholder="Weight (kg/g)">
+<textarea id="description" placeholder="Description"></textarea>
+
+<!-- 🔥 MULTIPLE IMAGE -->
+<input type="file" id="images" multiple accept="image/*">
+
+<button onclick="addProduct()">Add Product</button>
+
+<!-- ✅ FIX START -->
+  </div>
+</div>
+<!-- ✅ FIX END -->
+
+<script>
+const BASE_URL = "http://admin.harzo.in";
+
+async function addProduct() {
+
+  const files = document.getElementById("images").files;
+
+  if (files.length === 0) {
+    alert("Image select karo");
+    return;
+  }
+
+  const formData = new FormData();
+
+  formData.append("name", name.value);
+  formData.append("category", category.value);
+  formData.append("brand", brand.value);
+
+  formData.append("mrp", mrp.value);
+  formData.append("price", price.value);
+  formData.append("stock", stock.value);
+  formData.append("weight", weight.value);
+  formData.append("description", description.value);
+
+  // 🔥 multiple images
+  for (let i = 0; i < files.length; i++) {
+    formData.append("images", files[i]);
+  }
+
+  const res = await fetch(`${BASE_URL}/api/products/add`, {
+    method: "POST",
+    body: formData
+  });
+
+  const result = await res.json();
+  alert(result.message);
+}
+</script>
+
+</body>
+</html>
