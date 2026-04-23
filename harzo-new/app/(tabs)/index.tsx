@@ -1,6 +1,7 @@
+
+
 // @ts-nocheck
-
-
+import { BASE_URL } from "../../config";
 import Header from "../../components/Header";
 import CategoryList from "../../components/CategoryList";
 import BannerSlider from "../../components/BannerSlider";
@@ -17,17 +18,17 @@ export default function HomeScreen() {
   // ✅ FIRST products state
   const [products, setProducts] = useState([]);
 
-  useEffect(() => {
-    fetch("http://localhost:5000/api/products")
-      .then(res => res.json())
-      .then(data => {
-        console.log("DATA:", data);
-        setProducts(data);
-      })
-      .catch(err => {
-        console.log("API ERROR:", err);
-      });
-  }, []);
+ useEffect(() => {
+  fetch(`${BASE_URL}/api/products`)
+    .then(res => res.json())
+    .then(data => {
+      console.log("DATA:", data);
+      setProducts(data);
+    })
+    .catch(err => {
+      console.log("API ERROR:", err);
+    });
+}, []);
 
   // ✅ HELPER (image nikalne ke liye)
 const getImage = (name) => {

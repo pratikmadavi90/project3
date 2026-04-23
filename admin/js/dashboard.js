@@ -1,4 +1,4 @@
-
+import { BASE_URL } from "./config.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   getProducts();
@@ -48,7 +48,7 @@ new Chart(ctx, {
   }
 });
 
-fetch("http://localhost:5000/api/dashboard")
+fetch(`${BASE_URL}/api/dashboard`)
   .then(res => res.json())
   .then(data => {
     console.log("Dashboard Data:", data);
@@ -58,7 +58,7 @@ fetch("http://localhost:5000/api/dashboard")
 
 async function loadDashboard() {
   try {
-    const res = await fetch("http://localhost:5000/api/dashboard");
+    const res = await fetch(`${BASE_URL}/api/dashboard`);
     const data = await res.json();
 
     console.log("DASHBOARD:", data);

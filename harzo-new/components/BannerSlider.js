@@ -1,3 +1,5 @@
+import { BASE_URL } from "../config";
+
 import { View, StyleSheet, Image, ScrollView, Dimensions, TouchableOpacity } from "react-native";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "expo-router";
@@ -13,10 +15,10 @@ export default function BannerSlider() {
   const currentIndex = useRef(0);
 
   // ✅ FETCH (ONLY ON LOAD)
-  const fetchBanners = async () => {
-    try {
-      const res = await fetch("http://localhost:5000/banners");
-      const data = await res.json();
+const fetchBanners = async () => {
+  try {
+    const res = await fetch(BASE_URL + "/api/banners");
+    const data = await res.json();
 
       // 🔥 unnecessary re-render avoid
       setBanners(prev => {

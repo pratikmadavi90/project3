@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5000";
+import { BASE_URL } from "./config.js";
 
 let currentIndex = 0;
 let sliderInterval = null;
@@ -22,11 +22,10 @@ async function addBanner() {
     const formData = new FormData();
     formData.append("image", file);
 
-    const uploadRes = await fetch(`${BASE_URL}/upload`, {
-  method: "POST",
+  const uploadRes = await fetch(`${BASE_URL}/upload`, {
+method: "POST",
   body: formData
 });
-
     const uploadData = await uploadRes.json();
 
     if (!uploadData.imageUrl) {

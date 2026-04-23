@@ -1,3 +1,6 @@
+import { BASE_URL } from "./config.js";
+
+
 // ✅ MESSAGE SHOW FUNCTION
 function showMessage(text, type) {
   const msg = document.getElementById("message");
@@ -16,7 +19,7 @@ async function sendOTP() {
   }
 
   try {
-    const res = await fetch("http://localhost:5000/api/admin/send-otp", {
+    const res = await fetch(`${BASE_URL}/api/admin/send-otp`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -50,7 +53,7 @@ async function verifyOTP() {
     }
 
     try {
-        const res = await fetch("http://localhost:5000/api/admin/verify-otp", {
+        const res = await fetch(`${BASE_URL}/api/admin/verify-otp`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

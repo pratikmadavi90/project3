@@ -11,6 +11,14 @@ const bannerRoutes = require("./routes/bannerRoutes");
 
 const app = express(); // ✅ PEHLE APP BANAA
 
+app.use(cors({
+  origin: [
+    "http://localhost:5500",
+    "http://localhost:3000",
+    "https://admin.harzo.in"
+  ]
+}));
+
 // ✅ FIR USE KAR
 app.use("/admin", express.static(path.join(__dirname, "../admin")));
 app.use("/user", express.static(path.join(__dirname, "../user")));

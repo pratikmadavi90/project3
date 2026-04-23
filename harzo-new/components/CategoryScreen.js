@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { BASE_URL } from "../config";
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -21,13 +22,13 @@ export default function CategoryScreen() {
 
   // ✅ NEW: API fallback
   useEffect(() => {
-    fetch("http://localhost:5000/api/products")
-      .then(res => res.json())
-      .then(data => {
-        setApiProducts(data);
-      })
-      .catch(err => console.log("API ERROR:", err));
-  }, []);
+  fetch(BASE_URL + "/api/products")
+    .then((res) => res.json())
+    .then((data) => {
+      setApiProducts(data);
+    })
+    .catch((err) => console.log("API ERROR:", err));
+}, []);
 
   // ✅ FINAL PRODUCTS SOURCE
   const finalProducts =
