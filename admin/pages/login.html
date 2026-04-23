@@ -11,14 +11,20 @@
 </head>
 <body>
 
-  <script>
-  const key = prompt("Enter Access Key");
+ <script>
+  const savedKey = localStorage.getItem("accessKey");
 
-  if (key !== "HARZO-SECRET-2026") {
-    document.body.innerHTML = "Access Denied";
+  if (!savedKey) {
+    const key = prompt("Enter Access Key");
+
+    if (key === "HARZO-SECRET-2026") {
+      localStorage.setItem("accessKey", "ok");
+    } else {
+      document.body.innerHTML = "Access Denied ❌";
+      throw new Error("Blocked");
+    }
   }
 </script>
-
 
 <div class="container">
 
