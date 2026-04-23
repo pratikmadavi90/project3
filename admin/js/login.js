@@ -34,49 +34,46 @@ window.sendOTP = async function() {
 
 // ✅ VERIFY OTP (FINAL FIXED)
 async function verifyOTP() {
-    const email = document.getElementById("email").value;
-    const otp = document.getElementById("otp").value;
+  const email = document.getElementById("email").value;
+  const otp = document.getElementById("otp").value;
 
-    if (!otp) {
-        showMessage("Enter OTP", "error");
-        return;
+  if (!otp) {
+    showMessage("Enter OTP", "error");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${BASE_URL}/api/admin/verify-otp`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, otp })
+    });
+
+    const data = await res.json();
+    console.log("VERIFY RESPONSE:", data);
+
+    // ✅ BEST CONDITION (IMPORTANT)
+    if (data.success || data.message?.toLowerCase().includes("success")) {
+
+      showMessage("Login Successful 🚀", "success");
+
+      // ✅ LOGIN SAVE
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("isAdminLoggedIn", "true");
+
+      // ✅ REDIRECT
+      setTimeout(() => {
+        window.location.href = "/admin/pages/dashboard.html";
+      }, 800);
+
+    } else {
+      showMessage(data.message || "Invalid OTP", "error");
     }
 
-    try {
-        const res = await fetch(`${BASE_URL}/api/admin/verify-otp`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ email, otp })
-        });
-
-        const data = await res.json();
-        console.log("VERIFY RESPONSE:", data);
-
-      if (data.success || data.message?.toLowerCase().includes("success")) {
-  showMessage("Login Successful 🚀", "success");
-
-  // 🔥 IMPORTANT FIX
-  localStorage.setItem("isLoggedIn", "true");
-
-
-
-           // LOGIN SUCCESS
-
-localStorage.setItem("isAdminLoggedIn", "true");
-
-
-            setTimeout(() => {
-                window.location.href = "/admin/pages/dashboard.html";
-            }, 500);
-
-        } else {
-            showMessage(data.message || "Invalid OTP", "error");
-        }
-
-    } catch (err) {
-        console.log(err);
-        showMessage("Server error", "error");
-    }
+  } catch (err) {
+    console.error("OTP VERIFY ERROR:", err);
+    showMessage("Server error", "error");
+  }
 }
