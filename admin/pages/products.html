@@ -7,7 +7,7 @@
 
 <body>
 <script>
-  const isLoggedIn = sessionStorage.getItem("isAdminLoggedIn");
+  const isLoggedIn = localStorage.getItem("isAdminLoggedIn");
 
   if (isLoggedIn !== "true") {
     window.location.href = "/3172004/login.html";

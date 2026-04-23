@@ -6,7 +6,7 @@
   <title>Harzo Dashboard</title>
 
   <script>
-  if (sessionStorage.getItem("isAdminLoggedIn") !== "true") {
+  if (localStorage.getItem("isAdminLoggedIn") !== "true") {
     window.location.href = "/3172004/login.html";
   }
 </script>
