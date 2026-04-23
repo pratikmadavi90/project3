@@ -33,7 +33,7 @@ window.sendOTP = async function() {
 };
 
 // ✅ VERIFY OTP (FINAL FIXED)
-async function verifyOTP() {
+window.verifyOTP = async function () {
   const email = document.getElementById("email").value;
   const otp = document.getElementById("otp").value;
 
