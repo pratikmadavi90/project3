@@ -98,6 +98,7 @@ app.get("/admin", (req, res) => {
 
 const otpStore = {};
 const otpAttempts = {};
+const otpVerifyAttempts = {};
 
 // Generate OTP (6 digit)
 function generateOTP() {
