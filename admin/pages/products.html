@@ -2,7 +2,6 @@
 <html>
 <head>
   <title>Products</title>
-
   <link rel="stylesheet" href="../css/products.css">
 </head>
 
@@ -12,7 +11,6 @@
   <h2 class="title">🔥 Product Panel</h2>
 
   <input id="search" placeholder="Search..." oninput="searchProduct()">
-
 
   <select id="filterCategory">
     <option value="">All Categories</option> 
@@ -28,15 +26,15 @@
 
     <input id="name" placeholder="Product Name">
 
-   <select id="category">
-  <option value="">Select Category</option>
-</select>
+    <select id="category">
+      <option value="">Select Category</option>
+    </select>
 
-<select id="subCategory">
-  <option value="">Select Subcategory</option>
-</select>
+    <select id="subCategory">
+      <option value="">Select Subcategory</option>
+    </select>
 
-<input id="subCategoryInput" type="text" placeholder="Or type custom subcategory">
+    <input id="subCategoryInput" type="text" placeholder="Or type custom subcategory">
 
     <input id="brand" type="text" placeholder="Brand">
 
@@ -49,9 +47,9 @@
 
     <input type="file" id="images" multiple accept="image/*">
 
-<button id="saveBtn" type="button" class="save-btn" onclick="addOrUpdateProduct()">
-  Save Product
-</button>
+    <button id="saveBtn" type="button" class="save-btn" onclick="addOrUpdateProduct()">
+      Save Product
+    </button>
 
   </div>
 
@@ -62,6 +60,7 @@
 
 </div>
 
+<!-- ✅ FIX: script normal (no module) -->
 <script src="../js/product.js"></script>
 
 </body>

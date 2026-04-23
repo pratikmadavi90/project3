@@ -1,4 +1,4 @@
-import { BASE_URL } from "./config.js";
+const BASE_URL = "https://api.harzo.in";
 
 document.addEventListener("DOMContentLoaded", () => {
   getProducts();
@@ -405,3 +405,25 @@ document.addEventListener("DOMContentLoaded", () => {
   getProducts();
 
 });
+
+
+
+
+
+// ✅ GLOBAL FUNCTIONS FIX
+window.addOrUpdateProduct = addOrUpdateProduct;
+window.deleteProduct = deleteProduct;
+window.editProduct = editProduct;
+
+// ✅ SEARCH FIX
+function searchProduct() {
+  const value = document.getElementById("search").value.toLowerCase();
+
+  const filtered = allProducts.filter(p =>
+    p.name?.toLowerCase().includes(value)
+  );
+
+  displayProducts(filtered);
+}
+
+window.searchProduct = searchProduct;
