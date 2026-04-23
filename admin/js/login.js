@@ -65,8 +65,8 @@ window.verifyOTP = async function () {
 
       // ✅ REDIRECT
       setTimeout(() => {
-        window.location.href = "/admin/pages/dashboard.html";
-      }, 800);
+  window.location.href = "/pages/dashboard.html";
+}, 800);
 
     } else {
       showMessage(data.message || "Invalid OTP", "error");
