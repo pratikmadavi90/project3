@@ -6,10 +6,10 @@
   <title>Harzo Dashboard</title>
 
   <script>
-    if (localStorage.getItem("isAdminLoggedIn") !== "true") {
-      window.location.href = "/admin/pages/login.html";
-    }
-  </script>
+  if (sessionStorage.getItem("isAdminLoggedIn") !== "true") {
+    window.location.href = "/3172004/login.html";
+  }
+</script>
 
   <link rel="stylesheet" href="../css/dashboard.css">
 </head>
@@ -27,7 +27,7 @@
     
       <li><a href="orders.html">Orders</a></li>
       <li><a href="users.html">Users</a></li>
-      <li><a href="#" onclick="logout()">Logout</a></li>
+      
       <li><a href="banner.html">Banners</a></li>
     </ul>
   </div>

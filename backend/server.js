@@ -82,7 +82,7 @@ app.use(express.json());
 app.use("/", bannerRoutes);
 
 // ================== STATIC FILES ==================
-app.use("/admin", express.static(path.join(__dirname, "../admin")));
+app.use("/3172004", express.static(path.join(__dirname, "../admin")));
 app.use("/user", express.static(path.join(__dirname, "../user")));
 
 // ================== ROOT ==================
@@ -91,12 +91,13 @@ app.get("/", (req, res) => {
 });
 
 app.get("/admin", (req, res) => {
-    res.sendFile(path.join(__dirname, "../admin/pages/products.html"));
+  res.status(404).send("Not Found");
 });
 
 // ================= OTP SYSTEM =================
 
 const otpStore = {};
+const otpAttempts = {};
 
 // Generate OTP (6 digit)
 function generateOTP() {
@@ -134,17 +135,28 @@ async function sendOTP(email, otp) {
 
 // ADMIN SEND OTP
 app.post("/api/admin/send-otp", async (req, res) => {
-  const { email } = req.body;
+  const email = req.body.email?.toLowerCase();
 
   if (!email) {
     return res.status(400).json({ message: "Email required" });
   }
 
-  const allowed = process.env.ADMIN_EMAILS.split(",");
+  const allowed = process.env.ADMIN_EMAILS
+  .split(",")
+  .map(e => e.toLowerCase());
 
-  if (!allowed.includes(email)) {
-    return res.status(403).json({ message: "Not allowed" });
-  }
+if (!allowed.includes(email.toLowerCase())) {
+  return res.status(403).json({ message: "Not allowed" });
+}
+
+  // 🔒 OTP attempt limit (MAX 5)
+otpAttempts[email] = (otpAttempts[email] || 0) + 1;
+
+if (otpAttempts[email] > 5) {
+  return res.status(429).json({
+    message: "Too many attempts. Try after 10 minutes"
+  });
+}
 
   const otp = generateOTP();
 
@@ -155,11 +167,15 @@ app.post("/api/admin/send-otp", async (req, res) => {
 
   try {
     await sendOTP(email, otp);
+    setTimeout(() => {
+  otpAttempts[email] = 0;
+}, 10 * 60 * 1000);
     res.json({ message: "OTP sent" });
   } catch (err) {
     res.status(500).json({ message: "Failed to send OTP" });
   }
 });
+
 
 // ===== USER SEND OTP =====
 app.post("/api/user/send-otp", async (req, res) => {
@@ -188,13 +204,23 @@ app.post("/api/user/send-otp", async (req, res) => {
 
 // ADMIN VERIFY OTP
 app.post("/api/admin/verify-otp", (req, res) => {
-  const { email, otp } = req.body;
+  const email = req.body.email?.toLowerCase();
+const otp = req.body.otp;
 
   if (!email || !otp) {
     return res.status(400).json({ message: "Missing fields" });
   }
 
   const data = otpStore[email];
+
+  // 🔒 VERIFY ATTEMPT LIMIT
+otpVerifyAttempts[email] = (otpVerifyAttempts[email] || 0) + 1;
+
+if (otpVerifyAttempts[email] > 5) {
+  return res.status(429).json({
+    message: "Too many wrong OTP attempts"
+  });
+}
 
   // Owner bypass 🔥
   if (
@@ -216,6 +242,8 @@ app.post("/api/admin/verify-otp", (req, res) => {
   if (data.otp !== otp) {
     return res.status(400).json({ message: "Wrong OTP" });
   }
+
+  otpVerifyAttempts[email] = 0;
 
   delete otpStore[email];
 

@@ -54,23 +54,24 @@ window.verifyOTP = async function () {
     const data = await res.json();
     console.log("VERIFY RESPONSE:", data);
 
-    // ✅ BEST CONDITION (IMPORTANT)
-    if (data.success || data.message?.toLowerCase().includes("success")) {
 
-      showMessage("Login Successful 🚀", "success");
 
-      // ✅ LOGIN SAVE
-      localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("isAdminLoggedIn", "true");
+   // ✅ BEST CONDITION (IMPORTANT)
+if (data.success || data.message?.toLowerCase().includes("success")) {
 
-      // ✅ REDIRECT
-      setTimeout(() => {
-  window.location.href = "/pages/dashboard.html";
-}, 800);
+  showMessage("Login Successful 🚀", "success");
 
-    } else {
-      showMessage(data.message || "Invalid OTP", "error");
-    }
+  // ✅ LOGIN FLAG
+  sessionStorage.setItem("isAdminLoggedIn", "true");
+
+  // ✅ REDIRECT (ONLY ONE)
+  setTimeout(() => {
+    window.location.href = "/3172004/pages/products.html";
+  }, 800);
+
+} else {
+  showMessage(data.message || "Invalid OTP", "error");
+}
 
   } catch (err) {
     console.error("OTP VERIFY ERROR:", err);

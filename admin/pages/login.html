@@ -4,12 +4,20 @@
 <head>
   <meta charset="UTF-8">
   <title>Harzo Admin</title>
+  <meta name="robots" content="noindex, nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="../css/login.css">
 </head>
 <body>
 
+  <script>
+  const key = prompt("Enter Access Key");
+
+  if (key !== "HARZO-SECRET-2026") {
+    document.body.innerHTML = "Access Denied";
+  }
+</script>
 
 
 <div class="container">

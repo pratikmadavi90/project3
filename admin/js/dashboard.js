@@ -1,61 +1,73 @@
-import { BASE_URL } from "./config.js";
+const BASE_URL = "https://api.harzo.in";
 
 document.addEventListener("DOMContentLoaded", () => {
-  getProducts();
-});
 
-// 🔒 Check login
-if (localStorage.getItem("isLoggedIn") !== "true") {
-    window.location.replace("/admin/pages/login.html");
-}
-
-// Logout
-function logout() {
-    localStorage.removeItem("isLoggedIn");
-    window.location.replace("/admin/pages/login.html");
-}
-
-// 📊 Chart
-const ctx = document.getElementById("chart").getContext("2d");
-
-new Chart(ctx, {
-  type: "bar",
-  data: {
-    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    datasets: [{
-      label: "Orders",
-      data: [5, 10, 7, 14, 9, 18, 12],
-      backgroundColor: "#00ff88",
-      borderRadius: 8
-    }]
-  },
-  options: {
-    plugins: {
-      legend: {
-        labels: { color: "#fff" }
-      }
-    },
-    scales: {
-      x: {
-        ticks: { color: "#aaa" },
-        grid: { display: false }
-      },
-      y: {
-        ticks: { color: "#aaa" },
-        grid: { color: "rgba(255,255,255,0.05)" }
-      }
-    }
+  // 🔒 LOGIN CHECK (sessionStorage use)
+  if (sessionStorage.getItem("isAdminLoggedIn") !== "true") {
+    window.location.replace("/3172004/login.html");
+    return;
   }
+
+  // Existing functions
+  getProducts();
+  loadDashboard();
+
+  // 📊 CHART FIX (safe load)
+  const canvas = document.getElementById("chart");
+
+  if (canvas) {
+    const ctx = canvas.getContext("2d");
+
+    new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        datasets: [{
+          label: "Orders",
+          data: [5, 10, 7, 14, 9, 18, 12],
+          backgroundColor: "#00ff88",
+          borderRadius: 8
+        }]
+      },
+      options: {
+        plugins: {
+          legend: {
+            labels: { color: "#fff" }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: "#aaa" },
+            grid: { display: false }
+          },
+          y: {
+            ticks: { color: "#aaa" },
+            grid: { color: "rgba(255,255,255,0.05)" }
+          }
+        }
+      }
+    });
+  }
+
+  // 📡 FETCH DASHBOARD (extra safe)
+  fetch(`${BASE_URL}/api/dashboard`)
+    .then(res => res.json())
+    .then(data => {
+      console.log("Dashboard Data:", data);
+    })
+    .catch(err => console.error("Fetch error:", err));
+
 });
 
-fetch(`${BASE_URL}/api/dashboard`)
-  .then(res => res.json())
-  .then(data => {
-    console.log("Dashboard Data:", data);
-  });
+
+// 🔓 LOGOUT FUNCTION
+function logout() {
+  sessionStorage.clear();
+  window.location.replace("/3172004/login.html");
+}
 
 
-
+// 📊 DASHBOARD LOAD FUNCTION
 async function loadDashboard() {
   try {
     const res = await fetch(`${BASE_URL}/api/dashboard`);
@@ -63,7 +75,12 @@ async function loadDashboard() {
 
     console.log("DASHBOARD:", data);
 
-    document.getElementById("totalProducts").innerText = data.totalProducts;
+    // ✅ safe update (error avoid)
+    const totalProducts = document.getElementById("totalProducts");
+
+    if (totalProducts) {
+      totalProducts.innerText = data.totalProducts || 0;
+    }
 
   } catch (err) {
     console.error("Dashboard error:", err);

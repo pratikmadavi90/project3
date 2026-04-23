@@ -6,6 +6,13 @@
 </head>
 
 <body>
+<script>
+  const isLoggedIn = sessionStorage.getItem("isAdminLoggedIn");
+
+  if (isLoggedIn !== "true") {
+    window.location.href = "/3172004/login.html";
+  }
+</script>
 
 <div class="top-bar">
   <h2 class="title">🔥 Product Panel</h2>
