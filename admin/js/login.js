@@ -1,7 +1,6 @@
-import { BASE_URL } from "../js/config.js";
+const BASE_URL = "https://api.harzo.in";
 
-
-// ✅ MESSAGE SHOW FUNCTION
+// MESSAGE
 function showMessage(text, type) {
   const msg = document.getElementById("message");
   msg.style.display = "block";
@@ -9,8 +8,8 @@ function showMessage(text, type) {
   msg.innerText = text;
 }
 
-// ✅ SEND OTP
-async function sendOTP() {
+// SEND OTP
+window.sendOTP = async function() {
   const email = document.getElementById("email").value;
 
   if (!email) {
@@ -21,26 +20,17 @@ async function sendOTP() {
   try {
     const res = await fetch(`${BASE_URL}/api/admin/send-otp`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email })
     });
 
     const data = await res.json();
-    console.log("SEND OTP RESPONSE:", data); // debug
-
-    if (data.success || data.message?.toLowerCase().includes("sent")) {
-      showMessage("OTP sent successfully ✅", "success");
-    } else {
-      showMessage(data.message || "OTP failed", "error");
-    }
+    showMessage("OTP sent", "success");
 
   } catch (err) {
-    console.log(err);
     showMessage("Server error", "error");
   }
-}
+};
 
 // ✅ VERIFY OTP (FINAL FIXED)
 async function verifyOTP() {
