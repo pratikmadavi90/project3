@@ -3,9 +3,9 @@ const BASE_URL = "https://api.harzo.in";
 document.addEventListener("DOMContentLoaded", () => {
 
   // 🔒 LOGIN CHECK (sessionStorage use)
-  if (localStorage.getItem("isAdminLoggedIn") !== "true") {
-  window.location.replace("/3172004/login.html");
-  return;
+  if (sessionStorage.getItem("isAdminLoggedIn") !== "true") {
+    window.location.replace("/3172004/login.html");
+    return;
 }
 
   // Existing functions
