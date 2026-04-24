@@ -4,10 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 🔒 LOGIN CHECK (sessionStorage use)
   if (sessionStorage.getItem("isAdminLoggedIn") !== "true") {
-    window.location.replace("/3172004/login.html");
-    return;
+  window.location.replace("/login.html");
 }
-
   // Existing functions
   getProducts();
   loadDashboard();
@@ -62,8 +60,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // 🔓 LOGOUT FUNCTION
 function logout() {
-  localStorage.removeItem("isAdminLoggedIn");
-  window.location.replace("/3172004/login.html");
+  sessionStorage.removeItem("isAdminLoggedIn"); // ✅ same storage
+  window.location.replace("/login.html"); // ✅ clean path
 }
 
 // 📊 DASHBOARD LOAD FUNCTION

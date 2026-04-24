@@ -62,7 +62,7 @@ if (data.success || data.message?.toLowerCase().includes("success")) {
   showMessage("Login Successful 🚀", "success");
 
   // ✅ LOGIN FLAG
-  sessionStorage.setItem("isAdminLoggedIn", "true");
+  localStorage.setItem("isAdminLoggedIn", "true");
 
   // ✅ REDIRECT (ONLY ONE)
   setTimeout(() => {
