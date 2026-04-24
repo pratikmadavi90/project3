@@ -1,4 +1,4 @@
-import { BASE_URL } from "./config.js";
+const BASE_URL = "https://api.harzo.in";
 
 let currentIndex = 0;
 let sliderInterval = null;
