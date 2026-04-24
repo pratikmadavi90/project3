@@ -3,7 +3,7 @@ const BASE_URL = "https://api.harzo.in";
 document.addEventListener("DOMContentLoaded", () => {
 
   // 🔒 LOGIN CHECK (sessionStorage use)
-  if (sessionStorage.getItem("isAdminLoggedIn") !== "true") {
+  if (localStorage.getItem("isAdminLoggedIn") !== "true") {
   window.location.replace("/login.html");
 }
   // Existing functions
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // 🔓 LOGOUT FUNCTION
 function logout() {
-  sessionStorage.removeItem("isAdminLoggedIn"); // ✅ same storage
+ localStorage.removeItem("isAdminLoggedIn");
   window.location.replace("/login.html"); // ✅ clean path
 }
 
@@ -84,4 +84,3 @@ async function loadDashboard() {
   }
 }
 
-loadDashboard();

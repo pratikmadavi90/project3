@@ -70,19 +70,21 @@ document.getElementById("saveBtn").innerText = "Save Product";
 
 // 🔥 DELETE FUNCTION
 async function deleteProduct(id) {
+  if (!confirm("Delete this product?")) return;
+
   try {
     await fetch(`${BASE_URL}/api/products/${id}`, {
       method: "DELETE"
     });
 
-    alert("Product deleted ✅");
-
-    loadProducts(document.getElementById("category")?.value || "grocery");
+    allProducts = allProducts.filter(p => p._id !== id);
+    displayProducts(allProducts);
 
   } catch (error) {
     console.error("Delete error:", error);
   }
 }
+
 
 // 👇 VERY IMPORTANT
 window.deleteProduct = deleteProduct;
@@ -259,7 +261,7 @@ async function getProducts() {
     const res = await fetch(`${BASE_URL}/api/products`);
     const data = await res.json();
 
-    console.log("PRODUCT DATA:", data);
+    allProducts = data; // ✅ MUST
 
     displayProducts(data);
   } catch (err) {

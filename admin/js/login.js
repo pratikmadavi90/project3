@@ -65,9 +65,9 @@ if (data.success || data.message?.toLowerCase().includes("success")) {
   localStorage.setItem("isAdminLoggedIn", "true");
 
   // ✅ REDIRECT (ONLY ONE)
-  setTimeout(() => {
-    window.location.href = "/3172004/pages/products.html";
-  }, 800);
+ setTimeout(() => {
+  window.location.replace("/pages/products.html");
+}, 800);
 
 } else {
   showMessage(data.message || "Invalid OTP", "error");

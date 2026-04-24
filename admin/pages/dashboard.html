@@ -6,7 +6,9 @@
   <title>Harzo Dashboard</title>
 
   <script>
-  
+  if (localStorage.getItem("isAdminLoggedIn") !== "true") {
+    window.location.replace("/login.html");
+  }
 </script>
 
   <link rel="stylesheet" href="../css/dashboard.css">
