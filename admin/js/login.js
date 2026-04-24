@@ -66,7 +66,7 @@ if (data.success || data.message?.toLowerCase().includes("success")) {
 
   // ✅ REDIRECT (ONLY ONE)
  setTimeout(() => {
-  window.location.replace("/pages/products.html");
+  window.location.replace("/pages/dashboard.html");
 }, 800);
 
 } else {

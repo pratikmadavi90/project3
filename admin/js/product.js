@@ -203,30 +203,45 @@ console.log("WEIGHT VALUE:", p.weight);
       }
 
       // ✅ FINAL CARD (ONLY ONCE)
-      list.innerHTML += `
-      <div class="card">
+    list.innerHTML += `
+<div class="card">
 
-        <div class="slider-container">
-          <div class="slider">
-            ${imageHTML}
-          </div>
-        </div>
+  <div class="slider-container">
+    <div class="slider">
+      ${imageHTML}
+    </div>
+  </div>
 
-        <b>${p.name || "No Name"}</b><br>
-        ${p.category || ""} | ${p.subCategory || ""}<br>
+  <b>${p.name || "No Name"}</b><br>
+  ${p.category || ""} | ${p.subCategory || ""}<br>
 
-        <del>₹${p.pricing?.mrp || 0}</del> ₹${p.pricing?.sellingPrice || 0}<br>
+  ${
+    (() => {
+      const mrp = p.pricing?.mrp || 0;
+      const price = p.pricing?.sellingPrice || 0;
+      const discount = mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0;
+      const save = mrp - price;
 
-        Weight: ${weight || "N/A"}<br>
-        Stock: ${stock || 0}<br>
-
-        <div class="btns">
-          <button onclick="editProduct('${p._id}')">Edit</button>
-          <button onclick="deleteProduct('${p._id}')">Delete</button>
-        </div>
-
+      return `
+      <div class="price-box">
+        <span class="mrp">₹${mrp}</span>
+        <span class="price">₹${price}</span>
+        ${discount > 0 ? `<span class="discount">${discount}% OFF</span>` : ""}
       </div>
       `;
+    })()
+  }
+
+  Weight: ${weight || "N/A"}<br>
+  Stock: ${stock || 0}<br>
+
+  <div class="btns">
+    <button onclick="editProduct('${p._id}')">Edit</button>
+    <button onclick="deleteProduct('${p._id}')">Delete</button>
+  </div>
+
+</div>
+`;
     });
 }
 
