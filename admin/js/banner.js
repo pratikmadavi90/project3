@@ -1,4 +1,4 @@
-const BASE_URL = "https://api.harzo.in";
+import { BASE_URL } from "./config.js";
 
 let currentIndex = 0;
 let sliderInterval = null;
@@ -11,42 +11,40 @@ async function addBanner() {
   const redirectValueEl = document.getElementById("redirectValue");
   const file = document.getElementById("image").files[0];
 
-  // ✅ Safe handling (agar field nahi mile to error na aaye)
   const redirectType = redirectTypeEl ? redirectTypeEl.value : "";
   const redirectValue = redirectValueEl ? redirectValueEl.value : "";
 
   if (!file) return alert("Select image");
 
   try {
-    // 1️⃣ Upload to S3
     const formData = new FormData();
     formData.append("image", file);
 
-  const uploadRes = await fetch(`${BASE_URL}/upload`, {
-method: "POST",
+    const uploadRes = await fetch(BASE_URL + "/upload", {
+  method: "POST",
   body: formData
 });
+
     const uploadData = await uploadRes.json();
 
     if (!uploadData.imageUrl) {
       alert("❌ Upload failed");
       return;
     }
-
-    // 📦 Save banner in DB
-    const saveRes = await fetch(`${BASE_URL}/add-banner`, {
+const saveRes = await fetch(BASE_URL + "/add-banner", {
   method: "POST",
   headers: {
     "Content-Type": "application/json"
   },
+
       body: JSON.stringify({
         title,
         type,
         image: uploadData.imageUrl,
         position: Date.now(),
         isActive: true,
-        redirectType,   // ✅ NEW
-        redirectValue   // ✅ NEW
+        redirectType,
+        redirectValue
       })
     });
 
@@ -55,7 +53,6 @@ method: "POST",
     if (saveData.success) {
       alert("✅ Banner Added");
 
-      // reset fields
       document.getElementById("title").value = "";
       document.getElementById("image").value = "";
       if (redirectValueEl) redirectValueEl.value = "";
@@ -74,7 +71,7 @@ method: "POST",
 // 🚀 LOAD BANNERS
 async function loadBanners() {
   try {
-    const res = await fetch(`${BASE_URL}/banners`);
+    const res = await fetch(BASE_URL + "/banners");
     const data = await res.json();
 
     const slider = document.getElementById("sliderPreview");
@@ -84,17 +81,23 @@ async function loadBanners() {
     small.innerHTML = "";
 
     data.forEach((b) => {
+
+      // ✅ IMAGE URL FIX (MOST IMPORTANT)
+    const imageUrl = b.image.startsWith("http")
+  ? b.image
+  : BASE_URL + "/" + b.image;
+
       if (b.type === "slider") {
         slider.innerHTML += `
           <div class="banner-card">
-            <img src="${b.image}" />
+            <img src="${imageUrl}" />
             <button class="delete-btn" onclick="deleteBanner('${b._id}')">X</button>
           </div>
         `;
       } else {
         small.innerHTML += `
           <div class="small-box">
-            <img src="${b.image}" />
+            <img src="${imageUrl}" />
             <button onclick="deleteBanner('${b._id}')">X</button>
           </div>
         `;
@@ -113,9 +116,8 @@ async function deleteBanner(id) {
 
   try {
     const res = await fetch(`${BASE_URL}/delete-banner/${id}`, {
-      method: "DELETE"
-    });
-
+  method: "DELETE"
+});
     const data = await res.json();
 
     if (data.success) {

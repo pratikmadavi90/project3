@@ -1,5 +1,4 @@
-const ENV = "local"; 
-// "local" | "staging" | "production"
+const ENV = "production"; // 🔥 change here
 
 const URLS = {
   local: "http://localhost:5000",
