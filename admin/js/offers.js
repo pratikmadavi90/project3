@@ -1,4 +1,4 @@
-const API = "http://localhost:5000/api/offers";
+const API = "https://api.harzo.in/api/offers";
 
 // ✅ ADD OFFER
 async function addOffer() {
@@ -33,7 +33,7 @@ async function loadOffers() {
 
   let html = "";
 
-  data.forEach((o) => {
+  (data || []).forEach((o) => {
     html += `
       <div class="offer-card">
         <h3>${o.title || "No Title"}</h3>

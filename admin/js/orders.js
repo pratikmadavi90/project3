@@ -1,4 +1,4 @@
-const API = "http://localhost:5000/api/orders";
+const API = "https://api.harzo.in/api/orders";
 
 // 🔄 GET ORDERS
 async function getOrders() {
@@ -75,12 +75,12 @@ async function assignDelivery(id) {
 
 // 🔍 VIEW ORDER (POPUP)
 async function viewOrder(id) {
-  const res = await fetch(`http://localhost:5000/api/orders/${id}`);
+  const res = await fetch(`${API}/${id}`);
   const order = await res.json();
 
   let itemsHTML = "";
 
-  order.items.forEach(item => {
+  (order.items || []).forEach(item => {
   itemsHTML += `
   <div class="item-row">
     <img src="${item.image}" class="item-img"/>
@@ -98,8 +98,8 @@ async function viewOrder(id) {
  document.getElementById("orderDetails").innerHTML = `
   <div class="bill-header">
     <h3>Order ID: ${order.orderId}</h3>
-    <p>${order.user.name} | ${order.user.phone}</p>
-    <p>${order.address.fullAddress}</p>
+    <p>${order.user?.name || "-"} | ${order.user?.phone || "-"}</p>
+<p>${order.address?.fullAddress || "-"}</p>
   </div>
 
   <hr>

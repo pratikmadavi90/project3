@@ -1,16 +1,24 @@
-const API = "http://localhost:5000/api/stock";
+const API = "https://api.harzo.in/api/stock";
 
 // 🔹 Stock status class
 function getStockClass(p) {
-  if (p.stock.quantity === 0) return "out-stock";
-  if (p.stock.quantity <= p.stock.lowStockLimit) return "low-stock";
+  const qty = p.stock?.quantity || 0;
+  const limit = p.stock?.lowStockLimit || 0;
+
+  if (qty === 0) return "out-stock";
+  if (qty <= limit) return "low-stock";
+
   return "";
 }
 
 // 🔹 Stock text (real system)
 function getStockText(p) {
-  if (p.stock.quantity === 0) return "Out of Stock ❌";
-  if (p.stock.quantity <= p.stock.lowStockLimit) return "Low Stock ⚠️";
+  const qty = p.stock?.quantity || 0;
+  const limit = p.stock?.lowStockLimit || 0;
+
+  if (qty === 0) return "Out of Stock ❌";
+  if (qty <= limit) return "Low Stock ⚠️";
+
   return "In Stock ✅";
 }
 
@@ -26,7 +34,7 @@ async function loadProducts() {
     const table = document.getElementById("stockTable");
     table.innerHTML = "";
 
-    data.forEach(p => {
+    (data || []).forEach(p => {
       table.innerHTML += `
         <tr>
           <td>${p.name}</td>

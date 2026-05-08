@@ -1,4 +1,4 @@
-const API = "http://localhost:5000/api/users";
+const API = "https://api.harzo.in/api/users";
 
 let allUsers = [];
 
@@ -58,10 +58,10 @@ document.getElementById("searchInput").addEventListener("input", function () {
   const value = this.value.toLowerCase();
 
   const filtered = allUsers.filter(user =>
-    user.name.toLowerCase().includes(value) ||
-    user.email.toLowerCase().includes(value) ||
-    user.phone.includes(value) ||
-    user.address.toLowerCase().includes(value) ||
+  (user.name || "").toLowerCase().includes(value) ||
+(user.email || "").toLowerCase().includes(value) ||
+(user.phone || "").includes(value) ||
+(user.address || "").toLowerCase().includes(value) ||  
 
     (user.city || "").toLowerCase().includes(value) ||     // ✅ ADD
     (user.pincode || "").includes(value)                   // ✅ ADD

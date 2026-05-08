@@ -1,4 +1,4 @@
-const API = "http://localhost:5000/api/dashboard";
+const API = "https://api.harzo.in/api/dashboard";
 
 // 🔹 Load Stats (Top cards)
 async function loadStats() {
@@ -25,7 +25,7 @@ async function loadLowStock() {
     list.innerHTML = "";
 
     data.forEach(p => {
-      list.innerHTML += `<li>${p.name} (${p.stock.quantity})</li>`;
+      list.innerHTML += `<li>${p.name} (${p.stock?.quantity || 0})</li>`;
     });
 
   } catch (err) {

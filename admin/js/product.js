@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 let allProducts = [];
 let editId = null;
 
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = "https://api.harzo.in";
 
 // 👉 ADD / UPDATE PRODUCT
 async function addOrUpdateProduct() {
@@ -71,7 +71,7 @@ document.getElementById("saveBtn").innerText = "Save Product";
 // 🔥 DELETE FUNCTION
 async function deleteProduct(id) {
   try {
-    await fetch(`http://localhost:5000/api/products/${id}`, {
+   await fetch(`${BASE_URL}/api/products/${id}`, { 
       method: "DELETE"
     });
 
@@ -135,8 +135,8 @@ async function loadProducts(category) {
 
   console.log("Category:", category, data);
 
-  allProducts = data;
-  displayProducts(data);
+allProducts = Array.isArray(data) ? data : [];
+displayProducts(allProducts); 
 }
 
 

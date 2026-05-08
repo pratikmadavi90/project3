@@ -1,8 +1,12 @@
-const API = "http://localhost:5000/api/settings";
+const API = "https://api.harzo.in/api/settings";
 
 // 🔹 Load settings
 async function loadSettings() {
   const res = await fetch(API);
+if (!res.ok) {
+  throw new Error("Failed to load settings");
+}
+
   const data = await res.json();
 
   document.getElementById("storeName").value = data.storeName || "";

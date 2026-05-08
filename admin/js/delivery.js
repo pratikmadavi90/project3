@@ -1,4 +1,4 @@
-const API = "http://localhost:5000/api/delivery";
+const API = "https://api.harzo.in/api/delivery";
 
 // ➕ Add Area
 async function addArea() {
@@ -36,7 +36,12 @@ async function addArea() {
 // 📋 Load Areas
 async function loadAreas() {
   const res = await fetch(`${API}/all`);
-  const data = await res.json();
+
+if (!res.ok) {
+  throw new Error("Failed to load delivery areas");
+}
+
+const data = await res.json();
 
   const list = document.getElementById("areaList");
   list.innerHTML = "";

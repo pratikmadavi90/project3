@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = "https://api.harzo.in/api";
 
 // Load Categories
 async function loadCategories() {
@@ -15,7 +15,7 @@ async function loadCategories() {
 
         <img src="${cat.image}" width="60"/>
 
-        ${cat.images.map(img => `<img src="${img}" width="40"/>`).join("")}
+        ${(cat.images || []).map(img => <img src="${img}" width="40"/>).join("")}
 
         <button onclick="editCategory('${cat._id}','${cat.name}')">Edit</button>
         <button onclick="deleteCategory('${cat._id}')">Delete</button>
