@@ -16,7 +16,7 @@ async function sendOTP() {
   }
 
   try {
-    const res = await fetch("http://localhost:5000/api/admin/send-otp", {
+    fetch("https://api.harzo.in/api/admin/send-otp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -50,7 +50,7 @@ async function verifyOTP() {
     }
 
     try {
-        const res = await fetch("http://localhost:5000/api/admin/verify-otp", {
+        fetch(`${BASE_URL}/api/admin/verify-otp`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
