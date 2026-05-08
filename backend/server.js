@@ -7,21 +7,25 @@ const express = require("express");
 const path = require("path");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 const bannerRoutes = require("./routes/bannerRoutes");
+const userRoutes = require("./routes/userRoutes");
+const offerRoutes = require("./routes/offerRoutes");
+const deliveryRoutes = require("./routes/deliveryZoneRoutes");
+const stockRoutes = require("./routes/stockRoutes");
+const settingsRoutes = require("./routes/settingsRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
+
+
+
 
 const app = express(); // ✅ PEHLE APP BANAA
-
-app.use(cors({
-  origin: [
-    "http://localhost:5500",
-    "http://localhost:3000",
-    "https://admin.harzo.in"
-  ]
-}));
 
 // ✅ FIR USE KAR
 app.use("/admin", express.static(path.join(__dirname, "../admin")));
 app.use("/user", express.static(path.join(__dirname, "../user")));
+
+
 
 const { SESClient, SendEmailCommand } = require("@aws-sdk/client-ses");
 
@@ -79,10 +83,48 @@ const sesClient = new SESClient({
 // ================== MIDDLEWARE ==================
 app.use(cors());
 app.use(express.json());
+app.use("/api/dashboard", dashboardRoutes);
 app.use("/", bannerRoutes);
+app.use("/api/categories", require("./routes/categoryRoutes"));
+app.use("/api/orders", require("./routes/orderRoutes")); 
+app.use("/api/users", userRoutes);
+app.use("/api/offers", offerRoutes);
+app.use("/api/delivery", deliveryRoutes);
+app.use("/api/stock", stockRoutes);
+app.use("/api/settings", settingsRoutes);
+app.use("/api/notification", notificationRoutes);
+
+
+
+
+
+// ✅ TEST MAIL ROUTE (YAHAN ADD KAR)
+app.get("/test-mail", async (req, res) => {
+  const nodemailer = require("nodemailer");
+
+  const transporter = nodemailer.createTransport({
+    host: "smtp.office365.com",
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+
+  await transporter.sendMail({
+    from: process.env.EMAIL_USER,
+    to: "pratikmadavi11@gmail.com", 
+    subject: "Test Mail",
+    text: "Harzo notification working 🚀",
+  });
+
+  res.send("Mail Sent");
+});
+
 
 // ================== STATIC FILES ==================
-app.use("/3172004", express.static(path.join(__dirname, "../admin")));
+app.use("/admin", express.static(path.join(__dirname, "../admin")));
 app.use("/user", express.static(path.join(__dirname, "../user")));
 
 // ================== ROOT ==================
@@ -91,14 +133,12 @@ app.get("/", (req, res) => {
 });
 
 app.get("/admin", (req, res) => {
-  res.status(404).send("Not Found");
+    res.sendFile(path.join(__dirname, "../admin/pages/products.html"));
 });
 
 // ================= OTP SYSTEM =================
 
 const otpStore = {};
-const otpAttempts = {};
-const otpVerifyAttempts = {};
 
 // Generate OTP (6 digit)
 function generateOTP() {
@@ -136,28 +176,17 @@ async function sendOTP(email, otp) {
 
 // ADMIN SEND OTP
 app.post("/api/admin/send-otp", async (req, res) => {
-  const email = req.body.email?.toLowerCase();
+  const { email } = req.body;
 
   if (!email) {
     return res.status(400).json({ message: "Email required" });
   }
 
-  const allowed = process.env.ADMIN_EMAILS
-  .split(",")
-  .map(e => e.toLowerCase());
+  const allowed = process.env.ADMIN_EMAILS.split(",");
 
-if (!allowed.includes(email.toLowerCase())) {
-  return res.status(403).json({ message: "Not allowed" });
-}
-
-  // 🔒 OTP attempt limit (MAX 5)
-otpAttempts[email] = (otpAttempts[email] || 0) + 1;
-
-if (otpAttempts[email] > 5) {
-  return res.status(429).json({
-    message: "Too many attempts. Try after 10 minutes"
-  });
-}
+  if (!allowed.includes(email)) {
+    return res.status(403).json({ message: "Not allowed" });
+  }
 
   const otp = generateOTP();
 
@@ -168,15 +197,11 @@ if (otpAttempts[email] > 5) {
 
   try {
     await sendOTP(email, otp);
-    setTimeout(() => {
-  otpAttempts[email] = 0;
-}, 10 * 60 * 1000);
     res.json({ message: "OTP sent" });
   } catch (err) {
     res.status(500).json({ message: "Failed to send OTP" });
   }
 });
-
 
 // ===== USER SEND OTP =====
 app.post("/api/user/send-otp", async (req, res) => {
@@ -205,23 +230,13 @@ app.post("/api/user/send-otp", async (req, res) => {
 
 // ADMIN VERIFY OTP
 app.post("/api/admin/verify-otp", (req, res) => {
-  const email = req.body.email?.toLowerCase();
-const otp = req.body.otp;
+  const { email, otp } = req.body;
 
   if (!email || !otp) {
     return res.status(400).json({ message: "Missing fields" });
   }
 
   const data = otpStore[email];
-
-  // 🔒 VERIFY ATTEMPT LIMIT
-otpVerifyAttempts[email] = (otpVerifyAttempts[email] || 0) + 1;
-
-if (otpVerifyAttempts[email] > 5) {
-  return res.status(429).json({
-    message: "Too many wrong OTP attempts"
-  });
-}
 
   // Owner bypass 🔥
   if (
@@ -243,8 +258,6 @@ if (otpVerifyAttempts[email] > 5) {
   if (data.otp !== otp) {
     return res.status(400).json({ message: "Wrong OTP" });
   }
-
-  otpVerifyAttempts[email] = 0;
 
   delete otpStore[email];
 
@@ -275,10 +288,10 @@ app.post("/api/user/verify-otp", (req, res) => {
 });
 
 // ================== ROUTES ==================
-const dashboardRoutes = require("./routes/dashboardRoutes");
+
 const productRoutes = require("./routes/productRoutes");
 
-app.use("/api/dashboard", dashboardRoutes);
+
 app.use("/api/products", productRoutes);
 
 
@@ -311,6 +324,8 @@ app.post("/api/verify-otp", (req, res) => {
 
     res.json({ message: "Invalid OTP" });
 });
+
+
 
 // ===== LOGIN API =====
 app.post("/api/login", (req, res) => {

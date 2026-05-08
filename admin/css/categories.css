@@ -1,0 +1,104 @@
+/* Body */
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f7fa;
+  margin: 0;
+  padding: 20px;
+}
+
+/* Title */
+h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Form Container */
+form {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Inputs */
+input[type="text"] {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  width: 200px;
+}
+
+input[type="file"] {
+  border: 1px solid #ddd;
+  padding: 6px;
+  border-radius: 6px;
+  background: #fafafa;
+}
+
+/* Button */
+button {
+  background: #28a745;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #218838;
+}
+
+/* CSV Button */
+button[onclick="uploadCSV()"] {
+  background: #007bff;
+}
+
+button[onclick="uploadCSV()"]:hover {
+  background: #0069d9;
+}
+
+/* Category List */
+#categoryList {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+/* Card */
+#categoryList div {
+  background: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+}
+
+/* Images */
+#categoryList img {
+  margin: 5px;
+  border-radius: 6px;
+  border: 1px solid #eee;
+}
+
+/* Buttons inside card */
+#categoryList button {
+  margin-top: 8px;
+  margin-right: 5px;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+/* Delete button */
+#categoryList button:last-child {
+  background: #dc3545;
+}
+
+#categoryList button:last-child:hover {
+  background: #c82333;
+}

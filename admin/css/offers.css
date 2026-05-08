@@ -1,0 +1,59 @@
+body {
+  background: #0f172a;
+  color: white;
+  font-family: Arial;
+}
+
+/* container */
+.container {
+  padding: 20px;
+}
+
+/* heading */
+h2 {
+  margin-bottom: 20px;
+}
+
+/* form row */
+.form-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* inputs */
+input, select {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  background: #1e293b;
+  color: white;
+}
+
+/* button */
+button {
+  background: #22c55e;
+  color: black;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #16a34a;
+}
+
+/* offer list */
+#offerList {
+  margin-top: 20px;
+}
+
+/* card */
+.offer-card {
+  background: #1e293b;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}

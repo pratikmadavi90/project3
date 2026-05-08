@@ -1,23 +1,19 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  password: String,
-  role: {
-    type: String,
-    enum: ["admin", "user"],
-    default: "user",
-  },
-});
+  name: { type: String, required: true },
 
+  email: { type: String, unique: true },
 
-// 👇 YAHI PASTE KARNA HAI (IMPORTANT 🔥)
-userSchema.pre("save", async function () {
-  if (!this.isModified("password")) return;
-  this.password = await bcrypt.hash(this.password, 10);
-});
+  phone: { type: String, unique: true },
 
+  address: { type: String },
+
+  city: { type: String },        // ✅ ADD
+  pincode: { type: String },     // ✅ ADD
+
+  isBlocked: { type: Boolean, default: false },
+
+}, { timestamps: true });
 
 module.exports = mongoose.model("User", userSchema);

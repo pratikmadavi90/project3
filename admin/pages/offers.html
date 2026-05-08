@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Offers</title>
+
+  <!-- ✅ CSS yaha hona chahiye -->
+  <link rel="stylesheet" href="../css/offers.css">
+</head>
+
+<body>
+
+<div class="container">
+
+  <h2>Offers</h2>
+
+  <div class="form-row">
+
+    <!-- ✅ TITLE (IMPORTANT) -->
+    <input type="text" id="title" placeholder="Offer Title">
+
+    <!-- TYPE -->
+    <select id="type">
+      <option value="percentage">Percentage</option>
+      <option value="flat">Flat</option>
+    </select>
+
+    <!-- VALUE -->
+    <input type="number" id="value" placeholder="Value">
+
+    <!-- MIN ORDER -->
+    <input type="number" id="minOrderAmount" placeholder="Min Order Amount">
+
+    <!-- DATES -->
+    <input type="date" id="startDate">
+    <input type="date" id="endDate">
+
+    <!-- BUTTON -->
+    <button onclick="addOffer()">Add Offer</button>
+
+  </div>
+
+  <!-- OFFER LIST -->
+  <div id="offerList"></div>
+
+</div>
+
+<!-- ✅ JS -->
+<script src="../js/offers.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,92 @@
+body {
+  background: #0f172a;
+  color: #e2e8f0;
+  font-family: Arial, sans-serif;
+}
+
+/* Heading */
+h2 {
+  color: #38bdf8;
+  margin-bottom: 20px;
+}
+
+/* Search Box */
+#search {
+  padding: 10px;
+  width: 250px;
+  border: none;
+  border-radius: 6px;
+  outline: none;
+  background: #1e293b;
+  color: white;
+  margin-right: 10px;
+}
+
+/* Button */
+button {
+  padding: 8px 14px;
+  background: #22c55e;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #16a34a;
+}
+
+/* Table */
+table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+  background: #1e293b;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Table Head */
+thead {
+  background: #334155;
+}
+
+th {
+  padding: 12px;
+  text-align: left;
+  color: #94a3b8;
+}
+
+/* Table Rows */
+td {
+  padding: 12px;
+  border-bottom: 1px solid #334155;
+}
+
+/* Row Hover */
+tr:hover {
+  background: #2a3a55;
+}
+
+/* Stock Input */
+input[type="number"] {
+  width: 70px;
+  padding: 5px;
+  border-radius: 5px;
+  border: none;
+  background: #0f172a;
+  color: white;
+}
+
+/* LOW STOCK (RED) */
+.low-stock {
+  color: #f87171;
+  font-weight: bold;
+}
+
+/* OUT OF STOCK */
+.out-stock {
+  color: #ef4444;
+  font-weight: bold;
+}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Users</title>
+
+  <link rel="stylesheet" href="/admin/css/users.css">
+</head>
+
+<body>
+
+<h2>Users</h2>
+
+<div id="userCount">Total Users: 0</div>
+
+<!-- ✅ id change kiya -->
+<input type="text" id="searchInput" placeholder="Search user..." />
+
+<table>
+  <thead>
+<tr>
+  <th>Name</th>
+  <th>Email</th>
+  <th>Phone</th>
+  <th>Address</th>
+  <th>City</th>       
+  <th>Pincode</th>    
+  <th>Status</th>
+  <th>Actions</th>
+</tr>
+  </thead>
+
+  <tbody id="userTable"></tbody>
+</table>
+
+<script src="../js/users.js"></script>
+
+</body>
+</html>

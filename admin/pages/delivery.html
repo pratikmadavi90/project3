@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Delivery Areas</title>
+  <link rel="stylesheet" href="../css/delivery.css">
+</head>
+
+<body>
+
+<h2>🚚 Delivery Areas / Zones</h2>
+
+<!-- ✅ FORM -->
+<div class="form">
+
+  <input type="text" id="areaName" placeholder="Area / Village Name (Dhoptala)">
+  
+  <input type="text" id="pincode" placeholder="Pincode">
+  
+  <input type="number" id="charge" placeholder="Delivery Charge ₹">
+  
+  <input type="text" id="time" placeholder="Delivery Time (30-40 mins)">
+
+  <button onclick="addArea()">➕ Add Area</button>
+
+</div>
+
+<hr>
+
+<!-- ✅ LIST -->
+<h3>📍 All Areas</h3>
+
+<table width="100%" id="areaTable">
+  <thead>
+    <tr>
+      <th>Area</th>
+      <th>Pincode</th>
+      <th>Charge ₹</th>
+      <th>Time</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+
+  <tbody id="areaList"></tbody>
+</table>
+
+<script src="../js/delivery.js"></script>
+
+</body>
+</html>

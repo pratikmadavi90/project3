@@ -1,0 +1,90 @@
+const DeliveryZone = require("../models/DeliveryZone");
+
+// ➕ Add Area (with full details)
+exports.addZone = async (req, res) => {
+  try {
+    const { name, pincode, charge, time, landmark, address } = req.body;
+
+    const existing = await DeliveryZone.findOne({ name });
+    if (existing) {
+      return res.json({ success: false, message: "Area already exists" });
+    }
+
+    const zone = new DeliveryZone({
+      name,         // Dhoptala
+      pincode,      // 442xxx
+      charge,       // ₹
+      time,         // 30 min
+      landmark,     // Temple ke paas
+      address,      // Full address
+      isActive: true
+    });
+
+    await zone.save();
+
+    res.json({ success: true, data: zone });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// 📋 Get All Areas
+exports.getZones = async (req, res) => {
+  try {
+    const zones = await DeliveryZone.find().sort({ createdAt: -1 });
+    res.json(zones);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// ❌ Delete Area
+exports.deleteZone = async (req, res) => {
+  try {
+    await DeliveryZone.findByIdAndDelete(req.params.id);
+    res.json({ success: true, message: "Deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// 🔍 Check Delivery (smart match)
+exports.checkDelivery = async (req, res) => {
+  try {
+    const { pincode, name } = req.body;
+
+    // 👉 Pincode priority
+    let zone = await DeliveryZone.findOne({
+      pincode,
+      isActive: true
+    });
+
+    // 👉 Agar pincode nahi mila → name se check
+    if (!zone && name) {
+      zone = await DeliveryZone.findOne({
+        name: { $regex: new RegExp(name, "i") },
+        isActive: true
+      });
+    }
+
+    if (!zone) {
+      return res.json({
+        available: false,
+        message: "Delivery not available in your area"
+      });
+    }
+
+    res.json({
+      available: true,
+      area: zone.name,
+      deliveryCharge: zone.charge,
+      deliveryTime: zone.time,
+      landmark: zone.landmark,
+      address: zone.address
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

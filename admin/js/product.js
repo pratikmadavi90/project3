@@ -1,4 +1,3 @@
-const BASE_URL = "https://api.harzo.in";
 
 document.addEventListener("DOMContentLoaded", () => {
   getProducts();
@@ -7,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 let allProducts = [];
 let editId = null;
 
+const BASE_URL = "http://localhost:5000";
 
 // 👉 ADD / UPDATE PRODUCT
 async function addOrUpdateProduct() {
@@ -70,21 +70,19 @@ document.getElementById("saveBtn").innerText = "Save Product";
 
 // 🔥 DELETE FUNCTION
 async function deleteProduct(id) {
-  if (!confirm("Delete this product?")) return;
-
   try {
-    await fetch(`${BASE_URL}/api/products/${id}`, {
+    await fetch(`http://localhost:5000/api/products/${id}`, {
       method: "DELETE"
     });
 
-    allProducts = allProducts.filter(p => p._id !== id);
-    displayProducts(allProducts);
+    alert("Product deleted ✅");
+
+    loadProducts(document.getElementById("category")?.value || "grocery");
 
   } catch (error) {
     console.error("Delete error:", error);
   }
 }
-
 
 // 👇 VERY IMPORTANT
 window.deleteProduct = deleteProduct;
@@ -203,45 +201,30 @@ console.log("WEIGHT VALUE:", p.weight);
       }
 
       // ✅ FINAL CARD (ONLY ONCE)
-    list.innerHTML += `
-<div class="card">
+      list.innerHTML += `
+      <div class="card">
 
-  <div class="slider-container">
-    <div class="slider">
-      ${imageHTML}
-    </div>
-  </div>
+        <div class="slider-container">
+          <div class="slider">
+            ${imageHTML}
+          </div>
+        </div>
 
-  <b>${p.name || "No Name"}</b><br>
-  ${p.category || ""} | ${p.subCategory || ""}<br>
+        <b>${p.name || "No Name"}</b><br>
+        ${p.category || ""} | ${p.subCategory || ""}<br>
 
-  ${
-    (() => {
-      const mrp = p.pricing?.mrp || 0;
-      const price = p.pricing?.sellingPrice || 0;
-      const discount = mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0;
-      const save = mrp - price;
+        <del>₹${p.pricing?.mrp || 0}</del> ₹${p.pricing?.sellingPrice || 0}<br>
 
-      return `
-      <div class="price-box">
-        <span class="mrp">₹${mrp}</span>
-        <span class="price">₹${price}</span>
-        ${discount > 0 ? `<span class="discount">${discount}% OFF</span>` : ""}
+        Weight: ${weight || "N/A"}<br>
+        Stock: ${stock || 0}<br>
+
+        <div class="btns">
+          <button onclick="editProduct('${p._id}')">Edit</button>
+          <button onclick="deleteProduct('${p._id}')">Delete</button>
+        </div>
+
       </div>
       `;
-    })()
-  }
-
-  Weight: ${weight || "N/A"}<br>
-  Stock: ${stock || 0}<br>
-
-  <div class="btns">
-    <button onclick="editProduct('${p._id}')">Edit</button>
-    <button onclick="deleteProduct('${p._id}')">Delete</button>
-  </div>
-
-</div>
-`;
     });
 }
 
@@ -276,7 +259,7 @@ async function getProducts() {
     const res = await fetch(`${BASE_URL}/api/products`);
     const data = await res.json();
 
-    allProducts = data; // ✅ MUST
+    console.log("PRODUCT DATA:", data);
 
     displayProducts(data);
   } catch (err) {
@@ -331,7 +314,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ],
 
     Grocery: [
-      "Atta","Rice","Dal","Cooking Oil","Ghee",
+      "Atta & Flour","Rice","Dal & Pulses","Cooking Oil","Ghee",
       "Whole Spices","Powder Masala","Ready Masala","Salt",
       "Sugar","Jaggery","Honey","Dry Fruits","Seeds","Pickles",
       "Chutney","Sauces & Ketchup","Vinegar","Baking Items",
@@ -422,25 +405,3 @@ document.addEventListener("DOMContentLoaded", () => {
   getProducts();
 
 });
-
-
-
-
-
-// ✅ GLOBAL FUNCTIONS FIX
-window.addOrUpdateProduct = addOrUpdateProduct;
-window.deleteProduct = deleteProduct;
-window.editProduct = editProduct;
-
-// ✅ SEARCH FIX
-function searchProduct() {
-  const value = document.getElementById("search").value.toLowerCase();
-
-  const filtered = allProducts.filter(p =>
-    p.name?.toLowerCase().includes(value)
-  );
-
-  displayProducts(filtered);
-}
-
-window.searchProduct = searchProduct;

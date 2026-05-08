@@ -12,7 +12,7 @@ const productSchema = new mongoose.Schema({
   },
 
   subCategory: {
-  type: String,
+    type: String,
   },
 
   brand: {
@@ -21,9 +21,9 @@ const productSchema = new mongoose.Schema({
   },
 
   weight: {
-  type: String,
-  default: ""
-},
+    type: String,
+    default: ""
+  },
 
   sku: String,
   barcode: String,
@@ -47,9 +47,33 @@ const productSchema = new mongoose.Schema({
     discount: Number
   },
 
+  // ✅ UPDATED STOCK SYSTEM
   stock: {
-    quantity: Number,
-    inStock: Boolean
+    quantity: {
+      type: Number,
+      default: 0
+    },
+
+    inStock: {
+      type: Boolean,
+      default: true
+    },
+
+    lowStockLimit: {
+      type: Number,
+      default: 5
+    }
+  },
+
+  // ✅ NEW: Warehouse + Location
+  warehouse: {
+    type: String,
+    default: "Main"
+  },
+
+  location: {
+    type: String,
+    default: ""
   },
 
   tags: [String],

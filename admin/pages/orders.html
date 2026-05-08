@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Orders - HARZO</title>
+
+  <!-- CSS LINK -->
+  <link rel="stylesheet" href="../css/orders.css">
+</head>
+
+<body>
+
+<h1>Orders Management</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Order ID</th>
+      <th>Customer</th>
+      <th>Phone</th>
+      <th>Address</th>
+      <th>Total</th>
+      <th>Status</th>
+      <th>Assign</th>
+      <th>View</th>
+    </tr>
+  </thead>
+
+  <tbody id="ordersTable"></tbody>
+</table>
+
+<!-- 🔥 POPUP -->
+<div id="orderPopup" class="popup">
+  <div class="popup-content">
+
+    <!-- CLOSE BUTTON TOP RIGHT -->
+    <span class="close-btn" onclick="closePopup()">✖️</span>
+
+    <h2>Order Details</h2>
+
+    <div id="orderDetails"></div>
+
+  </div>
+</div>
+
+<!-- JS -->
+<script src="../js/orders.js"></script>
+
+</body>
+</html>

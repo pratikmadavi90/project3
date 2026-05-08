@@ -5,6 +5,9 @@ const multer = require("multer");
 const multerS3 = require("multer-s3");
 const { S3Client } = require("@aws-sdk/client-s3");
 
+// ✅ Product model (IMPORTANT - top me hi)
+const Product = require("../models/Product");
+
 const s3 = new S3Client({
   region: "ap-south-1",
   credentials: {
@@ -16,7 +19,7 @@ const s3 = new S3Client({
 const upload = multer({
   storage: multerS3({
     s3: s3,
-    bucket: "harzo-images-storage", // ✅ FIXED
+    bucket: "harzo-images-storage",
     contentType: multerS3.AUTO_CONTENT_TYPE,
     key: (req, file, cb) => {
       cb(null, Date.now().toString() + "-" + file.originalname);
@@ -31,9 +34,51 @@ const {
   updateProduct
 } = require("../controllers/productController");
 
+
+// ================= CRUD =================
 router.post("/add", upload.array("images", 5), addProduct);
 router.get("/", getProducts);
 router.delete("/:id", deleteProduct);
 router.put("/update/:id", upload.array("images", 5), updateProduct);
+
+
+// ================= 🔍 SEARCH =================
+router.get("/search", async (req, res) => {
+  const q = req.query.q || "";
+  const category = req.query.category || "";
+
+  try {
+    let filter = {
+      name: { $regex: q, $options: "i" }
+    };
+
+    if (category) {
+      filter.category = category;
+    }
+
+    const products = await Product.find(filter)
+      .limit(20)
+      .sort({ createdAt: -1 }); // latest first
+
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+// ================= 🔥 TRENDING =================
+router.get("/trending", async (req, res) => {
+  try {
+    const products = await Product.find()
+      .limit(10)
+      .sort({ createdAt: -1 });
+
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 
 module.exports = router;

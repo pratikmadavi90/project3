@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Inventory</title>
+  <link rel="stylesheet" href="../css/stock.css">
+</head>
+
+<body>
+
+<h2>Inventory / Stock</h2>
+
+<div class="top-bar">
+  <input type="text" id="search" placeholder="Search product">
+  <button onclick="loadProducts()">Search</button>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Stock Status</th>
+      <th>Update Stock</th>
+    </tr>
+  </thead>
+  <tbody id="stockTable"></tbody>
+</table>
+
+<script src="../js/stock.js"></script>
+
+</body>
+</html>

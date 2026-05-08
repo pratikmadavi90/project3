@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Categories</title>
+ <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+
+<h2>Categories</h2>
+
+<!-- Add / Edit -->
+<form id="categoryForm">
+  <input type="hidden" id="editId">
+
+  <input type="text" id="name" placeholder="Category Name" required>
+
+  <!-- Filter Image -->
+  <input type="file" id="image" accept="image/*">
+
+  <!-- Multiple Images -->
+  <input type="file" id="multipleImages" multiple accept="image/*">
+
+  <button type="submit">Save</button>
+</form>
+
+<hr>
+
+<!-- CSV -->
+<input type="file" id="csvFile" accept=".csv">
+<button onclick="uploadCSV()">Upload CSV</button>
+
+<hr>
+
+<!-- List -->
+<div id="categoryList"></div>
+
+<script src="../js/categories.js"></script>
+
+</body>
+</html>
