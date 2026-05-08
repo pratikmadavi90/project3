@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = "https://api.harzo.in";
 
 let currentIndex = 0;
 let sliderInterval = null;
