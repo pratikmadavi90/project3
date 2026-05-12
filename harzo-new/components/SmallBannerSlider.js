@@ -1,5 +1,3 @@
-import { BASE_URL } from "../config";
-
 import { ScrollView, Image, View, TouchableOpacity } from "react-native";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "expo-router";
@@ -10,15 +8,15 @@ export default function SmallBannerSlider() {
   const router = useRouter();
 
   // ✅ FETCH
-useEffect(() => {
-  fetch(BASE_URL + "/api/banners")
-    .then((res) => res.json())
-    .then((data) => {
-      const small = data.filter((b) => b.type === "small");
-      setBanners(small);
-    })
-    .catch((err) => console.log(err));
-}, []);
+  useEffect(() => {
+    fetch("https://api.harzo.in/banners")
+      .then(res => res.json())
+      .then(data => {
+        const small = data.filter(b => b.type === "small");
+        setBanners(small);
+      })
+      .catch(err => console.log(err));
+  }, []);
 
   // 🔥 CLICK HANDLER (NEW)
   const handleBannerClick = (banner) => {

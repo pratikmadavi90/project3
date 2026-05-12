@@ -1,51 +1,92 @@
 // @ts-nocheck
-import { BASE_URL } from "../config";
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
+
+import {
+  useLocalSearchParams,
+  useRouter,
+} from "expo-router";
+
+import { useCart } from "../context/CartContext";
 
 export default function CategoryScreen() {
-
   const router = useRouter();
-  const { category, subCategory, products } = useLocalSearchParams();
 
-  const [selectedSubCategory, setSelectedSubCategory] = useState(subCategory || null);
-  const [apiProducts, setApiProducts] = useState([]); // ✅ NEW
+  const {
+    addToCart,
+    cart,
+    increaseQty,
+    decreaseQty,
+  } = useCart();
+
+  const {
+    category,
+    subCategory,
+    products,
+  } = useLocalSearchParams();
+
+  const [selectedSubCategory, setSelectedSubCategory] =
+    useState(subCategory || null);
+
+  const [apiProducts, setApiProducts] = useState([]);
 
   let parsedProducts = [];
 
   try {
-    parsedProducts = products ? JSON.parse(products) : [];
+    parsedProducts = products
+      ? JSON.parse(products)
+      : [];
   } catch (err) {
     console.log("Parse Error:", err);
   }
 
-  // ✅ NEW: API fallback
+  // API FALLBACK
   useEffect(() => {
-  fetch(BASE_URL + "/api/products")
-    .then((res) => res.json())
-    .then((data) => {
-      setApiProducts(data);
-    })
-    .catch((err) => console.log("API ERROR:", err));
-}, []);
+    fetch("https://api.harzo.in/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        setApiProducts(data);
+      })
+      .catch((err) =>
+        console.log("API ERROR:", err)
+      );
+  }, []);
 
-  // ✅ FINAL PRODUCTS SOURCE
+  // FINAL PRODUCTS
   const finalProducts =
-    parsedProducts.length > 0 ? parsedProducts : apiProducts;
+    parsedProducts.length > 0
+      ? parsedProducts
+      : apiProducts;
 
-  console.log("CATEGORY:", category);
-  console.log("SUB:", subCategory);
-  console.log("PRODUCTS:", finalProducts.length);
+  // GET QTY
+  const getQty = (id) => {
+    const item = cart.find(
+      (p) => p._id === id
+    );
+
+    return item ? item.quantity : 0;
+  };
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>
+        {category}
+      </Text>
 
-      <Text style={styles.title}>{category}</Text>
-
-      <View style={{ flexDirection: "row", flex: 1 }}>
-
-        {/* 🔥 LEFT SIDE CATEGORY */}
+      <View
+        style={{
+          flexDirection: "row",
+          flex: 1,
+        }}
+      >
+        {/* LEFT SIDE CATEGORY */}
         <View style={styles.leftMenu}>
           <FlatList
             data={[
@@ -53,109 +94,270 @@ export default function CategoryScreen() {
                 finalProducts
                   .filter(
                     (p) =>
-                      p.category?.toLowerCase() === category?.toLowerCase()
+                      p.category
+                        ?.toLowerCase()
+                        .trim() ===
+                      category
+                        ?.toLowerCase()
+                        .trim()
                   )
-                  .map((p) => (p.subCategory || p.subcategory)?.toLowerCase())
+                  .map((p) =>
+                    (
+                      p.subCategory ||
+                      p.subcategory
+                    )?.toLowerCase()
+                  )
                   .filter(Boolean)
-              )
+              ),
             ]}
-            keyExtractor={(item, index) => index.toString()}
+            keyExtractor={(item, index) =>
+              index.toString()
+            }
             renderItem={({ item }) => (
               <TouchableOpacity
                 style={styles.categoryItem}
-                onPress={() => {
-                  setSelectedSubCategory(item.toLowerCase());
-                }}
+                onPress={() =>
+                  setSelectedSubCategory(
+                    item.toLowerCase()
+                  )
+                }
               >
-
-                <View style={styles.categoryCircle}>
+                <View
+                  style={styles.categoryCircle}
+                >
                   <Image
                     source={{
                       uri:
                         finalProducts.find(
-                          p =>
-                            (p.subCategory || p.subcategory)?.toLowerCase() === item
-                        )?.images?.thumbnail || "https://via.placeholder.com/100"
+                          (p) =>
+                            (
+                              p.subCategory ||
+                              p.subcategory
+                            )?.toLowerCase() ===
+                            item
+                        )?.images?.thumbnail ||
+                        "https://dummyimage.com/100x100/cccccc/000000",
                     }}
                     style={styles.categoryImage}
                   />
                 </View>
 
-                <Text style={styles.categoryText} numberOfLines={2}>
+                <Text
+                  style={styles.categoryText}
+                  numberOfLines={2}
+                >
                   {item}
                 </Text>
-
               </TouchableOpacity>
             )}
           />
         </View>
 
-        {/* 🔥 RIGHT PRODUCTS */}
+        {/* RIGHT PRODUCTS */}
         <View style={{ flex: 1 }}>
           <FlatList
             data={finalProducts.filter(
               (p) =>
-                p.category?.toLowerCase().trim().includes(category?.toLowerCase().trim()) &&
+                p.category
+                  ?.toLowerCase()
+                  .trim()
+                  .includes(
+                    category
+                      ?.toLowerCase()
+                      .trim()
+                  ) &&
                 (!selectedSubCategory ||
-                  (p.subCategory || p.subcategory)?.toLowerCase() === selectedSubCategory)
+                  (
+                    p.subCategory ||
+                    p.subcategory
+                  )?.toLowerCase() ===
+                    selectedSubCategory)
             )}
             numColumns={2}
-            keyExtractor={(item, index) => item._id || index.toString()}
+            keyExtractor={(
+              item,
+              index
+            ) =>
+              item._id ||
+              index.toString()
+            }
+            renderItem={({ item }) => {
+              const qty = getQty(
+                item._id
+              );
 
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={styles.card}
-                onPress={() =>
-                  router.push({
-                    pathname: "/product-detail",
-                    params: {
-                      item: JSON.stringify(item),
-                      allProducts: JSON.stringify(finalProducts) // ✅ FIXED
-                    }
-                  })
-                }
-              >
+              return (
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  style={styles.card}
+                  onPress={() =>
+                    router.push({
+                      pathname: "/product-detail",
+                      params: {
+                        item: JSON.stringify(
+                          item
+                        ),
+                        allProducts:
+                          JSON.stringify(
+                            finalProducts
+                          ),
+                      },
+                    })
+                  }
+                >
+                  <Image
+                    source={{
+                      uri:
+                        item?.images
+                          ?.thumbnail ||
+                        "https://dummyimage.com/100x100/cccccc/000000",
+                    }}
+                    style={styles.image}
+                  />
 
-                <Image
-                  source={{ uri: item.images?.thumbnail }}
-                  style={styles.image}
-                />
-
-                <Text style={styles.name} numberOfLines={2}>
-                  {item.name}
-                </Text>
-
-                <Text style={styles.weight}>
-                  {item.weight || "N/A"}
-                </Text>
-
-                <Text style={styles.delivery}>
-                  ⚡ 1 Day delivery
-                </Text>
-
-                <View style={styles.priceRow}>
-                  <Text style={styles.price}>
-                    ₹{item.pricing?.sellingPrice}
+                  <Text
+                    style={styles.name}
+                    numberOfLines={2}
+                  >
+                    {item?.name}
                   </Text>
 
-                  {item.pricing?.mrp && (
-                    <Text style={styles.mrp}>
-                      ₹{item.pricing?.mrp}
+                  <Text
+                    style={styles.weight}
+                  >
+                    {item?.weight ||
+                      "N/A"}
+                  </Text>
+
+                  <Text
+                    style={
+                      styles.delivery
+                    }
+                  >
+                    ⚡ 1 Day delivery
+                  </Text>
+
+                  <View
+                    style={
+                      styles.priceRow
+                    }
+                  >
+                    <Text
+                      style={
+                        styles.price
+                      }
+                    >
+                      ₹
+                      {item?.pricing
+                        ?.sellingPrice ||
+                        0}
                     </Text>
+
+                    {item?.pricing
+                      ?.mrp && (
+                      <Text
+                        style={
+                          styles.mrp
+                        }
+                      >
+                        ₹
+                        {
+                          item
+                            ?.pricing
+                            ?.mrp
+                        }
+                      </Text>
+                    )}
+                  </View>
+
+                  {/* ADD / QTY BUTTON */}
+                  {qty === 0 ? (
+                    <TouchableOpacity
+                      activeOpacity={
+                        0.8
+                      }
+                      style={
+                        styles.addBtn
+                      }
+                      onPress={(
+                        e
+                      ) => {
+                        e.stopPropagation();
+
+                        addToCart(
+                          item
+                        );
+                      }}
+                    >
+                      <Text
+                        style={
+                          styles.addText
+                        }
+                      >
+                        ADD
+                      </Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <View
+                      style={
+                        styles.qtyBox
+                      }
+                    >
+                      <TouchableOpacity
+                        onPress={(
+                          e
+                        ) => {
+                          e.stopPropagation();
+
+                          decreaseQty(
+                            item._id
+                          );
+                        }}
+                      >
+                        <Text
+                          style={
+                            styles.qtyBtn
+                          }
+                        >
+                          -
+                        </Text>
+                      </TouchableOpacity>
+
+                      <Text
+                        style={
+                          styles.qtyText
+                        }
+                      >
+                        {qty}
+                      </Text>
+
+                      <TouchableOpacity
+                        onPress={(
+                          e
+                        ) => {
+                          e.stopPropagation();
+
+                          increaseQty(
+                            item._id
+                          );
+                        }}
+                      >
+                        <Text
+                          style={
+                            styles.qtyBtn
+                          }
+                        >
+                          +
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
                   )}
-                </View>
-
-                <TouchableOpacity style={styles.addBtn}>
-                  <Text style={{ color: "#fff" }}>ADD</Text>
                 </TouchableOpacity>
-
-              </TouchableOpacity>
-            )}
+              );
+            }}
           />
         </View>
-
       </View>
-
     </View>
   );
 }
@@ -164,24 +366,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: "#f5f5f5"
+    backgroundColor: "#f5f5f5",
   },
 
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 10
+    marginBottom: 10,
   },
 
   // LEFT MENU
   leftMenu: {
     width: 90,
-    backgroundColor: "#f9f9f9"
+    backgroundColor: "#f9f9f9",
   },
 
   categoryItem: {
     alignItems: "center",
-    marginVertical: 10
+    marginVertical: 10,
   },
 
   categoryCircle: {
@@ -190,22 +392,22 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     backgroundColor: "#f5f5f5",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
 
   categoryImage: {
     width: 50,
     height: 50,
-    resizeMode: "contain"
+    resizeMode: "contain",
   },
 
   categoryText: {
-  fontSize: 13,          
-  fontWeight: "bold",    
-  color: "#000",         
-  textAlign: "center",
-  marginTop: 6
-},
+    fontSize: 13,
+    fontWeight: "bold",
+    color: "#000",
+    textAlign: "center",
+    marginTop: 6,
+  },
 
   // PRODUCT CARD
   card: {
@@ -213,55 +415,85 @@ const styles = StyleSheet.create({
     margin: "1%",
     backgroundColor: "#fff",
     padding: 10,
-    borderRadius: 12
+    borderRadius: 12,
   },
 
   image: {
     width: "100%",
     height: 100,
-    resizeMode: "contain"
+    resizeMode: "contain",
   },
 
   name: {
     fontSize: 14,
-    fontWeight: "600"
+    fontWeight: "600",
   },
 
   weight: {
-  fontSize: 13,
-  fontWeight: "bold",   // 🔥 bold
-  color: "#000",        // dark color
-  marginVertical: 2
-},
+    fontSize: 13,
+    fontWeight: "bold",
+    color: "#000",
+    marginVertical: 2,
+  },
 
   delivery: {
     fontSize: 12,
     color: "green",
-    marginVertical: 2
+    marginVertical: 2,
   },
 
   priceRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 2
+    marginTop: 2,
   },
 
   price: {
     fontSize: 16,
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
 
   mrp: {
     marginLeft: 5,
-    textDecorationLine: "line-through",
-    color: "gray"
+    textDecorationLine:
+      "line-through",
+    color: "gray",
   },
 
   addBtn: {
     marginTop: 6,
     backgroundColor: "green",
-    padding: 6,
+    padding: 8,
     borderRadius: 6,
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
+
+  addText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+
+  qtyBox: {
+    marginTop: 6,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "green",
+    borderRadius: 6,
+    overflow: "hidden",
+  },
+
+  qtyBtn: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "green",
+  },
+
+  qtyText: {
+    fontSize: 15,
+    fontWeight: "bold",
+  },
 });

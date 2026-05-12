@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "44cc88af-e3fa-4b70-8850-34ec045ab2dd"
+      }
+    },
+    "android": {
+      "package": "com.pratik8122002.project"
+    }
+  }
+}

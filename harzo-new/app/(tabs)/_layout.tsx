@@ -1,39 +1,66 @@
-import { Tabs } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import { Tabs } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function Layout() {
   return (
-    <Tabs
-      screenOptions={({ route }) => ({
-        headerShown: false,
-        tabBarActiveTintColor: '#0C8A7B',
-        tabBarInactiveTintColor: 'gray',
-        tabBarIcon: ({ color, size }) => {
-          let iconName: any;
+   <Tabs
+  screenOptions={({ route }) => ({
+    headerShown: false,
+    tabBarActiveTintColor: "#0C8A7B",
+    tabBarInactiveTintColor: "gray",
 
-          if (route.name === 'index') iconName = 'home';
-          else if (route.name === 'Category') iconName = 'grid';
-          else if (route.name === 'cart') iconName = 'cart';
-          else if (route.name === 'search') iconName = 'search';
-          else if (route.name === 'profile') iconName = 'person';
+    tabBarIcon: ({ color, size }) => {
+      let iconName: any;
 
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
-      })}
-    >
-      <Tabs.Screen name="index" options={{ title: 'Home' }} />
-      <Tabs.Screen name="Category" options={{ title: 'Category' }} />
-      <Tabs.Screen name="cart" options={{ title: 'Cart' }} />
-      <Tabs.Screen name="search" options={{ title: 'Search' }} />
-      <Tabs.Screen name="profile" options={{ title: 'Profile' }} />
+      if (route.name === "index") iconName = "home";
+      else if (route.name === "cart") iconName = "cart";
+      else if (route.name === "search") iconName = "search";
+      else if (route.name === "profile") iconName = "person";
 
-      {/* 👇 hidden screen (NO tab button) */}
+      return (
+        <Ionicons
+          name={iconName}
+          size={size}
+          color={color}
+        />
+      );
+    },
+
+    tabBarStyle: {
+      height: 65,
+      paddingBottom: 10,
+      paddingTop: 5,
+    },
+  })}
+> 
+      <Tabs.Screen name="index" options={{ title: "Home" }} />
+    
+
+      {/* 🔥 IMPORTANT: Cart screen connect */}
       <Tabs.Screen
-      name="product-detail"
-      options={{
-       href: null, // 👈 use THIS instead
-      }}
+        name="cart"
+        options={{
+          title: "Cart",
+        }}
       />
-     </Tabs>
-   );
-  }
+
+<Tabs.Screen name="search" options={{ title: "Search" }} />
+<Tabs.Screen name="profile" options={{ title: "Profile" }} />
+
+<Tabs.Screen
+  name="category"
+  options={{
+    href: null,
+  }}
+/>
+
+{/* 👇 hidden screen */}
+<Tabs.Screen
+  name="product-detail"
+  options={{
+    href: null,
+  }}
+/>
+    </Tabs>
+  );
+}

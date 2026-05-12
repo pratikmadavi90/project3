@@ -7,7 +7,7 @@
     "icon": "./assets/images/icon.png",
     "scheme": "harzonew",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    
     "ios": {
       "supportsTablet": true
     },
@@ -18,8 +18,9 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      
+      "predictiveBackGestureEnabled": false,
+      "package": "com.anonymous.harzonew"
     },
     "web": {
       "output": "static",
@@ -43,6 +44,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "202e1a2f-cce6-4579-82ba-1a9da87a85b6"
+      }
     }
   }
 }

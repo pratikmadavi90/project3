@@ -1,44 +1,61 @@
-import { BASE_URL } from "../config";
-
-import { View, StyleSheet, Image, ScrollView, Dimensions, TouchableOpacity } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Image,
+  ScrollView,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "expo-router";
 
 const { width } = Dimensions.get("window");
 
+// ✅ SIDE GAP
+const HORIZONTAL_PADDING = 3;
+
+// ✅ BANNER WIDTH
+const bannerWidth = width - HORIZONTAL_PADDING * 2;
+
+// ✅ GAP
+const SPACING = 12;
+
 export default function BannerSlider() {
   const [banners, setBanners] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(0);
+
   const scrollRef = useRef(null);
   const router = useRouter();
 
-  // ✅ FIX: index persist रहेगा
+  // ✅ CURRENT INDEX
   const currentIndex = useRef(0);
 
-  // ✅ FETCH (ONLY ON LOAD)
-const fetchBanners = async () => {
-  try {
-    const res = await fetch(BASE_URL + "/api/banners");
-    const data = await res.json();
+  // ✅ ONLY SLIDER BANNERS
+  const sliderBanners = banners.filter((b) => b.type === "slider");
 
-      // 🔥 unnecessary re-render avoid
-      setBanners(prev => {
+  // ✅ FETCH BANNERS
+  const fetchBanners = async () => {
+    try {
+      const res = await fetch("https://api.harzo.in/banners")
+      const data = await res.json();
+
+      setBanners((prev) => {
         if (JSON.stringify(prev) !== JSON.stringify(data)) {
           return data;
         }
         return prev;
       });
-
     } catch (err) {
       console.log(err);
     }
   };
 
-  // ✅ LOAD ONCE (NO INTERVAL)
+  // ✅ LOAD ONCE
   useEffect(() => {
     fetchBanners();
   }, []);
 
-  // 🔥 CLICK HANDLER
+  // ✅ CLICK HANDLER
   const handleBannerClick = (banner) => {
     if (!banner) return;
 
@@ -46,74 +63,143 @@ const fetchBanners = async () => {
       router.push({
         pathname: "/category",
         params: {
-          category: banner.redirectValue
-        }
+          category: banner.redirectValue,
+        },
       });
-    } 
-    else if (banner.redirectType === "product") {
+    } else if (banner.redirectType === "product") {
       router.push({
         pathname: "/product-detail",
         params: {
-          id: banner.redirectValue
-        }
+          id: banner.redirectValue,
+        },
       });
     }
   };
 
-  // ✅ AUTO SLIDE (SMOOTH)
+  // ✅ AUTO SLIDE FIX
   useEffect(() => {
-    if (banners.length === 0) return;
+    if (sliderBanners.length === 0) return;
 
     const interval = setInterval(() => {
-      currentIndex.current = (currentIndex.current + 1) % banners.length;
+      let nextIndex = currentIndex.current + 1;
+
+      // ✅ LAST BANNER FIX
+      if (nextIndex >= sliderBanners.length) {
+        nextIndex = 0;
+      }
+
+      currentIndex.current = nextIndex;
+      setActiveIndex(nextIndex);
 
       scrollRef.current?.scrollTo({
-        x: currentIndex.current * width,
+        x: nextIndex * (bannerWidth + SPACING),
         animated: true,
       });
-    }, 1500); // 🔥 smooth speed
+    }, 3000);
 
     return () => clearInterval(interval);
-  }, [banners]);
+  }, [sliderBanners]);
+
+  // ✅ MANUAL SWIPE INDEX
+  const handleScroll = (event) => {
+    const slide =
+      Math.round(
+        event.nativeEvent.contentOffset.x /
+          (bannerWidth + SPACING)
+      );
+
+    currentIndex.current = slide;
+    setActiveIndex(slide);
+  };
 
   return (
-    <View style={styles.banner}>
+    <View style={styles.container}>
       <ScrollView
         ref={scrollRef}
         horizontal
-        pagingEnabled
+        snapToInterval={bannerWidth + SPACING}
+        decelerationRate="fast"
+        snapToAlignment="start"
+        disableIntervalMomentum={true}
         showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContainer}
+        onMomentumScrollEnd={handleScroll}
       >
-        {banners
-          .filter(b => b.type === "slider") // ✅ ONLY SLIDER
-          .map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              activeOpacity={0.9}
-              onPress={() => handleBannerClick(item)}
-            >
-              <Image
-                source={{ uri: item.image }}
-                style={styles.image}
-              />
-            </TouchableOpacity>
-          ))}
+        {sliderBanners.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            activeOpacity={0.95}
+            onPress={() => handleBannerClick(item)}
+            style={styles.bannerWrapper}
+          >
+            <Image
+              source={{ uri: item.image }}
+              style={styles.image}
+            />
+          </TouchableOpacity>
+        ))}
       </ScrollView>
+
+      {/* ✅ DOTS */}
+      <View style={styles.dotsContainer}>
+        {sliderBanners.map((_, index) => (
+          <View
+            key={index}
+            style={[
+              styles.dot,
+              activeIndex === index && styles.activeDot,
+            ]}
+          />
+        ))}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  banner: {
-    marginTop: 10,
-    marginBottom: 10,
-    borderRadius: 12,
-    overflow: "hidden"
+  container: {
+    marginTop: 12,
+    marginBottom: 12,
   },
 
-  image: {
-    width: width,
-    height: 208,
-    resizeMode: "cover"
-  }
+  scrollContainer: {
+    paddingHorizontal: HORIZONTAL_PADDING,
+  },
+
+  // ✅ BIGGER PROFESSIONAL BANNER
+bannerWrapper: {
+  width: bannerWidth,
+  height: bannerWidth * 0.55,
+  borderRadius: 18,
+  overflow: "hidden",
+  marginRight: SPACING,
+  backgroundColor: "#fff",
+  elevation: 4,
+},
+
+image: {
+  width: "100%",
+  height: "100%",
+  resizeMode: "cover",
+},
+
+  // ✅ DOTS
+  dotsContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 10,
+  },
+
+  dot: {
+    width: 7,
+    height: 7,
+    borderRadius: 10,
+    backgroundColor: "#ccc",
+    marginHorizontal: 4,
+  },
+
+  activeDot: {
+    width: 18,
+    backgroundColor: "#16A34A",
+  },
 });

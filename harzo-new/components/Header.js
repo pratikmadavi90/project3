@@ -65,7 +65,8 @@ header: {
 
   location: {
     marginTop: 5,
-    color: "#333",
+    color: "#000",
+    fontWeight: "bold",
   },
 
   searchRow: {
@@ -88,10 +89,10 @@ header: {
   },
 
   subText: {
-  fontSize: 13,
-  color: "#333",
+  fontSize: 14,
+  color: "#000",
   marginTop: 2,
-  fontWeight: "500",
+  fontWeight: "bold",
 },
 
 });

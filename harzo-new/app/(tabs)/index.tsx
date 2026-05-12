@@ -1,7 +1,6 @@
-
-
 // @ts-nocheck
-import { BASE_URL } from "../../config";
+
+
 import Header from "../../components/Header";
 import CategoryList from "../../components/CategoryList";
 import BannerSlider from "../../components/BannerSlider";
@@ -18,17 +17,17 @@ export default function HomeScreen() {
   // ✅ FIRST products state
   const [products, setProducts] = useState([]);
 
- useEffect(() => {
-  fetch(`${BASE_URL}/api/products`)
-    .then(res => res.json())
-    .then(data => {
-      console.log("DATA:", data);
-      setProducts(data);
-    })
-    .catch(err => {
-      console.log("API ERROR:", err);
-    });
-}, []);
+  useEffect(() => {
+    fetch("https://api.harzo.in/api/products")
+      .then(res => res.json())
+      .then(data => {
+        console.log("DATA:", data);
+        setProducts(data);
+      })
+      .catch(err => {
+        console.log("API ERROR:", err);
+      });
+  }, []);
 
   // ✅ HELPER (image nikalne ke liye)
 const getImage = (name) => {
@@ -77,7 +76,7 @@ const getImage = (name) => {
     { name: "Atta", image: getImage("Atta") },
     { name: "Rice", image: getImage("Rice") },
     { name: "Dal", image: getImage("Dal") },
-    { name: "Cooking Oil", image: getImage("Cooking Oil") },
+    { name: "Oil", image: getImage("Oil") },
     { name: "Salt", image: getImage("Salt") },
     { name: "Masala", image: getImage("Masala") }
   ]
@@ -97,7 +96,7 @@ const getImage = (name) => {
       title: "Personal Care",
       data: [
         { name: "Shampoo", image: getImage("Shampoo") },
-        { name: "Bath Soap", image: getImage("Bath Soap") },
+        { name: "Soap", image: getImage("Soap") },
         { name: "Facewash", image: getImage("Facewash") },
         { name: "Cream", image: getImage("Cream") },
         { name: "Toothpaste", image: getImage("Toothpaste") },
@@ -107,12 +106,12 @@ const getImage = (name) => {
     {
       title: "Household",
       data: [
-        { name: "Detergents", image: getImage("Detergents") },
-        { name: "Floor Cleaners", image: getImage("Floor Cleaners") },
+        { name: "Detergent", image: getImage("Detergent") },
+        { name: "Floor Cleaner", image: getImage("Floor Cleaner") },
         { name: "Dishwash", image: getImage("Dishwash") },
         { name: "Phenyl", image: getImage("Phenyl") },
-        { name: "Glass Cleaners", image: getImage("Glass Cleaners") },
-        { name: "Toilet Cleaners", image: getImage("Toilet Cleaners") }
+        { name: "Glass Cleaner", image: getImage("Glass Cleaner") },
+        { name: "Toilet Cleaner", image: getImage("Toilet Cleaner") }
       ]
     }
   ];
