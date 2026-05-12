@@ -77,9 +77,9 @@ async function verifyOTP() {
 localStorage.setItem("isAdminLoggedIn", "true");
 
 
-            setTimeout(() => {
-                window.location.href = "/admin/pages/dashboard.html";
-            }, 500);
+           setTimeout(() => {
+    window.location.href = "dashboard.html";
+}, 500);
 
         } else {
             showMessage(data.message || "Invalid OTP", "error");
