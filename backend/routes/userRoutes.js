@@ -46,7 +46,7 @@ router.put("/update", async (req, res) => {
     const user = await User.findOneAndUpdate(
       { email },
       { name, phone, address, city, pincode }, // ✅ ADD
-      { new: true }
+      { new: true, upsert: true }
     );
 
     res.json({
