@@ -24,6 +24,7 @@ const app = express(); // ✅ PEHLE APP BANAA
 
 app.use(cors({
   origin: [
+    "http://localhost:8081",
     "https://admin.harzo.in",
     "https://harzo.in"
   ],

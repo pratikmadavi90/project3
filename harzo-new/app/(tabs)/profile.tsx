@@ -46,10 +46,14 @@ export default function Profile() {
       }
 
       // ✅ login hai → fetch data
-      fetch(`${API}`)
-        .then((res) => res.json())
-        .then((data) => setUser(data[0]))
-        .catch(() => Alert.alert("Error", "Data load nahi hua"));
+  fetch(`${API}`)
+  .then((res) => res.json())
+  .then((data) => {
+    if (data.user) {
+      setUser(data.user);
+    }
+  })
+  .catch(() => Alert.alert("Error", "Data load nahi hua"));
     };
 
     loadData();
@@ -72,6 +76,8 @@ export default function Profile() {
       const data = await res.json();
 
       console.log("UPDATE RESPONSE:", data);
+      
+    await AsyncStorage.setItem("user", JSON.stringify(data.user));
 
       Alert.alert("Success", "Profile updated");
 
