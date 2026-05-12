@@ -19,7 +19,19 @@ const notificationRoutes = require("./routes/notificationRoutes");
 
 
 
+
 const app = express(); // ✅ PEHLE APP BANAA
+
+app.use(cors({
+  origin: [
+    "https://admin.harzo.in",
+    "https://harzo.in"
+  ],
+  credentials: true
+}));
+
+app.use(express.json());
+
 
 // ✅ FIR USE KAR
 app.use("/admin", express.static(path.join(__dirname, "../admin")));
