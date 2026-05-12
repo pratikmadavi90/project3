@@ -33,3 +33,42 @@ exports.deleteUser = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+// UPDATE USER PROFILE
+exports.updateUser = async (req, res) => {
+  try {
+    const {
+      name,
+      phone,
+      email,
+      address,
+      city,
+      pincode
+    } = req.body;
+
+    const user = await User.findOneAndUpdate(
+      { email },
+      {
+        name,
+        phone,
+        email,
+        address,
+        city,
+        pincode
+      },
+      { new: true, upsert: true }
+    );
+
+    res.json({
+      success: true,
+      message: "User updated",
+      user
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: err.message
+    });
+  }
+};
