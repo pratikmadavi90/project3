@@ -199,9 +199,13 @@ async function viewOrder(id) {
             ${weight ? `(${weight})` : ""}
           </div>
 
-          <div class="item-qty">
-            Qty: ${qty}
-          </div>
+        <div class="item-qty">
+  Qty: ${qty}
+</div>
+
+<div class="item-weight">
+  ${weight}
+</div>  
 
         </div>
 
