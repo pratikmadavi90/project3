@@ -78,6 +78,7 @@ async function getOrders() {
 
 // 🔄 UPDATE STATUS
 async function updateStatus(id, status) {
+
   await fetch(`${API}/${id}/status`, {
     method: "PUT",
 
@@ -160,11 +161,29 @@ async function viewOrder(id) {
       item.qty ||
       1;
 
+    // ✅ PRICE FIX
     const price =
-      item.price || 0;
+      item.price ||
+      item.pricing?.mrp ||
+      item.pricing?.salePrice ||
+      item.pricing?.price ||
+      0;
 
+    // ✅ IMAGE FIX
     const image =
       item.image ||
+      item.thumbnail ||
+      item.images?.thumbnail ||
+      item.images?.[0]?.url ||
+      item.images?.[0]?.thumbnail ||
+      "https://via.placeholder.com/100";
+
+    // ✅ WEIGHT FIX
+    const weight =
+      item.weight ||
+      item.size ||
+      item.unit ||
+      item.quantityText ||
       "";
 
     itemsHTML += `
@@ -175,7 +194,8 @@ async function viewOrder(id) {
         <div class="item-info">
 
           <div class="item-name">
-            ${item.name || "-"}
+            ${item.name || "-"} 
+            ${weight ? `(${weight})` : ""}
           </div>
 
           <div class="item-qty">
@@ -185,7 +205,7 @@ async function viewOrder(id) {
         </div>
 
         <div class="item-price">
-          ₹${price * qty}
+          ₹${price}
         </div>
 
       </div>
