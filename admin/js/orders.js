@@ -179,12 +179,13 @@ async function viewOrder(id) {
       "https://via.placeholder.com/100";
 
     // ✅ WEIGHT FIX
-    const weight =
-      item.weight ||
-      item.size ||
-      item.unit ||
-      item.quantityText ||
-      "";
+   const weight =
+  item.weight ||
+  item.size ||
+  item.unit ||
+  item.quantityText ||
+  item.name?.match(/\d+\s?(kg|g|L|ml)/i)?.[0] ||
+  "";
 
     itemsHTML += `
       <div class="item-row">
