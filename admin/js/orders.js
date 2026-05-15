@@ -12,11 +12,11 @@ async function getOrders() {
     const row = document.createElement("tr");
 
     row.innerHTML = `
-      <td>${order.orderId}</td>
-      <td>${order.user?.name || "-"}</td>
-      <td>${order.user?.phone || "-"}</td>
-      <td>${order.address?.fullAddress || "-"}</td>
-      <td>₹${order.totalAmount}</td>
+    <td>${order.orderId}</td>
+    <td>${order.customerName || "-"}</td>
+    <td>${order.phone || "-"}</td>
+    <td>${order.address || "-"}</td>
+    <td>₹${order.finalAmount || 0}</td>
 
       <td>
         <select onchange="updateStatus('${order._id}', this.value)">
@@ -80,26 +80,27 @@ async function viewOrder(id) {
 
   let itemsHTML = "";
 
-  (order.items || []).forEach(item => {
-  itemsHTML += `
-  <div class="item-row">
+    (order.items || []).forEach(item => {
+    itemsHTML += `
+    <div class="item-row">
     <img src="${item.image}" class="item-img"/>
 
     <div class="item-info">
-      <div class="item-name">${item.name}</div>
-      <div class="item-qty">Qty: ${item.qty}</div>
+    <div class="item-name">${item.name}</div>
+    <div class="item-qty">Qty: ${item.quantity}</div> 
     </div>
 
-    <div class="item-price">₹${item.price * item.qty}</div>
+  <div class="item-price">₹${item.price * item.quantity}</div> 
   </div>
-`;
+  `;
   });
 
  document.getElementById("orderDetails").innerHTML = `
   <div class="bill-header">
-    <h3>Order ID: ${order.orderId}</h3>
-    <p>${order.user?.name || "-"} | ${order.user?.phone || "-"}</p>
-<p>${order.address?.fullAddress || "-"}</p>
+  <h3>Order ID: ${order.orderId}</h3>
+
+   <p>${order.customerName || "-"} | ${order.phone || "-"}</p>
+   <p>${order.address || "-"}</p> 
   </div>
 
   <hr>
@@ -111,19 +112,19 @@ async function viewOrder(id) {
   <hr>
 
   <div class="bill-summary">
-    <div>Items Total</div>
-    <div>₹${order.totalAmount}</div>
+  <div>Items Total</div>
+  <div>₹${order.finalAmount || 0}</div> 
   </div>
 
   <div class="bill-summary total-final">
-    <div>To Pay</div>
-    <div>₹${order.totalAmount}</div>
+  <div>To Pay</div>
+  <div>₹${order.finalAmount || 0}</div> 
   </div>
 
   <div class="bill-status">
     Status: <b>${order.status}</b>
   </div>
-`;
+  `;
 
   document.getElementById("orderPopup").style.display = "block";
 }
