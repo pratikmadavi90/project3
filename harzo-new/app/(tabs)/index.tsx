@@ -7,7 +7,15 @@ import BannerSlider from "../../components/BannerSlider";
 import ProductRow from "../../components/ProductRow";
 import SmallBannerSlider from "../../components/SmallBannerSlider";
 
-import { ScrollView, View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  ScrollView,
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  RefreshControl,
+} from "react-native";
 import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 
@@ -16,18 +24,42 @@ export default function HomeScreen() {
 
   // ✅ FIRST products state
   const [products, setProducts] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    fetch("https://api.harzo.in/api/products")
-      .then(res => res.json())
-      .then(data => {
-        console.log("DATA:", data);
-        setProducts(data);
-      })
-      .catch(err => {
-        console.log("API ERROR:", err);
-      });
-  }, []);
+ const fetchProducts = () => {
+
+  fetch("https://api.harzo.in/api/products")
+    .then(res => res.json())
+    .then(data => {
+
+      console.log("DATA:", data);
+
+      setProducts(data);
+
+      setRefreshing(false);
+
+    })
+    .catch(err => {
+
+      console.log("API ERROR:", err);
+
+      setRefreshing(false);
+
+    });
+};
+
+useEffect(() => {
+
+  fetchProducts();
+
+}, []);
+
+const onRefresh = () => {
+
+  setRefreshing(true);
+
+  fetchProducts();
+};
 
   // ✅ HELPER (image nikalne ke liye)
 const getImage = (name) => {
@@ -117,7 +149,15 @@ const getImage = (name) => {
   ];
 
   return (
-    <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
+  <ScrollView
+  contentContainerStyle={{ paddingBottom: 100 }}
+  refreshControl={
+    <RefreshControl
+      refreshing={refreshing}
+      onRefresh={onRefresh}
+    />
+  }
+>  
       <Header />
       <CategoryList />
       <BannerSlider />

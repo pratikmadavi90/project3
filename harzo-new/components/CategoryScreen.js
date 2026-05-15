@@ -1,5 +1,11 @@
 // @ts-nocheck
-import React, { useEffect, useState } from "react";
+
+import React, {
+  useEffect,
+  useState,
+  useMemo,
+} from "react";
+
 import {
   View,
   Text,
@@ -7,6 +13,7 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 
 import {
@@ -33,10 +40,19 @@ export default function CategoryScreen() {
   } = useLocalSearchParams();
 
   const [selectedSubCategory, setSelectedSubCategory] =
-    useState(subCategory || null);
+    useState(
+      subCategory
+        ? subCategory.toLowerCase()
+        : null
+    );
 
-  const [apiProducts, setApiProducts] = useState([]);
+  const [apiProducts, setApiProducts] =
+    useState([]);
 
+  const [loading, setLoading] =
+    useState(true);
+
+  // PARSE PRODUCTS
   let parsedProducts = [];
 
   try {
@@ -47,7 +63,7 @@ export default function CategoryScreen() {
     console.log("Parse Error:", err);
   }
 
-  // API FALLBACK
+  // API FETCH
   useEffect(() => {
     fetch("https://api.harzo.in/api/products")
       .then((res) => res.json())
@@ -56,8 +72,20 @@ export default function CategoryScreen() {
       })
       .catch((err) =>
         console.log("API ERROR:", err)
-      );
+      )
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
+
+  // CATEGORY CHANGE FIX
+  useEffect(() => {
+    setSelectedSubCategory(
+      subCategory
+        ? subCategory.toLowerCase()
+        : null
+    );
+  }, [subCategory]);
 
   // FINAL PRODUCTS
   const finalProducts =
@@ -65,14 +93,94 @@ export default function CategoryScreen() {
       ? parsedProducts
       : apiProducts;
 
+  // LEFT MENU CATEGORIES
+  const subCategories = useMemo(() => {
+    return [
+      ...new Set(
+        finalProducts
+          .filter(
+            (p) =>
+              p.category
+                ?.toLowerCase()
+                .trim() ===
+              category
+                ?.toLowerCase()
+                .trim()
+          )
+          .map((p) =>
+            (
+              p.subCategory ||
+              p.subcategory
+            )?.toLowerCase()
+          )
+          .filter(Boolean)
+      ),
+    ];
+  }, [finalProducts, category]);
+
+  // FILTERED PRODUCTS
+  const filteredProducts =
+    useMemo(() => {
+      return finalProducts.filter(
+        (p) =>
+          p.category
+            ?.toLowerCase()
+            .trim() ===
+            category
+              ?.toLowerCase()
+              .trim() &&
+          (!selectedSubCategory ||
+            (
+              p.subCategory ||
+              p.subcategory
+            )?.toLowerCase() ===
+              selectedSubCategory)
+      );
+    }, [
+      finalProducts,
+      category,
+      selectedSubCategory,
+    ]);
+
   // GET QTY
   const getQty = (id) => {
     const item = cart.find(
       (p) => p._id === id
     );
 
-    return item ? item.quantity : 0;
+    return item
+      ? item.quantity
+      : 0;
   };
+
+  // LOADING SCREEN
+  if (loading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#fff",
+        }}
+      >
+        <ActivityIndicator
+          size="large"
+          color="green"
+        />
+
+        <Text
+          style={{
+            marginTop: 10,
+            fontSize: 16,
+            fontWeight: "600",
+          }}
+        >
+          Loading Products...
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -89,41 +197,39 @@ export default function CategoryScreen() {
         {/* LEFT SIDE CATEGORY */}
         <View style={styles.leftMenu}>
           <FlatList
-            data={[
-              ...new Set(
-                finalProducts
-                  .filter(
-                    (p) =>
-                      p.category
-                        ?.toLowerCase()
-                        .trim() ===
-                      category
-                        ?.toLowerCase()
-                        .trim()
-                  )
-                  .map((p) =>
-                    (
-                      p.subCategory ||
-                      p.subcategory
-                    )?.toLowerCase()
-                  )
-                  .filter(Boolean)
-              ),
-            ]}
-            keyExtractor={(item, index) =>
+            showsVerticalScrollIndicator={
+              false
+            }
+            data={subCategories}
+            keyExtractor={(
+              item,
+              index
+            ) =>
+              item +
               index.toString()
             }
             renderItem={({ item }) => (
               <TouchableOpacity
-                style={styles.categoryItem}
+                activeOpacity={0.8}
+                style={[
+                  styles.categoryItem,
+                  selectedSubCategory ===
+                    item && {
+                    backgroundColor:
+                      "#e8f5e9",
+                    borderRadius: 10,
+                  },
+                ]}
                 onPress={() =>
                   setSelectedSubCategory(
-                    item.toLowerCase()
+                    item
                   )
                 }
               >
                 <View
-                  style={styles.categoryCircle}
+                  style={
+                    styles.categoryCircle
+                  }
                 >
                   <Image
                     source={{
@@ -135,15 +241,20 @@ export default function CategoryScreen() {
                               p.subcategory
                             )?.toLowerCase() ===
                             item
-                        )?.images?.thumbnail ||
+                        )?.images
+                          ?.thumbnail ||
                         "https://dummyimage.com/100x100/cccccc/000000",
                     }}
-                    style={styles.categoryImage}
+                    style={
+                      styles.categoryImage
+                    }
                   />
                 </View>
 
                 <Text
-                  style={styles.categoryText}
+                  style={
+                    styles.categoryText
+                  }
                   numberOfLines={2}
                 >
                   {item}
@@ -156,35 +267,40 @@ export default function CategoryScreen() {
         {/* RIGHT PRODUCTS */}
         <View style={{ flex: 1 }}>
           <FlatList
-            data={finalProducts.filter(
-              (p) =>
-                p.category
-                  ?.toLowerCase()
-                  .trim()
-                  .includes(
-                    category
-                      ?.toLowerCase()
-                      .trim()
-                  ) &&
-                (!selectedSubCategory ||
-                  (
-                    p.subCategory ||
-                    p.subcategory
-                  )?.toLowerCase() ===
-                    selectedSubCategory)
-            )}
+            showsVerticalScrollIndicator={
+              false
+            }
+            data={filteredProducts}
             numColumns={2}
+            key={`products-${selectedSubCategory}`}
+            ListEmptyComponent={() => (
+              <View
+                style={{
+                  marginTop: 100,
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: "bold",
+                    color: "gray",
+                  }}
+                >
+                  No Products Found
+                </Text>
+              </View>
+            )}
             keyExtractor={(
               item,
               index
             ) =>
-              item._id ||
+              item?._id ||
               index.toString()
             }
             renderItem={({ item }) => {
-              const qty = getQty(
-                item._id
-              );
+              const qty =
+                getQty(item._id);
 
               return (
                 <TouchableOpacity
@@ -192,7 +308,8 @@ export default function CategoryScreen() {
                   style={styles.card}
                   onPress={() =>
                     router.push({
-                      pathname: "/product-detail",
+                      pathname:
+                        "/product-detail",
                       params: {
                         item: JSON.stringify(
                           item
@@ -212,7 +329,9 @@ export default function CategoryScreen() {
                           ?.thumbnail ||
                         "https://dummyimage.com/100x100/cccccc/000000",
                     }}
-                    style={styles.image}
+                    style={
+                      styles.image
+                    }
                   />
 
                   <Text
@@ -223,7 +342,9 @@ export default function CategoryScreen() {
                   </Text>
 
                   <Text
-                    style={styles.weight}
+                    style={
+                      styles.weight
+                    }
                   >
                     {item?.weight ||
                       "N/A"}
@@ -270,7 +391,7 @@ export default function CategoryScreen() {
                     )}
                   </View>
 
-                  {/* ADD / QTY BUTTON */}
+                  {/* ADD BUTTON */}
                   {qty === 0 ? (
                     <TouchableOpacity
                       activeOpacity={
@@ -384,6 +505,7 @@ const styles = StyleSheet.create({
   categoryItem: {
     alignItems: "center",
     marginVertical: 10,
+    paddingVertical: 5,
   },
 
   categoryCircle: {
@@ -476,7 +598,8 @@ const styles = StyleSheet.create({
   qtyBox: {
     marginTop: 6,
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent:
+      "space-between",
     alignItems: "center",
     borderWidth: 1,
     borderColor: "green",

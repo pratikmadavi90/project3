@@ -14,15 +14,17 @@ const orderSchema = new mongoose.Schema({
     pincode: String,
   },
 
-  items: [
-    {
-      productId: String,
-      name: String,
-      image: String,
-      qty: Number,
-      price: Number,
-    }
-  ],
+items: [
+  {
+    productId: String,
+    name: String,
+    image: String,
+    qty: Number,
+    price: Number,
+
+    weight: String
+  }
+],
 
   totalAmount: Number,
   finalAmount: Number, 

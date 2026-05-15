@@ -27,37 +27,29 @@ export default function Profile() {
     pincode: "",
   });
 
-  // 📥 Load user data (UPDATED 🔥)
-  useEffect(() => {
-    const loadData = async () => {
-      const token = await AsyncStorage.getItem("token");
+ // 📥 Load user data
+useEffect(() => {
+  const loadData = async () => {
+    try {
+     
 
-      // ❌ login nahi hai → data clear
-      if (!token) {
-        setUser({
-          name: "",
-          phone: "",
-          email: "",
-          address: "",
-          city: "",
-          pincode: "",
-        });
-        return;
+      // ✅ pehle local storage check karo
+      const savedUser = await AsyncStorage.getItem("user");
+
+      if (savedUser) {
+        setUser(JSON.parse(savedUser));
       }
 
-      // ✅ login hai → fetch data
-  fetch(`${API}`)
-  .then((res) => res.json())
-  .then((data) => {
-    if (data.user) {
-      setUser(data.user);
+    } catch (err) {
+      console.log(err);
+      Alert.alert("Error", "Data load nahi hua");
     }
-  })
-  .catch(() => Alert.alert("Error", "Data load nahi hua"));
-    };
+  };
 
-    loadData();
-  }, []);
+  loadData();
+}, []);
+
+ 
 
   // 💾 Update
   const updateProfile = async () => {
@@ -76,8 +68,14 @@ export default function Profile() {
       const data = await res.json();
 
       console.log("UPDATE RESPONSE:", data);
+
+      console.log("USER DATA SEND:", user);
+console.log("STATUS:", res.status);
       
-    await AsyncStorage.setItem("user", JSON.stringify(data.user));
+    await AsyncStorage.setItem(
+  "user",
+  JSON.stringify(user)
+);
 
       Alert.alert("Success", "Profile updated");
 
@@ -88,41 +86,25 @@ export default function Profile() {
   };
 
   // 🔥 LOGOUT FUNCTION (FINAL FIXED)
-  const handleLogout = () => {
-    console.log("Logout pressed");
-
-    if (typeof window !== "undefined") {
-      const confirmLogout = window.confirm("Are you sure you want to logout?");
-      
-      if (confirmLogout) {
-        AsyncStorage.removeItem("token");
-        AsyncStorage.removeItem("user");
-
-        // 🔥 UI clear
-        setUser({
-          name: "",
-          phone: "",
-          email: "",
-          address: "",
-          city: "",
-          pincode: "",
-        });
-
-        router.replace("/");
-      }
-    } else {
-      Alert.alert(
-        "Logout",
-        "Are you sure?",
-        [
-          { text: "Cancel", style: "cancel" },
-          {
-            text: "Logout",
-            onPress: async () => {
+  const handleLogout = async () => {
+  try {
+    Alert.alert(
+      "Logout",
+      "Are you sure you want to logout?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Logout",
+          onPress: async () => {
+            try {
+              // CLEAR STORAGE
               await AsyncStorage.removeItem("token");
               await AsyncStorage.removeItem("user");
 
-              // 🔥 UI clear
+              // CLEAR UI
               setUser({
                 name: "",
                 phone: "",
@@ -132,19 +114,32 @@ export default function Profile() {
                 pincode: "",
               });
 
-              router.replace("/");
-            },
+              // GO HOME
+              router.replace("/(tabs)");
+
+            } catch (error) {
+              console.log(
+                "Logout Error:",
+                error
+              );
+            }
           },
-        ]
-      );
-    }
-  };
+        },
+      ]
+    );
+  } catch (err) {
+    console.log(err);
+  }
+};
+ 
 
   return (
-    <ScrollView 
+     <ScrollView
       style={styles.container}
+      contentContainerStyle={{ paddingBottom: 120 }}
       keyboardShouldPersistTaps="handled"
-    >
+      >
+        
       <Text style={styles.heading}>👤 Profile</Text>
 
       {/* Inputs */}
@@ -200,9 +195,12 @@ export default function Profile() {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Account</Text>
 
-        <TouchableOpacity style={styles.option}>
-          <Text style={styles.optionText}>📦 My Orders</Text>
-        </TouchableOpacity>
+      <TouchableOpacity
+  style={styles.option}
+  onPress={() => router.push("/orders")}
+>
+  <Text style={styles.optionText}>📦 My Orders</Text>
+</TouchableOpacity>
 
         <TouchableOpacity style={styles.option}>
           <Text style={styles.optionText}>❤️ Wishlist</Text>
