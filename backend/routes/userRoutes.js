@@ -9,6 +9,7 @@ router.get("/", userController.getUsers);
 
 // ================= ADD USER =================
 router.post("/", async (req, res) => {
+
   try {
 
     const existingUser =
@@ -17,25 +18,38 @@ router.post("/", async (req, res) => {
       });
 
     if (existingUser) {
+
       return res.json({
         message: "User already exists",
       });
     }
 
-    // ✅ ADDRESS VALIDATION
+    // ✅ SIMPLE ADDRESS VALIDATION
     if (
-  !req.body.address ||
-  req.body.address.trim().length < 8
-) {
-  return res.status(400).json({
-    message:
-      "Please enter full address",
-  });
-}
+      !req.body.address ||
+      req.body.address.trim().length < 8
+    ) {
+
+      return res.status(400).json({
+        message:
+          "Please enter full address",
+      });
+    }
+
+    // ✅ EMAIL CHECK
+    if (!req.body.email) {
+
+      return res.status(400).json({
+        message: "Email required",
+      });
+    }
 
     const user = new User({
+
       name: req.body.name,
+
       email: req.body.email,
+
       phone: req.body.phone,
 
       // ✅ ADDRESS
@@ -56,6 +70,8 @@ router.post("/", async (req, res) => {
 
   } catch (err) {
 
+    console.log("ADD USER ERROR:", err);
+
     res.status(500).json({
       error: err.message,
     });
@@ -75,17 +91,27 @@ router.put("/update", async (req, res) => {
       pincode,
     } = req.body;
 
-    // ✅ ADDRESS VALIDATION
-    if (
-      !address ||
-      !address.includes(",")
-    ) {
+    // ✅ EMAIL CHECK
+    if (!email) {
+
       return res.status(400).json({
-        message:
-          "Use format: Village Name, Landmark",
+        message: "Email required",
       });
     }
 
+    // ✅ SIMPLE ADDRESS VALIDATION
+    if (
+      !address ||
+      address.trim().length < 8
+    ) {
+
+      return res.status(400).json({
+        message:
+          "Please enter full address",
+      });
+    }
+
+    // ✅ CREATE OR UPDATE USER
     const user =
       await User.findOneAndUpdate(
 
@@ -93,6 +119,7 @@ router.put("/update", async (req, res) => {
 
         {
           name,
+          email,
           phone,
 
           // ✅ ADDRESS
@@ -116,6 +143,11 @@ router.put("/update", async (req, res) => {
     });
 
   } catch (err) {
+
+    console.log(
+      "UPDATE PROFILE ERROR:",
+      err
+    );
 
     res.status(500).json({
       error: err.message,
