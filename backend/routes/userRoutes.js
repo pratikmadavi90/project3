@@ -24,14 +24,14 @@ router.post("/", async (req, res) => {
 
     // ✅ ADDRESS VALIDATION
     if (
-      !req.body.address ||
-      !req.body.address.includes(",")
-    ) {
-      return res.status(400).json({
-        message:
-          "Use format: Village Name, Landmark",
-      });
-    }
+  !req.body.address ||
+  req.body.address.trim().length < 8
+) {
+  return res.status(400).json({
+    message:
+      "Please enter full address",
+  });
+}
 
     const user = new User({
       name: req.body.name,
