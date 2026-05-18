@@ -1,9 +1,12 @@
 const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema({
+
   orderId: String,
 
-userEmail: String,
+  userId: String,
+
+  userEmail: String,
 
   user: {
     name: String,
