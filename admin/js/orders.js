@@ -35,6 +35,8 @@ async function getOrders() {
     row.innerHTML = `
       <td>${order.orderId || "-"}</td>
 
+      <td>${order.userId || "-"}</td>
+
       <td>${customerName}</td>
 
       <td>${phone}</td>
