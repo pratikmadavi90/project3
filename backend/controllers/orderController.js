@@ -17,19 +17,22 @@ exports.createOrder = async (req, res) => {
       finalAmount = applyOffer(cartTotal, offer);
     }
 
-// user ko phone ya email se dhundo
+// asli user ko email se pakdo
 const user = await User.findOne({
-  $or: [
-    { phone: req.body?.user?.phone },
-    { email: req.body?.userEmail }
-  ]
+  email: req.body.userEmail
 });
+
+if (!user) {
+  return res.status(404).json({
+    message: "User not found"
+  });
+}
 
 const order = new Order({
   ...req.body,
 
-  // hamesha original user ID use karo
-  userId: user?.userId || req.body?.userId || "",
+  // database ki original userId hi save hogi
+  userId: user.userId,
 
   finalAmount,
   orderId: "ORD" + Date.now()
