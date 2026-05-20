@@ -17,15 +17,19 @@ exports.createOrder = async (req, res) => {
       finalAmount = applyOffer(cartTotal, offer);
     }
 
-  const user = await User.findOne({
-  phone: req.body?.user?.phone
+// user ko phone ya email se dhundo
+const user = await User.findOne({
+  $or: [
+    { phone: req.body?.user?.phone },
+    { email: req.body?.userEmail }
+  ]
 });
 
 const order = new Order({
   ...req.body,
 
-  // original user ID force
-  userId: user?.userId || req.body.userId,
+  // hamesha original user ID use karo
+  userId: user?.userId || req.body?.userId || "",
 
   finalAmount,
   orderId: "ORD" + Date.now()
