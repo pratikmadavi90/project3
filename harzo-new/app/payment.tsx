@@ -32,21 +32,96 @@ export default function Payment() {
     clearCart,
   } = useCart();
 
-  // ✅ CALCULATIONS
+  
 
-  const deliveryCharge =
-    total > 499 ? 0 : 40;
+// ✅ CALCULATIONS
 
-  const gst = Math.floor(total * 0.05);
+// Distance (abhi fixed 10km)
+const distance = 10;
 
-  const discount =
-    total > 999 ? 100 : 0;
+// Total cart kg calculate
+let totalKg = 0;
 
-  const finalTotal =
-    total +
-    deliveryCharge +
-    gst -
-    discount;
+cart.forEach((item) => {
+
+  let kg = parseFloat(
+    item.weight ||
+    item.size ||
+    item.unit ||
+    "1"
+  );
+
+  let qty =
+    item.quantity ||
+    item.qty ||
+    1;
+
+  totalKg += kg * qty;
+
+});
+
+// Delivery charge
+let deliveryCharge = 0;
+
+// Heavy charge
+let heavyCharge = 0;
+
+// Discount
+let discount = 0;
+
+// FREE DELIVERY
+if (total >= 999) {
+
+  deliveryCharge = 0;
+
+} else {
+
+  // Distance charge
+  if (distance <= 3) {
+
+    deliveryCharge = 20;
+
+  } else if (distance <= 6) {
+
+    deliveryCharge = 30;
+
+  } else {
+
+    deliveryCharge = 40;
+  }
+
+}
+
+// Heavy weight charge
+
+heavyCharge = 0;
+
+if (totalKg > 10) {
+
+  heavyCharge =
+  Math.ceil(
+    (totalKg - 10) / 10
+  ) * 20;
+
+}
+
+
+
+
+
+// Discount
+if (total >= 1500) {
+
+  discount = 100;
+
+}
+
+// Final total
+const finalTotal =
+total +
+deliveryCharge +
+heavyCharge -
+discount;
 
   // ✅ PLACE ORDER
 
@@ -72,9 +147,48 @@ console.log(
 );
 
 
+// ✅ PERMANENT USER ID
+
+let permanentUserId =
+  user?.userId;
+
+// ✅ AGAR USER ID NAHI HAI TO BANADO
+if (!permanentUserId) {
+
+  permanentUserId =
+    "HZUSER" +
+    Math.floor(
+      100000 + Math.random() * 900000
+    );
+
+  // ✅ SAVE IN USER
+  const updatedUser = {
+    ...user,
+    userId: permanentUserId,
+  };
+
+  await AsyncStorage.setItem(
+    "user",
+    JSON.stringify(updatedUser)
+  );
+}
+
+// ✅ EVERY ORDER DIFFERENT
+const uniqueOrderId =
+  "ORD" + Date.now();
+
 const orderData = {
 
-  id: Date.now(),
+  id: uniqueOrderId,
+
+  // ✅ ORDER ID
+  orderId: uniqueOrderId,
+
+  // ✅ SAME USER ID EVERY TIME
+  userId: permanentUserId,
+
+  userEmail:
+    user?.email || "",
 
   // ✅ MATCH MONGODB SCHEMA
   user: {
@@ -282,17 +396,33 @@ items: cart.map((item) => ({
 
         </View>
 
-        <View style={styles.row}>
+<View style={styles.row}>
 
-          <Text style={styles.label}>
-            GST
-          </Text>
+<Text style={styles.label}>
+Weight
+</Text>
 
-          <Text style={styles.value}>
-            ₹{gst}
-          </Text>
+<Text style={styles.value}>
+{totalKg.toFixed(1)} kg
+</Text>
 
-        </View>
+</View>
+
+<View style={styles.row}>
+
+<Text style={styles.label}>
+Heavy Charge
+</Text>
+
+<Text style={styles.value}>
+{heavyCharge === 0
+ ? "₹0"
+ : `₹${heavyCharge}`}
+</Text>
+
+</View>
+
+        
 
         <View style={styles.row}>
 
@@ -508,68 +638,69 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f5f5f5",
-    padding: 16,
+    paddingHorizontal: 14,
+    paddingTop: 50,
   },
 
   title: {
-    fontSize: 30,
+    fontSize: 22,
     fontWeight: "bold",
-    marginBottom: 22,
+    marginBottom: 16,
     color: "#111",
   },
 
   addressBox: {
     backgroundColor: "#fff",
-    padding: 18,
-    borderRadius: 22,
-    marginBottom: 20,
+    padding: 14,
+    borderRadius: 16,
+    marginBottom: 14,
 
     shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 6,
+    shadowOpacity: 0.04,
+    shadowRadius: 4,
 
-    elevation: 3,
+    elevation: 2,
   },
 
   addressText: {
-    marginTop: 8,
+    marginTop: 6,
     color: "#666",
-    fontSize: 15,
+    fontSize: 13,
   },
 
   card: {
     backgroundColor: "#fff",
-    borderRadius: 22,
-    padding: 20,
-    marginBottom: 22,
+    borderRadius: 16,
+    padding: 15,
+    marginBottom: 16,
 
     shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 6,
+    shadowOpacity: 0.04,
+    shadowRadius: 4,
 
-    elevation: 3,
+    elevation: 2,
   },
 
   sectionTitle: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: "bold",
-    marginBottom: 18,
+    marginBottom: 14,
     color: "#111",
   },
 
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 14,
+    marginBottom: 10,
   },
 
   label: {
-    fontSize: 15,
+    fontSize: 14,
     color: "#555",
   },
 
   value: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: "600",
     color: "#111",
   },
@@ -577,17 +708,17 @@ const styles = StyleSheet.create({
   divider: {
     height: 1,
     backgroundColor: "#eee",
-    marginVertical: 12,
+    marginVertical: 10,
   },
 
   totalText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
     color: "#111",
   },
 
   totalPrice: {
-    fontSize: 26,
+    fontSize: 22,
     fontWeight: "bold",
     color: "#111",
   },
@@ -598,66 +729,66 @@ const styles = StyleSheet.create({
 
     alignItems: "center",
 
-    padding: 18,
+    padding: 14,
 
-    borderRadius: 22,
+    borderRadius: 16,
 
-    marginBottom: 18,
+    marginBottom: 14,
 
     shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 6,
+    shadowOpacity: 0.04,
+    shadowRadius: 4,
 
-    elevation: 3,
+    elevation: 2,
   },
 
   codCard: {
-    backgroundColor: "#fef9c3",
+    backgroundColor: "#fff8db",
     borderWidth: 1,
-    borderColor: "#fde047",
+    borderColor: "#fde68a",
   },
 
   onlineCard: {
-    backgroundColor: "#eff6ff",
+    backgroundColor: "#eef4ff",
     borderWidth: 1,
-    borderColor: "#93c5fd",
+    borderColor: "#bfdbfe",
   },
 
   iconCircle: {
 
-    width: 52,
-    height: 52,
+    width: 42,
+    height: 42,
 
-    borderRadius: 26,
+    borderRadius: 21,
 
     backgroundColor: "#facc15",
 
     justifyContent: "center",
     alignItems: "center",
 
-    marginRight: 16,
+    marginRight: 12,
   },
 
   iconText: {
     color: "#fff",
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: "bold",
   },
 
   paymentTitle: {
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: "bold",
     color: "#111",
   },
 
   paymentDesc: {
-    marginTop: 5,
+    marginTop: 2,
     color: "#666",
-    fontSize: 14,
+    fontSize: 12,
   },
 
   arrow: {
-    fontSize: 26,
+    fontSize: 20,
     color: "#555",
     fontWeight: "bold",
   },

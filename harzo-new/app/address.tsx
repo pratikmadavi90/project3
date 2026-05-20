@@ -10,6 +10,8 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -60,7 +62,6 @@ export default function Address() {
     try {
 
       const userData = {
-
         name,
         phone,
         address,
@@ -78,7 +79,6 @@ export default function Address() {
         "Address Saved"
       );
 
-      // ✅ GO PAYMENT
       router.push("/payment");
 
     } catch (error) {
@@ -94,99 +94,105 @@ export default function Address() {
 
   return (
 
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={
-        Platform.OS === "ios"
-          ? "padding"
-          : undefined
-      }
-    >
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 
-      <ScrollView
-        contentContainerStyle={styles.container}
-        showsVerticalScrollIndicator={false}
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={
+          Platform.OS === "ios"
+            ? "padding"
+            : "height"
+        }
+        keyboardVerticalOffset={20}
       >
 
-        <Text style={styles.title}>
-          Delivery Address
-        </Text>
-
-        <Text style={styles.label}>
-          Full Name
-        </Text>
-
-        <TextInput
-          placeholder="Enter full name"
-          style={styles.input}
-          value={name}
-          onChangeText={setName}
-        />
-
-        <Text style={styles.label}>
-          Phone Number
-        </Text>
-
-        <TextInput
-          placeholder="Enter phone number"
-          style={styles.input}
-          keyboardType="number-pad"
-          value={phone}
-          onChangeText={setPhone}
-        />
-
-        <Text style={styles.label}>
-          Full Address
-        </Text>
-
-        <TextInput
-          placeholder="House no, street, area"
-          style={[
-            styles.input,
-            styles.addressInput,
-          ]}
-          multiline
-          value={address}
-          onChangeText={setAddress}
-        />
-
-        <Text style={styles.label}>
-          City
-        </Text>
-
-        <TextInput
-          placeholder="Enter city"
-          style={styles.input}
-          value={city}
-          onChangeText={setCity}
-        />
-
-        <Text style={styles.label}>
-          Pincode
-        </Text>
-
-        <TextInput
-          placeholder="Enter pincode"
-          style={styles.input}
-          keyboardType="number-pad"
-          value={pincode}
-          onChangeText={setPincode}
-        />
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={saveAddress}
+        <ScrollView
+          contentContainerStyle={styles.container}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
         >
 
-          <Text style={styles.btnText}>
-            Continue To Payment
+          <Text style={styles.title}>
+            Delivery Address
           </Text>
 
-        </TouchableOpacity>
+          <Text style={styles.label}>
+            Full Name
+          </Text>
 
-      </ScrollView>
+          <TextInput
+            placeholder="Enter full name"
+            style={styles.input}
+            value={name}
+            onChangeText={setName}
+          />
 
-    </KeyboardAvoidingView>
+          <Text style={styles.label}>
+            Phone Number
+          </Text>
+
+          <TextInput
+            placeholder="Enter phone number"
+            style={styles.input}
+            keyboardType="number-pad"
+            value={phone}
+            onChangeText={setPhone}
+          />
+
+          <Text style={styles.label}>
+            Full Address
+          </Text>
+
+          <TextInput
+            placeholder="House no, street, area"
+            style={[
+              styles.input,
+              styles.addressInput,
+            ]}
+            multiline
+            value={address}
+            onChangeText={setAddress}
+          />
+
+          <Text style={styles.label}>
+            City
+          </Text>
+
+          <TextInput
+            placeholder="Enter city"
+            style={styles.input}
+            value={city}
+            onChangeText={setCity}
+          />
+
+          <Text style={styles.label}>
+            Pincode
+          </Text>
+
+          <TextInput
+            placeholder="Enter pincode"
+            style={styles.input}
+            keyboardType="number-pad"
+            value={pincode}
+            onChangeText={setPincode}
+          />
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={saveAddress}
+          >
+
+            <Text style={styles.btnText}>
+              Continue To Payment
+            </Text>
+
+          </TouchableOpacity>
+
+        </ScrollView>
+
+      </KeyboardAvoidingView>
+
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -196,6 +202,7 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "#f5f5f5",
     flexGrow: 1,
+    paddingBottom: 120,
   },
 
   title: {
@@ -227,10 +234,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#eee",
 
-    shadowColor: "#000",
-    shadowOpacity: 0.03,
-    shadowRadius: 4,
-
     elevation: 2,
   },
 
@@ -250,7 +253,7 @@ const styles = StyleSheet.create({
 
     marginTop: 10,
 
-    marginBottom: 30,
+    marginBottom: 40,
   },
 
   btnText: {

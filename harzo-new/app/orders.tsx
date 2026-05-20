@@ -16,8 +16,7 @@ const API = "https://api.harzo.in/api/orders";
 
 export default function OrdersScreen() {
 
-  const [orders, setOrders] = useState([]);
-
+  const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -29,14 +28,41 @@ export default function OrdersScreen() {
 
     try {
 
-      // LOCAL ORDERS
-      const localOrders =
-        JSON.parse(
-          await AsyncStorage.getItem("orders")
-        ) || [];
+      // ✅ CURRENT USER
+      const savedUser =
+        await AsyncStorage.getItem("user");
 
-      // API ORDERS
-      let apiOrders = [];
+      // ❌ NOT LOGGED IN
+      if (!savedUser) {
+
+        setOrders([]);
+        setLoading(false);
+
+        return;
+      }
+
+      const user = JSON.parse(savedUser);
+
+      // ✅ LOCAL ORDERS
+      const savedOrders =
+        await AsyncStorage.getItem("orders");
+
+      const localOrders = savedOrders
+        ? JSON.parse(savedOrders)
+        : [];
+
+      // ✅ FILTER USER ORDERS
+      const filteredLocalOrders =
+        Array.isArray(localOrders)
+          ? localOrders.filter(
+              (item: any) =>
+                item?.userEmail === user?.email ||
+                item?.email === user?.email
+            )
+          : [];
+
+      // ✅ API ORDERS
+      let apiOrders: any[] = [];
 
       try {
 
@@ -44,37 +70,63 @@ export default function OrdersScreen() {
 
         const data = await response.json();
 
-        apiOrders = Array.isArray(data)
-          ? data
-          : [];
+        const allOrders =
+          Array.isArray(data)
+            ? data
+            : data?.orders || [];
+
+        apiOrders = allOrders.filter(
+          (item: any) =>
+            item?.userEmail === user?.email ||
+            item?.email === user?.email
+        );
 
       } catch (e) {
 
         console.log("API ERROR:", e);
       }
 
-      // MERGE BOTH
-      const merged = [
-        ...localOrders,
-        ...apiOrders,
-      ];
+      // ✅ MERGE ORDERS
+     const mergedOrders = [
+  ...apiOrders,
+  ...filteredLocalOrders,
+];
 
-      // NEWEST FIRST
-      merged.sort(
-        (a, b) =>
+      // ✅ REMOVE DUPLICATES
+      const uniqueOrders =
+        mergedOrders.filter(
+          (
+            item: any,
+            index: number,
+            self: any[]
+          ) =>
+            index ===
+            self.findIndex(
+              (t: any) =>
+               (t?.orderId || t?._id || t?.id) ===
+               (item?.orderId || item?._id || item?.id)
+            )
+        );
+
+      // ✅ SORT NEWEST FIRST
+      uniqueOrders.sort(
+        (a: any, b: any) =>
           new Date(
-            b.createdAt || Date.now()
-          ) -
+            b?.createdAt || Date.now()
+          ).getTime() -
           new Date(
-            a.createdAt || Date.now()
-          )
+            a?.createdAt || Date.now()
+          ).getTime()
       );
 
-      setOrders(merged);
+      setOrders(uniqueOrders);
 
     } catch (error) {
 
-      console.log("Order Error:", error);
+      console.log(
+        "ORDER FETCH ERROR:",
+        error
+      );
 
     } finally {
 
@@ -91,7 +143,7 @@ export default function OrdersScreen() {
 
         <ActivityIndicator
           size="large"
-          color="#000"
+          color="#22c55e"
         />
 
       </View>
@@ -104,6 +156,10 @@ export default function OrdersScreen() {
     return (
 
       <View style={styles.emptyContainer}>
+
+        <Text style={styles.emptyEmoji}>
+          📦
+        </Text>
 
         <Text style={styles.emptyTitle}>
           No Orders Yet
@@ -122,29 +178,130 @@ export default function OrdersScreen() {
     <FlatList
       data={orders}
 
-      keyExtractor={(item, index) =>
-        (item?._id || item?.id || index).toString()
+      keyExtractor={(
+        item: any,
+        index: number
+      ) =>
+        (
+          item?._id ||
+          item?.id ||
+          index
+        ).toString()
       }
 
-      contentContainerStyle={styles.container}
+      contentContainerStyle={
+        styles.container
+      }
 
       showsVerticalScrollIndicator={false}
 
-      renderItem={({ item }) => (
+      renderItem={({ item }: any) => (
 
         <View style={styles.card}>
 
+          {/* HEADER */}
+
+          <View style={styles.topRow}>
+
+  <Text
+  numberOfLines={1}
+  style={styles.orderId}
+>
+  🛒 {item?.orderId || "Order"}
+</Text>     
+
+ <View
+  style={[
+    styles.statusBox,
+    {
+      backgroundColor:
+        item?.status === "Delivered"
+          ? "#dcfce7"
+          : item?.status === "Packed"
+          ? "#fef3c7"
+          : item?.status === "Out for Delivery"
+          ? "#dbeafe"
+          : item?.status === "Accepted"
+          ? "#ede9fe"
+          : item?.status === "Cancelled"
+          ? "#fee2e2"
+          : "#fef9c3",
+    },
+  ]}
+>
+
+  <Text
+    style={[
+      styles.statusText,
+      {
+        color:
+          item?.status === "Delivered"
+            ? "#16a34a"
+            : item?.status === "Packed"
+            ? "#d97706"
+            : item?.status === "Out for Delivery"
+            ? "#2563eb"
+            : item?.status === "Accepted"
+            ? "#7c3aed"
+            : item?.status === "Cancelled"
+            ? "#dc2626"
+            : "#ca8a04",
+      },
+    ]}
+  >
+    {item?.status || "Pending"}
+  </Text>
+
+</View>           
+
+          </View>
+
+          {/* DATE */}
+
+          <Text style={styles.date}>
+            📅{" "}
+            {
+              item?.createdAt
+                ? new Date(
+                    item.createdAt
+                  ).toLocaleDateString()
+                : "Today"
+            }
+          </Text>
+
+          {/* TIME */}
+
+          <Text style={styles.time}>
+            ⏰{" "}
+            {
+              item?.createdAt
+                ? new Date(
+                    item.createdAt
+                  ).toLocaleTimeString()
+                : ""
+            }
+          </Text>
+
           {/* PRODUCTS */}
 
-          <ScrollView horizontal>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={{ marginTop: 14 }}
+          >
 
             {
               item?.items?.map(
-                (product, index) => (
+                (
+                  product: any,
+                  index: number
+                ) => (
 
                   <View
                     key={index}
-                    style={styles.productCard}
+                    style={
+                      styles.productCard
+                    }
                   >
 
                     <Image
@@ -160,17 +317,28 @@ export default function OrdersScreen() {
                     />
 
                     <View
-                      style={styles.details}
+                      style={
+                        styles.details
+                      }
                     >
 
                       <Text
                         numberOfLines={1}
-                        style={styles.title}
+                        style={
+                          styles.title
+                        }
                       >
-                        {product?.name}
+                        {
+                          product?.name ||
+                          "Product"
+                        }
                       </Text>
 
-                      <Text style={styles.price}>
+                      <Text
+                        style={
+                          styles.price
+                        }
+                      >
                         ₹
                         {
                           product?.price ||
@@ -180,12 +348,15 @@ export default function OrdersScreen() {
                         }
                       </Text>
 
-                      <Text style={styles.qty}>
-                        Qty:
-                        {" "}
-                        {product?.quantity ||
+                      <Text
+                        style={styles.qty}
+                      >
+                        Qty:{" "}
+                        {
+                          product?.quantity ||
                           product?.qty ||
-                          1}
+                          1
+                        }
                       </Text>
 
                     </View>
@@ -197,32 +368,33 @@ export default function OrdersScreen() {
 
           </ScrollView>
 
-          {/* ORDER INFO */}
+          {/* INFO */}
 
           <View style={styles.infoBox}>
 
             <Text style={styles.orderText}>
-              Payment:
-              {" "}
+              💳 Payment:{" "}
               {
                 item?.paymentMethod ||
                 "Cash On Delivery"
               }
             </Text>
-
             <Text style={styles.orderText}>
-              Status:
-              {" "}
-              {item?.status || "Placed"}
-            </Text>
+  🚚 Delivery:{" "}
+  {
+    item?.address?.fullAddress
+      ? `${item.address.fullAddress}, ${item.address.city} - ${item.address.pincode}`
+      : item?.deliveryAddress || "Korpana"
+  }
+</Text>
 
-            <Text style={styles.orderText}>
-              Total:
-              {" "}
-              ₹
-              {item?.total ||
+            <Text style={styles.total}>
+              Total: ₹
+              {
+                item?.total ||
                 item?.totalAmount ||
-                0}
+                0
+              }
             </Text>
 
           </View>
@@ -236,36 +408,92 @@ export default function OrdersScreen() {
 const styles = StyleSheet.create({
 
   container: {
-    padding: 15,
-    backgroundColor: "#f5f5f5",
+    padding: 16,
+    backgroundColor: "#f1f5f9",
+    paddingBottom: 100,
   },
 
   card: {
     backgroundColor: "#fff",
 
-    borderRadius: 18,
+    borderRadius: 24,
 
-    padding: 15,
+    padding: 16,
 
     marginBottom: 18,
 
     shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 6,
 
-    elevation: 3,
+    shadowOpacity: 0.06,
+
+    shadowRadius: 10,
+
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+
+    elevation: 4,
+  },
+
+topRow: {
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center",
+},
+
+orderId: {
+  fontSize: 11,
+  fontWeight: "800",
+  color: "#111827",
+  width: "72%",
+},
+
+statusBox: {
+  backgroundColor: "#dcfce7",
+  paddingHorizontal: 10,
+  paddingVertical: 5,
+  borderRadius: 30,
+},
+
+  statusText: {
+    color: "#16a34a",
+    fontWeight: "700",
+    fontSize: 13,
+  },
+
+  date: {
+    marginTop: 10,
+    color: "#64748b",
+    fontSize: 13,
+  },
+
+  time: {
+    marginTop: 3,
+    color: "#64748b",
+    fontSize: 13,
   },
 
   productCard: {
     flexDirection: "row",
-    marginRight: 15,
+
+    backgroundColor: "#f8fafc",
+
+    borderRadius: 18,
+
+    padding: 10,
+
+    marginRight: 14,
+
     width: 260,
   },
 
   image: {
-    width: 90,
-    height: 90,
-    borderRadius: 14,
+    width: 88,
+    height: 88,
+
+    borderRadius: 16,
+
     backgroundColor: "#eee",
   },
 
@@ -277,60 +505,75 @@ const styles = StyleSheet.create({
 
   title: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#111",
+    fontWeight: "700",
+    color: "#111827",
   },
 
   price: {
     marginTop: 6,
-    fontSize: 15,
+    fontSize: 16,
     color: "#16a34a",
-    fontWeight: "600",
+    fontWeight: "700",
   },
 
   qty: {
     marginTop: 5,
-    color: "#555",
+    color: "#475569",
+    fontSize: 14,
   },
 
   infoBox: {
-    marginTop: 15,
+    marginTop: 16,
 
     borderTopWidth: 1,
-    borderTopColor: "#eee",
+    borderTopColor: "#e2e8f0",
 
-    paddingTop: 12,
+    paddingTop: 14,
   },
 
   orderText: {
     fontSize: 14,
-    color: "#444",
-    marginBottom: 5,
+    color: "#334155",
+    marginBottom: 7,
+  },
+
+  total: {
+    fontSize: 18,
+    color: "#111827",
+    fontWeight: "800",
+    marginTop: 8,
   },
 
   loader: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#f1f5f9",
   },
 
   emptyContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#f1f5f9",
     padding: 20,
   },
 
+  emptyEmoji: {
+    fontSize: 58,
+    marginBottom: 10,
+  },
+
   emptyTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#111",
+    fontSize: 26,
+    fontWeight: "800",
+    color: "#111827",
   },
 
   emptyText: {
     marginTop: 10,
     fontSize: 15,
-    color: "#777",
+    color: "#64748b",
     textAlign: "center",
   },
 

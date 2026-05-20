@@ -10,6 +10,7 @@ import React, {
 import {
   View,
   Text,
+  
   Image,
   ScrollView,
   StyleSheet,
@@ -25,10 +26,11 @@ import {
 } from "expo-router";
 
 import { useCart } from "../context/CartContext";
-
 const { width } = Dimensions.get("window");
 
 export default function ProductDetail() {
+
+  
   const { item, allProducts } =
     useLocalSearchParams();
 
@@ -125,6 +127,33 @@ export default function ProductDetail() {
 
   return (
     <View style={{ flex: 1 }}>
+
+<TouchableOpacity
+  style={{
+    position: "absolute",
+    top: 50,
+    left: 15,
+    zIndex: 999,
+    backgroundColor: "#fff",
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 5,
+  }}
+onPress={() => router.back()}
+>
+  <Text
+    style={{
+      fontSize: 22,
+      fontWeight: "bold",
+    }}
+  >
+    ←
+  </Text>
+</TouchableOpacity>
+
       <ScrollView
         ref={scrollRef}
         style={styles.container}
@@ -159,6 +188,8 @@ export default function ProductDetail() {
             </TouchableOpacity>
           )}
         />
+
+       
 
         {/* DETAILS */}
         <View style={styles.details}>
@@ -303,7 +334,7 @@ export default function ProductDetail() {
                 <TouchableOpacity
                   activeOpacity={0.9}
                   onPress={() =>
-                    router.push({
+                  router.push({
                       pathname:
                         "/product-detail",
                       params: {

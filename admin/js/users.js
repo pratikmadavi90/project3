@@ -32,23 +32,23 @@ function renderUsers(users, search = "") {
 
   users.forEach(user => {
     tbody.innerHTML += `
-      <tr>
-        <td>${highlight(user.name, search)}</td>
-        <td>${highlight(user.email, search)}</td>
-        <td>${highlight(user.phone, search)}</td>
-        <td>${highlight(user.address, search)}</td>
+<tr>
+<td>${highlight(user.userId || "-", search)}</td>
+<td>${highlight(user.name, search)}</td>
+<td>${highlight(user.email, search)}</td>
+<td>${highlight(user.phone || "-", search)}</td>
+<td>${highlight(user.address || "-", search)}</td>
+<td>${highlight(user.city || "-", search)}</td>
+<td>${highlight(user.pincode || "-", search)}</td>
 
-        <td>${highlight(user.city || "-", search)}</td>       <!-- ✅ ADD -->
-        <td>${highlight(user.pincode || "-", search)}</td>    <!-- ✅ ADD -->
-
-        <td>${user.isBlocked ? "Blocked" : "Active"}</td>
-        <td>
-          <button onclick="toggleBlock('${user._id}')">
-            ${user.isBlocked ? "Unblock" : "Block"}
-          </button>
-          <button onclick="deleteUser('${user._id}')">Delete</button>
-        </td>
-      </tr>
+<td>${user.isBlocked ? "Blocked" : "Active"}</td>
+<td>
+<button onclick="toggleBlock('${user._id}')">
+${user.isBlocked ? "Unblock" : "Block"}
+</button>
+<button onclick="deleteUser('${user._id}')">Delete</button>
+</td>
+</tr>
     `;
   });
 }
@@ -58,6 +58,7 @@ document.getElementById("searchInput").addEventListener("input", function () {
   const value = this.value.toLowerCase();
 
   const filtered = allUsers.filter(user =>
+  (user.userId || "").toLowerCase().includes(value) ||
   (user.name || "").toLowerCase().includes(value) ||
 (user.email || "").toLowerCase().includes(value) ||
 (user.phone || "").includes(value) ||
