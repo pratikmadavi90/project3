@@ -147,31 +147,9 @@ console.log(
 );
 
 
-// ✅ PERMANENT USER ID
-
-let permanentUserId =
-  user?.userId;
-
-// ✅ AGAR USER ID NAHI HAI TO BANADO
-if (!permanentUserId) {
-
-  permanentUserId =
-    "HZUSER" +
-    Math.floor(
-      100000 + Math.random() * 900000
-    );
-
-  // ✅ SAVE IN USER
-  const updatedUser = {
-    ...user,
-    userId: permanentUserId,
-  };
-
-  await AsyncStorage.setItem(
-    "user",
-    JSON.stringify(updatedUser)
-  );
-}
+// ✅ ORIGINAL USER ID
+const permanentUserId =
+  user?.userId || "";
 
 // ✅ EVERY ORDER DIFFERENT
 const uniqueOrderId =

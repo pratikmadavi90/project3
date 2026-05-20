@@ -76,3 +76,20 @@ button:nth-child(2) {
   font-weight: bold;
 }
 
+table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+th,
+td {
+  padding: 12px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+td:last-child {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
