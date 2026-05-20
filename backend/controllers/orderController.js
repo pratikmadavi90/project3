@@ -4,24 +4,24 @@ const { applyOffer } = require("../utils/offerHelper");
 // 🧾 CREATE ORDER
 exports.createOrder = async (req, res) => {
   try {
-    const { cartTotal, offerId } = req.body;
+    const { cartTotal, offerId, userId } = req.body;
 
-let finalAmount = cartTotal;
+    let finalAmount = cartTotal;
 
-// agar offer mila to apply karo
-if (offerId) {
-  const Offer = require("../models/Offer");
-  const offer = await Offer.findById(offerId);
+    // Offer apply
+    if (offerId) {
+      const Offer = require("../models/Offer");
+      const offer = await Offer.findById(offerId);
 
-  finalAmount = applyOffer(cartTotal, offer);
-}
+      finalAmount = applyOffer(cartTotal, offer);
+    }
 
-const order = new Order({
-  ...req.body,
-  finalAmount,
-  orderId: "ORD" + Date.now()
-});
-
+    const order = new Order({
+      ...req.body,
+      userId: userId, // same user id save hogi
+      finalAmount,
+      orderId: "ORD" + Date.now()
+    });
 
     await order.save();
 
@@ -31,10 +31,11 @@ const order = new Order({
     });
 
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({
+      error: err.message
+    });
   }
 };
-
 
 // 📋 GET ALL ORDERS (Admin)
 exports.getOrders = async (req, res) => {
