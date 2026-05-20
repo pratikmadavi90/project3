@@ -3,13 +3,35 @@ const User = require("../models/User");
 // GET all users
 exports.getUsers = async (req, res) => {
   try {
-    const users = await User.find().sort({ createdAt: -1 });
+
+    let users = await User.find()
+      .sort({ createdAt: -1 });
+
+    // old users ke liye auto userId
+    for (const user of users) {
+
+      if (!user.userId) {
+
+        user.userId =
+          "USR" +
+          user.createdAt.getTime();
+
+        await user.save();
+      }
+    }
+
+    // refresh data
+    users = await User.find()
+      .sort({ createdAt: -1 });
 
     res.json(users);
+
   } catch (err) {
+
     res.status(500).json({
       error: err.message
     });
+
   }
 };
 
