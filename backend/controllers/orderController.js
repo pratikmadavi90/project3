@@ -1,5 +1,6 @@
 const Order = require("../models/Order");
 const { applyOffer } = require("../utils/offerHelper");
+const User = require("../models/User");
 
 // 🧾 CREATE ORDER
 exports.createOrder = async (req, res) => {
@@ -16,12 +17,19 @@ exports.createOrder = async (req, res) => {
       finalAmount = applyOffer(cartTotal, offer);
     }
 
-    const order = new Order({
-      ...req.body,
-      userId: userId, // same user id save hogi
-      finalAmount,
-      orderId: "ORD" + Date.now()
-    });
+  const user = await User.findOne({
+  phone: req.body?.user?.phone
+});
+
+const order = new Order({
+  ...req.body,
+
+  // original user ID force
+  userId: user?.userId || req.body.userId,
+
+  finalAmount,
+  orderId: "ORD" + Date.now()
+});
 
     await order.save();
 
