@@ -171,3 +171,27 @@ exports.cancelOrder = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+// 🗑 DELETE ORDER
+exports.deleteOrder = async (req, res) => {
+  try {
+    const order = await Order.findByIdAndDelete(
+      req.params.id
+    );
+
+    if (!order) {
+      return res.status(404).json({
+        message: "Order not found"
+      });
+    }
+
+    res.json({
+      message: "Order Deleted"
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      error: err.message
+    });
+  }
+};

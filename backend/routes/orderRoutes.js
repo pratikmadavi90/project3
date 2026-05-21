@@ -39,6 +39,8 @@ router.put("/:id/assign-delivery", orderController.assignDelivery);
 // PUT /api/orders/:id/cancel
 router.put("/:id/cancel", orderController.cancelOrder);
 
+// 🗑 Delete Order
+router.delete("/:id", orderController.deleteOrder);
 
 // ==============================
 module.exports = router;

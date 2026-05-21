@@ -87,26 +87,32 @@ export default function OrdersScreen() {
       }
 
       // ✅ MERGE ORDERS
-     const mergedOrders = [
+ const mergedOrders = [
   ...apiOrders,
   ...filteredLocalOrders,
 ];
 
-      // ✅ REMOVE DUPLICATES
-      const uniqueOrders =
-        mergedOrders.filter(
-          (
-            item: any,
-            index: number,
-            self: any[]
-          ) =>
-            index ===
-            self.findIndex(
-              (t: any) =>
-               (t?.orderId || t?._id || t?.id) ===
-               (item?.orderId || item?._id || item?.id)
-            )
-        );
+// REMOVE DUPLICATES
+const uniqueOrders =
+mergedOrders.filter(
+(item,index,self)=>{
+
+const currentKey =
+`${item?.items?.[0]?.name}-${item?.total}-${item?.createdAt}`;
+
+return index ===
+self.findIndex(
+(t)=>
+
+`${t?.items?.[0]?.name}-${t?.total}-${t?.createdAt}`
+
+===
+
+currentKey
+);
+
+}
+);  
 
       // ✅ SORT NEWEST FIRST
       uniqueOrders.sort(

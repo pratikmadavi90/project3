@@ -1,5 +1,10 @@
 {
   "android": {
     "package": "com.pratik8122002.staff"
+  },
+  "extra": {
+    "eas": {
+      "projectId": "14c851f5-e76d-4ae2-a948-aa70124e9953"
+    }
   }
 }

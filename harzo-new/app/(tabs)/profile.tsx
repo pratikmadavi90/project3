@@ -13,6 +13,7 @@ import {
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
+import * as Location from "expo-location";
 
 const API = "https://api.harzo.in/api/users";
 
@@ -85,78 +86,108 @@ export default function Profile() {
 
         return;
       }
+// LOCATION PERMISSION
+const { status } =
+await Location.requestForegroundPermissionsAsync();
 
-      // ✅ DELIVERY AREAS FETCH
-      const response = await fetch(
-        "https://api.harzo.in/api/delivery/all"
-      );
+if(status !== "granted"){
 
-      const areas = await response.json();
+Alert.alert(
+"Permission Denied",
+"Location permission required"
+);
 
-      console.log(
-        "DELIVERY API DATA:",
-        areas
-      );
+return;
+}
 
-      // ✅ USER FIRST WORD = VILLAGE
-      const userVillage =
-        user.address
-          .trim()
-          .split(" ")[0]
-          .replace(
-            /[^a-zA-Z]/g,
-            ""
-          )
-          .toLowerCase();
+// GET CURRENT LOCATION
+const currentLocation =
+await Location.getCurrentPositionAsync({});
 
-      console.log(
-        "USER VILLAGE:",
-        userVillage
-      );
+const latitude =
+currentLocation.coords.latitude;
 
-      // ✅ MATCH ADMIN PANEL VILLAGES
-      const isValidVillage = (
-        areas.data || areas
-      ).some((item: any) => {
+const longitude =
+currentLocation.coords.longitude;
 
-        const villageName =
-          (
-            item.name ||
-            item.village ||
-            item.area ||
-            item.city ||
-            item.title ||
-            item.location ||
-            ""
-          )
-            .trim()
-            .split(" ")[0]
-            .replace(
-              /[^a-zA-Z]/g,
-              ""
-            )
-            .toLowerCase();
 
-        console.log(
-          "CHECKING:",
-          villageName
-        );
+// CONVERT GPS TO ADDRESS
+const addressData =
+await Location.reverseGeocodeAsync({
+latitude,
+longitude
+});
 
-        return (
-          villageName === userVillage
-        );
-      });
+const liveVillage =
+addressData[0]?.name ||
+addressData[0]?.street ||
+addressData[0]?.district ||
+addressData[0]?.subregion ||
+addressData[0]?.city ||
+"";
 
-      // ❌ DELIVERY NOT AVAILABLE
-      if (!isValidVillage) {
+console.log(
+"FULL LOCATION:",
+addressData[0]
+);
 
-        Alert.alert(
-          "Delivery Not Available",
-          "Sorry, delivery is not available in your village"
-        );
+console.log(
+"LIVE VILLAGE:",
+liveVillage
+);
 
-        return;
-      }
+const livePincode =
+addressData[0]?.postalCode || "";
+
+
+// GET DELIVERY AREAS
+const response =
+await fetch(
+"https://api.harzo.in/api/delivery/all"
+);
+
+const areas =
+await response.json();
+
+const matchedArea =
+(areas.data || areas).find(
+(item)=>{
+
+const village =
+(item.area || "")
+.toLowerCase()
+.trim();
+
+const userVillage =
+user.address
+.toLowerCase()
+.trim();
+
+const userPin =
+user.pincode
+.toString()
+.trim();
+
+return (
+userVillage.includes(village)
+&&
+item.pincode
+?.toString()
+.trim() === userPin
+);
+
+}
+);
+
+if(!matchedArea){
+
+Alert.alert(
+"Delivery Not Available",
+`No delivery in ${user.address}`
+);
+
+return;
+}
 
       // ✅ EMAIL CHECK
       if (!user.email) {
