@@ -1,219 +1,340 @@
 import React, { useEffect, useState } from "react";
 import {
-View,
-Text,
-TextInput,
-TouchableOpacity,
-StyleSheet,
-Alert,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
 } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
+import * as Location from "expo-location";
 
 export default function AddressScreen() {
 
-const [user, setUser] = useState({
-name: "",
-phone: "",
-address: "",
-city: "",
-pincode: "",
-});
+  const [user, setUser] = useState({
+    name: "",
+    phone: "",
+    address: "",
+    city: "",
+    pincode: "",
+  });
 
-// ✅ AUTO LOAD PROFILE DATA
-useEffect(() => {
-loadUser();
-}, []);
+  // AUTO LOAD PROFILE
+  useEffect(() => {
+    loadUser();
+  }, []);
 
-const loadUser = async () => {
-try {
+  const loadUser = async () => {
 
-const savedUser = await AsyncStorage.getItem("user");  
+    try {
 
-  if (savedUser) {  
+      const savedUser =
+      await AsyncStorage.getItem("user");
 
-    const parsedUser = JSON.parse(savedUser);  
+      if (savedUser) {
 
-    // ✅ PROFILE COMPLETE HAI  
-   if (
+        const parsedUser =
+        JSON.parse(savedUser);
 
-parsedUser.name &&
-parsedUser.phone &&
-parsedUser.address &&
-parsedUser.city &&
-parsedUser.pincode
-) {
+        if (
+          parsedUser.name &&
+          parsedUser.phone &&
+          parsedUser.address &&
+          parsedUser.city &&
+          parsedUser.pincode
+        ) {
 
-console.log("PROFILE FOUND");
+          router.replace("/payment");
 
-router.replace("/payment");
+          return;
+        }
 
-return;
-}
+        setUser(parsedUser);
+      }
 
-// ❌ PROFILE INCOMPLETE  
-    setUser(parsedUser);  
-  }  
-
-} catch (error) {  
-  console.log(error);  
-}
-
-};
-
-const placeOrder = async () => {
-
-  try {
-
-    const response = await fetch(
-      "https://api.harzo.in/api/delivery"
-    );
-
-    const areas = await response.json();
-
-    // ✅ USER ADDRESS
-    const fullAddress =
-      `${user.address} ${user.city}`
-        .toLowerCase();
-
-    // ✅ MATCH AREA
-    const matchedArea = areas.find(
-      (item) =>
-        fullAddress.includes(
-          item.area.toLowerCase()
-        )
-    );
-
-    // ❌ NOT AVAILABLE
-    if (!matchedArea) {
-
-      Alert.alert(
-        "Delivery Not Available",
-        "Sorry, we do not deliver in your area."
-      );
-
-      return;
+    } catch (error) {
+      console.log(error);
     }
 
-    // ✅ SAVE USER
-    await AsyncStorage.setItem(
-      "user",
-      JSON.stringify(user)
-    );
+  };
 
-    // ✅ GO PAYMENT
-    router.push("/payment");
 
-  } catch (error) {
 
-    console.log(error);
+  const placeOrder = async () => {
 
-    Alert.alert(
-      "Error",
-      "Something went wrong"
-    );
-  }
-};
+    try {
 
-return (
-<View style={styles.container}>
+      // CHECK EMPTY FIELDS
+      if (
+        !user.name ||
+        !user.phone ||
+        !user.address ||
+        !user.city ||
+        !user.pincode
+      ) {
 
-<Text style={styles.heading}>  
-    Delivery Address  
-  </Text>  
+        Alert.alert(
+          "Error",
+          "Please fill all fields"
+        );
 
-  <TextInput  
-    placeholder="Name"  
-    value={user.name}  
-    onChangeText={(text) =>  
-      setUser({ ...user, name: text })  
-    }  
-    style={styles.input}  
-  />  
+        return;
+      }
 
-  <TextInput  
-    placeholder="Phone"  
-    value={user.phone}  
-    onChangeText={(text) =>  
-      setUser({ ...user, phone: text })  
-    }  
-    style={styles.input}  
-  />  
 
-  <TextInput  
-    placeholder="Address"  
-    value={user.address}  
-    onChangeText={(text) =>  
-      setUser({ ...user, address: text })  
-    }  
-    style={styles.input}  
-  />  
+      // LOCATION PERMISSION
+      const { status } =
+      await Location.requestForegroundPermissionsAsync();
 
-  <TextInput  
-    placeholder="City"  
-    value={user.city}  
-    onChangeText={(text) =>  
-      setUser({ ...user, city: text })  
-    }  
-    style={styles.input}  
-  />  
+      if (status !== "granted") {
 
-  <TextInput  
-    placeholder="Pincode"  
-    value={user.pincode}  
-    onChangeText={(text) =>  
-      setUser({ ...user, pincode: text })  
-    }  
-    style={styles.input}  
-  />  
+        Alert.alert(
+          "Permission Denied",
+          "Location permission required"
+        );
 
-  <TouchableOpacity  
-    style={styles.button}  
-    onPress={placeOrder}  
-  >  
-    <Text style={styles.buttonText}>  
-      Place Order  
-    </Text>  
-  </TouchableOpacity>  
+        return;
+      }
 
-</View>
 
-);
+      // GET CURRENT LOCATION
+      const currentLocation =
+      await Location.getCurrentPositionAsync({});
+
+      const latitude =
+      currentLocation.coords.latitude;
+
+      const longitude =
+      currentLocation.coords.longitude;
+
+
+      // CONVERT GPS TO ADDRESS
+      const addressData =
+      await Location.reverseGeocodeAsync({
+
+        latitude,
+        longitude,
+
+      });
+
+      const liveCity =
+      addressData[0]?.city || "";
+
+      const livePincode =
+      addressData[0]?.postalCode || "";
+
+
+      console.log(
+        "Live City:",
+        liveCity
+      );
+
+      console.log(
+        "Live Pincode:",
+        livePincode
+      );
+
+
+      // GET ADMIN DELIVERY AREAS
+      const response =
+      await fetch(
+        "https://api.harzo.in/api/delivery"
+      );
+
+      const areas =
+      await response.json();
+
+
+      // MATCH AREA + PINCODE
+      const matchedArea =
+      areas.find(
+
+        (item) =>
+
+          item.area
+            .toLowerCase()
+            .trim()
+
+          ===
+
+          liveCity
+            .toLowerCase()
+            .trim()
+
+          &&
+
+          item.pincode
+            .toString()
+            .trim()
+
+          ===
+
+          livePincode
+            .toString()
+            .trim()
+
+      );
+
+
+      // DELIVERY NOT AVAILABLE
+      if (!matchedArea) {
+
+        Alert.alert(
+          "Delivery Not Available",
+          "Sorry, we do not deliver in your area"
+        );
+
+        return;
+      }
+
+
+      // SAVE USER
+      await AsyncStorage.setItem(
+        "user",
+        JSON.stringify(user)
+      );
+
+
+      // GO PAYMENT
+      router.push("/payment");
+
+    }
+
+    catch (error) {
+
+      console.log(error);
+
+      Alert.alert(
+        "Error",
+        "Something went wrong"
+      );
+
+    }
+
+  };
+
+
+
+  return (
+
+    <View style={styles.container}>
+
+      <Text style={styles.heading}>
+        Delivery Address
+      </Text>
+
+
+      <TextInput
+        placeholder="Name"
+        value={user.name}
+        onChangeText={(text) =>
+          setUser({
+            ...user,
+            name: text
+          })
+        }
+        style={styles.input}
+      />
+
+      <TextInput
+        placeholder="Phone"
+        value={user.phone}
+        onChangeText={(text) =>
+          setUser({
+            ...user,
+            phone: text
+          })
+        }
+        style={styles.input}
+      />
+
+      <TextInput
+        placeholder="Address"
+        value={user.address}
+        onChangeText={(text) =>
+          setUser({
+            ...user,
+            address: text
+          })
+        }
+        style={styles.input}
+      />
+
+      <TextInput
+        placeholder="City"
+        value={user.city}
+        onChangeText={(text) =>
+          setUser({
+            ...user,
+            city: text
+          })
+        }
+        style={styles.input}
+      />
+
+      <TextInput
+        placeholder="Pincode"
+        value={user.pincode}
+        onChangeText={(text) =>
+          setUser({
+            ...user,
+            pincode: text
+          })
+        }
+        style={styles.input}
+      />
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={placeOrder}
+      >
+
+        <Text style={styles.buttonText}>
+          Place Order
+        </Text>
+
+      </TouchableOpacity>
+
+    </View>
+
+  );
 }
 
 const styles = StyleSheet.create({
 
-container: {
-flex: 1,
-backgroundColor: "#fff",
-padding: 20,
-},
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    padding: 20,
+  },
 
-heading: {
-fontSize: 28,
-fontWeight: "bold",
-marginBottom: 20,
-},
+  heading: {
+    fontSize: 28,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
 
-input: {
-borderWidth: 1,
-borderColor: "#ddd",
-borderRadius: 10,
-padding: 15,
-marginBottom: 15,
-},
+  input: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 15,
+  },
 
-button: {
-backgroundColor: "#facc15",
-padding: 15,
-borderRadius: 10,
-alignItems: "center",
-},
+  button: {
+    backgroundColor: "#facc15",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+  },
 
-buttonText: {
-fontWeight: "bold",
-fontSize: 16,
-},
+  buttonText: {
+    fontWeight: "bold",
+    fontSize: 16,
+  },
 
 });

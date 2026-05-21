@@ -16,6 +16,8 @@ const stockRoutes = require("./routes/stockRoutes");
 const settingsRoutes = require("./routes/settingsRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const orderRoutes = require("./routes/orderRoutes");
+const distanceRoutes =require("./routes/distanceRoutes");
+
 
 
 
@@ -108,6 +110,9 @@ app.use("/api/stock", stockRoutes);
 app.use("/api/settings", settingsRoutes);
 app.use("/api/notification", notificationRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/distance",distanceRoutes);
+
+
 
 
 

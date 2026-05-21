@@ -1,9 +1,5 @@
-export const SHOP_LOCATION = {
-  latitude: 18.7500,
-  longitude: 73.3300,
-};
-
 export const calculateDeliveryFee = (distanceKm) => {
+
   if (distanceKm <= 3) return 25;
 
   if (distanceKm <= 6) return 40;
@@ -11,31 +7,35 @@ export const calculateDeliveryFee = (distanceKm) => {
   if (distanceKm <= 10) return 60;
 
   return 80;
+
 };
 
-export const getDistanceFromGoogle = async (
+
+export const getDistance = async (
   userLat,
   userLng
 ) => {
-  const apiKey = "AIzaSyC8IBgAMfBDmXDpB9-tir8jHLaKRvlk3ik";
 
-  const url =
-    `https://maps.googleapis.com/maps/api/distancematrix/json` +
-    `?origins=${SHOP_LOCATION.latitude},${SHOP_LOCATION.longitude}` +
-    `&destinations=${userLat},${userLng}` +
-    `&key=${apiKey}`;
+try{
 
-  const response = await fetch(url);
+const response = await fetch(
 
-  const data = await response.json();
+`https://api.harzo.in/api/distance?lat=${userLat}&lng=${userLng}`
 
-  const element = data.rows[0].elements[0];
+);
 
-  const distanceText = element.distance.text;
+const data = await response.json();
 
-  const distanceKm = parseFloat(
-    distanceText.replace(" km", "")
-  );
+return data.distanceKm || 0;
 
-  return distanceKm;
+}
+
+catch(error){
+
+console.log(error);
+
+return 0;
+
+}
+
 };

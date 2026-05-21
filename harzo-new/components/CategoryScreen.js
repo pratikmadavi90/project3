@@ -272,6 +272,9 @@ export default function CategoryScreen() {
             }
             data={filteredProducts}
             numColumns={2}
+            contentContainerStyle={{
+  paddingBottom: 120
+}}
             key={`products-${selectedSubCategory}`}
             ListEmptyComponent={() => (
               <View
