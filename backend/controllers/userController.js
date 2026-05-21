@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const DeliveryZone = require("../models/DeliveryZone");
 
 // GET all users
 exports.getUsers = async (req, res) => {
@@ -7,7 +8,6 @@ exports.getUsers = async (req, res) => {
     let users = await User.find()
       .sort({ createdAt: -1 });
 
-    // old users ke liye auto userId
     for (const user of users) {
 
       if (!user.userId) {
@@ -20,7 +20,6 @@ exports.getUsers = async (req, res) => {
       }
     }
 
-    // refresh data
     users = await User.find()
       .sort({ createdAt: -1 });
 
@@ -38,6 +37,7 @@ exports.getUsers = async (req, res) => {
 // BLOCK / UNBLOCK user
 exports.toggleBlockUser = async (req, res) => {
   try {
+
     const user = await User.findById(req.params.id);
 
     user.isBlocked = !user.isBlocked;
@@ -50,15 +50,18 @@ exports.toggleBlockUser = async (req, res) => {
     });
 
   } catch (err) {
+
     res.status(500).json({
       error: err.message
     });
+
   }
 };
 
 // DELETE user
 exports.deleteUser = async (req, res) => {
   try {
+
     await User.findByIdAndDelete(
       req.params.id
     );
@@ -68,9 +71,11 @@ exports.deleteUser = async (req, res) => {
     });
 
   } catch (err) {
+
     res.status(500).json({
       error: err.message
     });
+
   }
 };
 
@@ -87,7 +92,20 @@ exports.updateUser = async (req, res) => {
       pincode
     } = req.body;
 
-    // existing user check
+    // DELIVERY ZONE CHECK
+    const zoneExists = await DeliveryZone.findOne({
+      area: {
+        $regex: new RegExp(`^${city}$`, "i")
+      }
+    });
+
+    if (!zoneExists) {
+      return res.status(400).json({
+        success: false,
+        message: "Delivery not available in this area"
+      });
+    }
+
     let user = await User.findOne({
       email
     });

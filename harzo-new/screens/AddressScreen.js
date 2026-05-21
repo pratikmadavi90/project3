@@ -120,23 +120,25 @@ export default function AddressScreen() {
 
       });
 
-      const liveCity =
-      addressData[0]?.city || "";
+ const liveArea =
+addressData[0]?.subregion ||
+addressData[0]?.district ||
+addressData[0]?.city ||
+addressData[0]?.name ||
+"";
 
-      const livePincode =
-      addressData[0]?.postalCode || "";
+const livePincode =
+addressData[0]?.postalCode || "";
 
+console.log(
+"Live Area:",
+liveArea
+);
 
-      console.log(
-        "Live City:",
-        liveCity
-      );
-
-      console.log(
-        "Live Pincode:",
-        livePincode
-      );
-
+console.log(
+"Live Pincode:",
+livePincode
+); 
 
       // GET ADMIN DELIVERY AREAS
       const response =
@@ -144,39 +146,40 @@ export default function AddressScreen() {
         "https://api.harzo.in/api/delivery"
       );
 
-      const areas =
-      await response.json();
+     const areasResponse =
+await response.json();
+
+const areas =
+areasResponse.data || areasResponse;
 
 
       // MATCH AREA + PINCODE
-      const matchedArea =
-      areas.find(
+const matchedArea =
+areas.find((item)=>{
 
-        (item) =>
+const area =
+(item.name || "")
+.toLowerCase()
+.trim();
 
-          item.area
-            .toLowerCase()
-            .trim()
+const pin =
+(item.pincode || "")
+.toString()
+.trim();
 
-          ===
+return (
 
-          liveCity
-            .toLowerCase()
-            .trim()
+liveArea
+.toLowerCase()
+.includes(area)
 
-          &&
+||
 
-          item.pincode
-            .toString()
-            .trim()
+pin === livePincode
 
-          ===
+);
 
-          livePincode
-            .toString()
-            .trim()
-
-      );
+});
 
 
       // DELIVERY NOT AVAILABLE

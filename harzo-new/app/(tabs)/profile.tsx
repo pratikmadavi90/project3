@@ -91,24 +91,40 @@ const { status } =
 await Location.requestForegroundPermissionsAsync();
 
 if(status !== "granted"){
+ return;
+}
+
+const serviceEnabled =
+await Location.hasServicesEnabledAsync();
+
+if(!serviceEnabled){
 
 Alert.alert(
-"Permission Denied",
-"Location permission required"
+"Location Off",
+"Please turn on GPS/Location"
 );
 
 return;
 }
 
-// GET CURRENT LOCATION
 const currentLocation =
-await Location.getCurrentPositionAsync({});
+await Location.getLastKnownPositionAsync();
+
+if(!currentLocation){
+
+Alert.alert(
+"Location Error",
+"Move outside and turn GPS ON"
+);
+
+return;
+}
 
 const latitude =
-currentLocation.coords.latitude;
+currentLocation?.coords?.latitude;
 
 const longitude =
-currentLocation.coords.longitude;
+currentLocation?.coords?.longitude;
 
 
 // CONVERT GPS TO ADDRESS
@@ -118,12 +134,11 @@ latitude,
 longitude
 });
 
-const liveVillage =
-addressData[0]?.name ||
-addressData[0]?.street ||
-addressData[0]?.district ||
+const liveArea =
 addressData[0]?.subregion ||
+addressData[0]?.district ||
 addressData[0]?.city ||
+addressData[0]?.name ||
 "";
 
 console.log(
@@ -132,8 +147,8 @@ addressData[0]
 );
 
 console.log(
-"LIVE VILLAGE:",
-liveVillage
+"LIVE AREA:",
+liveArea
 );
 
 const livePincode =
@@ -146,38 +161,39 @@ await fetch(
 "https://api.harzo.in/api/delivery/all"
 );
 
-const areas =
+const areasResponse =
 await response.json();
 
+const areas =
+areasResponse.data || areasResponse;
+
 const matchedArea =
-(areas.data || areas).find(
-(item)=>{
+areas.find((item) => {
 
 const village =
-(item.area || "")
+(item.name || "")
 .toLowerCase()
 .trim();
 
 const userVillage =
-user.address
+liveArea
 .toLowerCase()
 .trim();
 
 const userPin =
-user.pincode
+livePincode
 .toString()
 .trim();
 
 return (
 userVillage.includes(village)
-&&
+||
 item.pincode
 ?.toString()
 .trim() === userPin
 );
 
-}
-);
+});
 
 if(!matchedArea){
 
