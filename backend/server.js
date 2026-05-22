@@ -347,6 +347,14 @@ app.post("/api/verify-otp", (req, res) => {
 
 
 // ===== LOGIN API =====
+
+global.users = [
+{
+email:"sarswathi@harzo.in",
+password:"aishuthakre83"
+}
+];
+
 app.post("/api/login", (req, res) => {
     const { email, password } = req.body;
 

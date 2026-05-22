@@ -8,58 +8,29 @@ StyleSheet,
 Alert
 } from "react-native";
 
-const API="https://api.harzo.in/api/admin";
+const API="https://api.harzo.in/api/login";
 
 export default function LoginScreen({goDashboard}){
 
 const [email,setEmail]=useState("");
-const [otp,setOtp]=useState("");
-const [showOtp,setShowOtp]=useState(false);
+const [password,setPassword]=useState("");
 
-const sendOTP = async () => {
+const login=async()=>{
 
-if(!email){
-alert("Enter Email");
+if(!email || !password){
+
+Alert.alert(
+"Error",
+"Enter email and password"
+);
+
 return;
 }
 
 try{
 
 const response=await fetch(
-"https://api.harzo.in/api/admin/send-otp",
-{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-email:email
-})
-}
-);
-
-const data=await response.json();
-
-alert(data.message);
-
-setOtpSent(true);
-
-}catch(err){
-
-console.log(err);
-
-alert("Failed");
-
-}
-
-};
-
-const verifyOTP=async()=>{
-
-try{
-
-const response=await fetch(
-`${API}/verify-otp`,
+API,
 {
 method:"POST",
 headers:{
@@ -67,7 +38,7 @@ headers:{
 },
 body:JSON.stringify({
 email,
-otp
+password
 })
 }
 );
@@ -75,21 +46,28 @@ otp
 const data=await response.json();
 
 if(
-data.message.includes("success")
+data.message==="Login successful"
 ){
 
 goDashboard();
 
 }else{
 
-Alert.alert(data.message);
+Alert.alert(
+"Error",
+"Invalid email or password"
+);
 
 }
 
-}
-catch(err){
+}catch(err){
 
-Alert.alert("Error");
+console.log(err);
+
+Alert.alert(
+"Error",
+"Login failed"
+);
 
 }
 
@@ -99,6 +77,10 @@ return(
 
 <View style={styles.container}>
 
+<Text style={styles.branch}>
+MH34
+</Text>
+
 <Text style={styles.logo}>
 HARZO STAFF
 </Text>
@@ -107,34 +89,25 @@ HARZO STAFF
 placeholder="Enter Email"
 value={email}
 onChangeText={setEmail}
+autoCapitalize="none"
 style={styles.input}
 />
-
-{showOtp && (
 
 <TextInput
-placeholder="Enter OTP"
-value={otp}
-onChangeText={setOtp}
-keyboardType="numeric"
+placeholder="Enter Password"
+value={password}
+onChangeText={setPassword}
+secureTextEntry
 style={styles.input}
 />
-
-)}
 
 <TouchableOpacity
 style={styles.button}
-onPress={
-showOtp
-?verifyOTP
-:sendOTP
-}
+onPress={login}
 >
 
 <Text style={styles.text}>
-{showOtp
-?"Verify OTP"
-:"Send OTP"}
+Login
 </Text>
 
 </TouchableOpacity>
@@ -152,6 +125,14 @@ flex:1,
 justifyContent:"center",
 padding:25,
 backgroundColor:"#f6f7fb"
+},
+
+branch:{
+fontSize:28,
+fontWeight:"bold",
+textAlign:"center",
+color:"#16A34A",
+marginBottom:10
 },
 
 logo:{
