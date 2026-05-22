@@ -167,7 +167,7 @@ function generateOTP() {
 // Send OTP using AWS SES
 async function sendOTP(email, otp) {
   const params = {
-    Source: process.env.EMAIL_FROM,
+    Source: process.env.EMAIL_USER,
     Destination: {
       ToAddresses: [email],
     },

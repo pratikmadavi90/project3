@@ -27,7 +27,7 @@ export default function Profile() {
     phone: "",
     email: "",
     address: "",
-    city: "Korpana",
+    city: "",
     pincode: "",
   });
 
@@ -49,9 +49,8 @@ export default function Profile() {
             JSON.parse(savedUser);
 
           setUser({
-            ...parsedUser,
-            city: "Korpana",
-          });
+  ...parsedUser
+});
         }
 
       } catch (err) {
@@ -69,223 +68,219 @@ export default function Profile() {
 
   }, []);
 
-  // 💾 UPDATE PROFILE
-  const updateProfile = async () => {
+ // 💾 UPDATE PROFILE
+const updateProfile = async () => {
 
-    try {
+  try {
 
-      // ✅ ADDRESS VALIDATION
-      if (
-        user.address.trim().length < 8
-      ) {
+    // ADDRESS VALIDATION
+    if (user.address.trim().length < 8) {
 
-        Alert.alert(
-          "Invalid Address",
-          "Please enter full delivery address"
-        );
+      Alert.alert(
+        "Invalid Address",
+        "Please enter full delivery address"
+      );
 
-        return;
-      }
-// LOCATION PERMISSION
-const { status } =
-await Location.requestForegroundPermissionsAsync();
+      return;
+    }
 
-if(status !== "granted"){
- return;
-}
+    // LOCATION PERMISSION
+    const { status } =
+      await Location.requestForegroundPermissionsAsync();
 
-const serviceEnabled =
-await Location.hasServicesEnabledAsync();
+    if (status !== "granted") {
 
-if(!serviceEnabled){
+      Alert.alert(
+        "Permission Required",
+        "Location permission required"
+      );
 
-Alert.alert(
-"Location Off",
-"Please turn on GPS/Location"
-);
+      return;
+    }
 
-return;
-}
+    const serviceEnabled =
+      await Location.hasServicesEnabledAsync();
 
-const currentLocation =
-await Location.getLastKnownPositionAsync();
+    if (!serviceEnabled) {
 
-if(!currentLocation){
+      Alert.alert(
+        "Location Off",
+        "Please turn on GPS"
+      );
 
-Alert.alert(
-"Location Error",
-"Move outside and turn GPS ON"
-);
+      return;
+    }
 
-return;
-}
+    // CURRENT LOCATION
+    const currentLocation =
+      await Location.getLastKnownPositionAsync();
 
-const latitude =
-currentLocation?.coords?.latitude;
+    if (!currentLocation) {
 
-const longitude =
-currentLocation?.coords?.longitude;
+      Alert.alert(
+        "Location Error",
+        "Move outside and try again"
+      );
 
+      return;
+    }
 
-// CONVERT GPS TO ADDRESS
-const addressData =
-await Location.reverseGeocodeAsync({
-latitude,
-longitude
-});
+    const latitude =
+      currentLocation.coords.latitude;
 
-const liveArea =
-addressData[0]?.subregion ||
-addressData[0]?.district ||
-addressData[0]?.city ||
-addressData[0]?.name ||
-"";
+    const longitude =
+      currentLocation.coords.longitude;
 
-console.log(
-"FULL LOCATION:",
-addressData[0]
-);
+    // CONVERT GPS TO ADDRESS
+    const addressData =
+      await Location.reverseGeocodeAsync({
+        latitude,
+        longitude,
+      });
 
-console.log(
-"LIVE AREA:",
-liveArea
-);
+    const liveArea =
+      (
+        addressData[0]?.city ||
+        addressData[0]?.district ||
+        addressData[0]?.subregion ||
+        addressData[0]?.name ||
+        ""
+      )
+      .toLowerCase()
+      .trim();
 
-const livePincode =
-addressData[0]?.postalCode || "";
+    console.log(
+      "FULL LOCATION:",
+      addressData[0]
+    );
 
+    console.log(
+      "LIVE AREA:",
+      liveArea
+    );
 
-// GET DELIVERY AREAS
-const response =
-await fetch(
-"https://api.harzo.in/api/delivery/all"
-);
+    // GET ADMIN DELIVERY AREAS
+    const response =
+      await fetch(
+        "https://api.harzo.in/api/delivery/all"
+      );
 
-const areasResponse =
-await response.json();
+    const areasResponse =
+      await response.json();
 
-const areas =
-areasResponse.data || areasResponse;
+    const areas =
+      areasResponse.data ||
+      areasResponse;
 
-const matchedArea =
-areas.find((item) => {
+    // MATCH ONLY ADMIN ADDED VILLAGE
+    const matchedArea =
+      areas.find((item) => {
 
-const village =
-(item.name || "")
-.toLowerCase()
-.trim();
+        const adminVillage =
+          (
+            item.area ||
+            item.name ||
+            ""
+          )
+          .toLowerCase()
+          .trim();
 
-const userVillage =
-liveArea
-.toLowerCase()
-.trim();
+        return adminVillage === liveArea;
 
-const userPin =
-livePincode
-.toString()
-.trim();
+      });
 
-return (
-userVillage.includes(village)
-||
-item.pincode
-?.toString()
-.trim() === userPin
-);
+    // DELIVERY CHECK
+    if (!matchedArea) {
 
-});
+      Alert.alert(
+        "Delivery Not Available",
+        `No delivery in ${liveArea}`
+      );
 
-if(!matchedArea){
+      return;
+    }
 
-Alert.alert(
-"Delivery Not Available",
-`No delivery in ${user.address}`
-);
+    // EMAIL CHECK
+    if (!user.email) {
 
-return;
-}
+      Alert.alert(
+        "Error",
+        "Email missing"
+      );
 
-      // ✅ EMAIL CHECK
-      if (!user.email) {
+      return;
+    }
 
-        Alert.alert(
-          "Error",
-          "Email missing hai"
-        );
+    // FINAL USER DATA
+    const finalUser = {
 
-        return;
-      }
+      ...user,
 
-      // ✅ FINAL USER DATA
-     const finalUser = {
-  ...user,
+      userId:
+        user?.userId ||
+        "USR" + Date.now()
 
-  userId:
-    user?.userId ||
-    "USR" + Date.now(),
+    };
 
-  city: "Korpana",
-};
-
-      // ✅ UPDATE API
-      const res = await fetch(
+    // UPDATE API
+    const res =
+      await fetch(
         `${API}/update`,
         {
           method: "PUT",
 
           headers: {
             "Content-Type":
-              "application/json",
+              "application/json"
           },
 
-          body: JSON.stringify(
-            finalUser
-          ),
+          body:
+            JSON.stringify(
+              finalUser
+            )
         }
       );
 
-      const data =
-        await res.json();
+    const data =
+      await res.json();
 
-      console.log(
-        "UPDATE RESPONSE:",
-        data
-      );
+    console.log(
+      "UPDATE RESPONSE:",
+      data
+    );
 
-      console.log(
-        "USER DATA SEND:",
+    // SAVE LOCAL
+    await AsyncStorage.setItem(
+      "user",
+      JSON.stringify(
         finalUser
-      );
+      )
+    );
 
-      console.log(
-        "STATUS:",
-        res.status
-      );
+    setUser(
+      finalUser
+    );
 
-      // ✅ SAVE LOCAL
-      await AsyncStorage.setItem(
-        "user",
-        JSON.stringify(finalUser)
-      );
+    Alert.alert(
+      "Success",
+      "Profile updated"
+    );
 
-      // ✅ UPDATE UI
-      setUser(finalUser);
+  } catch (err) {
 
-      Alert.alert(
-        "Success",
-        "Profile updated"
-      );
+    console.log(
+      "UPDATE ERROR:",
+      err
+    );
 
-    } catch (err) {
+    Alert.alert(
+      "Error",
+      "Update failed"
+    );
 
-      console.log(err);
+  }
 
-      Alert.alert(
-        "Error",
-        "Update failed"
-      );
-    }
-  };
+}; 
 
   // 🔥 LOGOUT
   const handleLogout = async () => {
@@ -322,7 +317,7 @@ return;
              phone: "",
              email: "",
              address: "",
-             city: "Korpana",
+             city: "",
              pincode: "",
              });
 
@@ -444,19 +439,16 @@ return;
       />
 
       {/* FIXED CITY */}
-      <TextInput
-        value="Korpana"
-        editable={false}
-        style={[
-          styles.input,
-          {
-            backgroundColor:
-              "#eee",
-
-            color: "#444",
-          },
-        ]}
-      />
+ <TextInput
+  value={user.city || ""}
+  onChangeText={(text) =>
+    setUser({
+      ...user,
+      city: text,
+    })
+  }
+  style={styles.input}
+/>
 
       {/* PINCODE */}
       <TextInput
