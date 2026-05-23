@@ -30,27 +30,57 @@ function renderUsers(users, search = "") {
   // 🔥 COUNT UPDATE
   count.innerText = "Total Users: " + users.length;
 
-  users.forEach(user => {
-    tbody.innerHTML += `
-<tr>
-<td>${highlight(user.userId || "-", search)}</td>
-<td>${highlight(user.name, search)}</td>
-<td>${highlight(user.email, search)}</td>
-<td>${highlight(user.phone || "-", search)}</td>
-<td>${highlight(user.address || "-", search)}</td>
-<td>${highlight(user.city || "-", search)}</td>
-<td>${highlight(user.pincode || "-", search)}</td>
+users.forEach(user => {
 
-<td>${user.isBlocked ? "Blocked" : "Active"}</td>
+tbody.innerHTML += `
+<tr>
+
+<td title="${user.userId || '-'}">
+${highlight(user.userId || "-", search)}
+</td>
+
+<td title="${user.name || '-'}">
+${highlight(user.name || "-", search)}
+</td>
+
+<td title="${user.email || '-'}">
+${highlight(user.email || "-", search)}
+</td>
+
+<td title="${user.phone || '-'}">
+${highlight(user.phone || "-", search)}
+</td>
+
+<td title="${user.address || '-'}">
+${highlight(user.address || "-", search)}
+</td>
+
+<td title="${user.city || '-'}">
+${highlight(user.city || "-", search)}
+</td>
+
+<td title="${user.pincode || '-'}">
+${highlight(user.pincode || "-", search)}
+</td>
+
+<td>
+${user.isBlocked ? "Blocked" : "Active"}
+</td>
+
 <td>
 <button onclick="toggleBlock('${user._id}')">
 ${user.isBlocked ? "Unblock" : "Block"}
 </button>
-<button onclick="deleteUser('${user._id}')">Delete</button>
+
+<button onclick="deleteUser('${user._id}')">
+Delete
+</button>
 </td>
+
 </tr>
-    `;
-  });
+`;
+
+});
 }
 
 // 🔥 SEARCH (LIVE)
