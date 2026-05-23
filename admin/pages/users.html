@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Users</title>
+<meta charset="UTF-8">
+<title>Users</title>
 
-  <link rel="stylesheet" href="../css/users.css">
+<link rel="stylesheet" href="../css/users.css">
 </head>
 
 <body>
@@ -13,26 +13,32 @@
 
 <div id="userCount">Total Users: 0</div>
 
-<!-- ✅ id change kiya -->
 <input type="text" id="searchInput" placeholder="Search user..." />
 
-<table>
-  <thead>
-<tr>
-  <th>User ID</th>
-  <th>Name</th>
-  <th>Email</th>
-  <th>Phone</th>
-  <th>Address</th>
-  <th>City</th>       
-  <th>Pincode</th>    
-  <th>Status</th>
-  <th>Actions</th>
-</tr>
-  </thead>
+<div class="table-container">
 
-  <tbody id="userTable"></tbody>
+<table id="usersTable">
+
+<thead>
+<tr>
+<th>User ID</th>
+<th>Name</th>
+<th>Email</th>
+<th>Phone</th>
+<th>Address</th>
+<th>City</th>
+<th>Pincode</th>
+<th>Status</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody id="userTable">
+</tbody>
+
 </table>
+
+</div>
 
 <script src="../js/users.js"></script>
 
