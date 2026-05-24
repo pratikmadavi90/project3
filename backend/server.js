@@ -17,7 +17,7 @@ const settingsRoutes = require("./routes/settingsRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const distanceRoutes =require("./routes/distanceRoutes");
-const supportRoutes = require("./routes/support");
+const supportRoutes = require("./routes/supportRoutes");
 
 
 
