@@ -659,14 +659,17 @@ router.push("/help-support")
 </Text>
 </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.option}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.optionText}>
-            ℹ️ About App
-          </Text>
-        </TouchableOpacity>
+<TouchableOpacity
+    style={styles.option}
+    activeOpacity={0.7}
+    onPress={() => {
+        router.push("/about")
+    }}
+>
+    <Text style={styles.optionText}>
+        ℹ️ About App
+    </Text>
+</TouchableOpacity>
 
         {/* LOGOUT */}
         <TouchableOpacity

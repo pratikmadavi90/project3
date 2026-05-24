@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, {
+useState,
+useEffect
+} from "react";
 
 import {
 View,
@@ -6,7 +9,8 @@ Text,
 TextInput,
 TouchableOpacity,
 StyleSheet,
-Alert
+Alert,
+ScrollView
 } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -22,6 +26,56 @@ useState("");
 const [message,setMessage]=
 useState("");
 
+const [tickets,setTickets]=
+useState<any[]>([]);
+
+
+// LOAD USER TICKETS
+const loadTickets=async()=>{
+
+try{
+
+const savedUser=
+await AsyncStorage.getItem(
+"user"
+);
+
+const user=
+JSON.parse(savedUser || "{}");
+
+const res=
+await fetch(API);
+
+const data=
+await res.json();
+
+const myTickets=
+data.filter(
+(item:any)=>
+
+item.phone===user.phone
+
+);
+
+setTickets(myTickets);
+
+}catch(err){
+
+console.log(err);
+
+}
+
+};
+
+
+useEffect(()=>{
+
+loadTickets();
+
+},[]);
+
+
+// SEND SUPPORT
 const sendSupport=async()=>{
 
 try{
@@ -78,6 +132,8 @@ Alert.alert(
 setSubject("");
 setMessage("");
 
+loadTickets();
+
 }catch(err){
 
 console.log(err);
@@ -85,7 +141,6 @@ console.log(err);
 Alert.alert(
 "Error",
 "Failed"
-
 );
 
 }
@@ -94,7 +149,13 @@ Alert.alert(
 
 return(
 
-<View style={styles.container}>
+<ScrollView
+style={styles.container}
+showsVerticalScrollIndicator={false}
+contentContainerStyle={{
+paddingBottom:120
+}}
+>
 
 <Text style={styles.title}>
 Help & Support
@@ -126,7 +187,92 @@ Send
 
 </TouchableOpacity>
 
+
+{/* MY TICKETS */}
+
+<Text
+style={{
+fontSize:20,
+fontWeight:"700",
+marginTop:25,
+marginBottom:15
+}}
+>
+My Support Tickets
+</Text>
+
+
+{tickets.map((item:any,index)=>(
+
+<View
+key={index}
+style={styles.ticket}
+>
+
+<Text
+style={{
+fontWeight:"700",
+fontSize:16
+}}
+>
+{item.subject}
+</Text>
+
+<Text
+style={{
+marginTop:5
+}}
+>
+{item.message}
+</Text>
+
+<Text
+style={{
+marginTop:10,
+color:"#6b7280"
+}}
+>
+Status :
+{item.status}
+</Text>
+
+{item.reply && (
+
+<View
+style={{
+marginTop:12,
+padding:12,
+backgroundColor:"#ecfdf5",
+borderRadius:10
+}}
+>
+
+<Text
+style={{
+color:"#16a34a",
+fontWeight:"700"
+}}
+>
+Admin Reply
+</Text>
+
+<Text
+style={{
+marginTop:5
+}}
+>
+{item.reply}
+</Text>
+
 </View>
+
+)}
+
+</View>
+
+))}
+
+</ScrollView>
 
 );
 
@@ -176,6 +322,15 @@ btnText:{
 color:"#fff",
 fontWeight:"700",
 fontSize:16
+},
+
+ticket:{
+backgroundColor:"#fff",
+padding:15,
+borderRadius:15,
+marginBottom:15,
+borderWidth:1,
+borderColor:"#e5e7eb"
 }
 
 });

@@ -91,7 +91,7 @@ style="flex:1"
 
 <button
 onclick="replyTicket('${ticket._id}')"
-> 
+>
 Reply
 </button>
 
@@ -100,6 +100,34 @@ Reply
 `;
 
 }
+
+/* Delete button added */
+div.innerHTML += `
+
+<div style="
+margin-top:15px;
+text-align:right;
+">
+
+<button
+onclick="deleteTicket('${ticket._id}')"
+style="
+background:red;
+color:white;
+border:none;
+padding:8px 14px;
+border-radius:8px;
+cursor:pointer;
+"
+>
+
+Delete
+
+</button>
+
+</div>
+
+`;
 
 ticketList.appendChild(div);
 
@@ -145,6 +173,37 @@ body:JSON.stringify({
 reply
 })
 
+}
+
+);
+
+loadTickets();
+
+}catch(err){
+
+console.log(err);
+
+}
+
+}
+
+async function deleteTicket(id){
+
+try{
+
+const ok =
+confirm(
+"Delete this ticket?"
+);
+
+if(!ok) return;
+
+await fetch(
+
+`${API}/${id}`,
+
+{
+method:"DELETE"
 }
 
 );
