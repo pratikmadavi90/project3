@@ -1,21 +1,49 @@
 const Support = require("../models/Support");
 
 exports.createTicket = async (req, res) => {
-  try {
-    const { userId, subject, message } = req.body;
 
-    const ticket = await Support.create({
+ try {
+
+   const { userId, subject, message } = req.body;
+
+   const ticket = await Support.create({
       userId,
       subject,
       message
-    });
+   });
 
-    res.json(ticket);
+   res.json(ticket);
 
-  } catch(err) {
-    console.log(err);
-    res.status(500).json({
-      msg: "Error"
-    });
-  }
+ } catch(err){
+
+   console.log(err);
+
+   res.status(500).json({
+      msg:"Error"
+   });
+
+ }
+
+};
+
+
+exports.getTickets = async (req,res)=>{
+
+ try{
+
+   const tickets = await Support.find()
+   .sort({ createdAt:-1 });
+
+   res.json(tickets);
+
+ }catch(err){
+
+   console.log(err);
+
+   res.status(500).json({
+      msg:"Error"
+   });
+
+ }
+
 };
