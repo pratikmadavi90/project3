@@ -5,6 +5,7 @@ exports.createTicket = async (req, res) => {
 try {
 
 const {
+userId,
 name,
 phone,
 address,
@@ -12,8 +13,10 @@ subject,
 message
 } = req.body;
 
-const ticket = await Support.create({
+const ticket =
+await Support.create({
 
+userId,
 name,
 phone,
 address,
@@ -21,14 +24,13 @@ address,
 subject,
 message,
 
-status:"open",
-reply:""
+status:"open"
 
 });
 
 res.json(ticket);
 
-} catch(err){
+}catch(err){
 
 console.log(err);
 
