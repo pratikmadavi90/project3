@@ -9,6 +9,8 @@ import {
   ScrollView,
   Alert,
   Platform,
+  Modal,
+  FlatList,
 } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -21,15 +23,20 @@ export default function Profile() {
 
   const router = useRouter();
 
-  const [user, setUser] = useState({
-    userId: "",
-    name: "",
-    phone: "",
-    email: "",
-    address: "",
-    city: "",
-    pincode: "",
-  });
+const [user, setUser] = useState({
+userId: "",
+name: "",
+phone: "",
+email: "",
+address: "",
+village: "",
+landmark: "",
+city: "",
+pincode: "",
+});
+
+const [villages, setVillages] = useState<any[]>([]);
+const [showVillage, setShowVillage] = useState(false);
 
   // 📥 LOAD USER DATA
   useEffect(() => {
@@ -64,9 +71,40 @@ export default function Profile() {
       }
     };
 
-    loadData();
+loadData();
 
-  }, []);
+const loadVillages = async () => {
+
+try {
+
+const res = await fetch(
+"https://api.harzo.in/api/delivery/all"
+);
+
+const data = await res.json();
+
+console.log("Villages:", data);
+
+setVillages(
+  Array.isArray(data)
+    ? data
+    : data.data || []
+);
+
+} catch (err) {
+
+console.log(
+"Village Load Error:",
+err
+);
+
+}
+
+};
+
+loadVillages();
+
+}, []);
 
  // 💾 UPDATE PROFILE
 const updateProfile = async () => {
@@ -74,15 +112,25 @@ const updateProfile = async () => {
   try {
 
     // ADDRESS VALIDATION
-    if (user.address.trim().length < 8) {
+ if (!user.village) {
 
-      Alert.alert(
-        "Invalid Address",
-        "Please enter full delivery address"
-      );
+Alert.alert(
+"Select Village",
+"Please select village"
+);
 
-      return;
-    }
+return;
+}
+
+if ((user.landmark || "").trim().length < 5) {
+
+Alert.alert(
+"Landmark Required",
+"Please enter house no / landmark"
+);
+
+return;
+}
 
     // LOCATION PERMISSION
     const { status } =
@@ -172,33 +220,52 @@ const updateProfile = async () => {
       areasResponse.data ||
       areasResponse;
 
-    // MATCH ONLY ADMIN ADDED VILLAGE
-    const matchedArea =
-      areas.find((item) => {
+    
+// MATCH LIVE AREA WITH SELECTED VILLAGE
 
-        const adminVillage =
-          (
-            item.area ||
-            item.name ||
-            ""
-          )
-          .toLowerCase()
-          .trim();
+const selectedVillage =
+(user.village || "")
+.toLowerCase()
+.trim();
 
-        return adminVillage === liveArea;
+if (selectedVillage !== liveArea) {
 
-      });
+Alert.alert(
+"Delivery Not Available",
+`You are in ${liveArea.charAt(0).toUpperCase() + liveArea.slice(1)} but selected ${user.village}`
+);
+
+return;
+
+}
+
+const matchedArea =
+areas.find((item:any)=>{
+
+const adminVillage =
+(
+item.area ||
+item.name ||
+""
+)
+.toLowerCase()
+.trim();
+
+return adminVillage === selectedVillage;
+
+});
 
     // DELIVERY CHECK
-    if (!matchedArea) {
+if (!matchedArea) {
 
-      Alert.alert(
-        "Delivery Not Available",
-        `No delivery in ${liveArea}`
-      );
+Alert.alert(
+"Delivery Not Available",
+`No delivery in ${selectedVillage}`
+);
 
-      return;
-    }
+return;
+
+}
 
     // EMAIL CHECK
     if (!user.email) {
@@ -212,15 +279,18 @@ const updateProfile = async () => {
     }
 
     // FINAL USER DATA
-    const finalUser = {
+ const finalUser = {
 
-      ...user,
+...user,
 
-      userId:
-        user?.userId ||
-        "USR" + Date.now()
+address:
+`${user.village}, ${user.landmark}`,
 
-    };
+userId:
+user?.userId ||
+"USR" + Date.now()
+
+};
 
     // UPDATE API
     const res =
@@ -311,16 +381,17 @@ const updateProfile = async () => {
                   "user"
                 );
 
-            setUser({
-             userId: "",
-             name: "",
-             phone: "",
-             email: "",
-             address: "",
-             city: "",
-             pincode: "",
-             });
-
+setUser({
+userId: "",
+name: "",
+phone: "",
+email: "",
+address: "",
+village: "",
+landmark: "",
+city: "",
+pincode: "",
+});
               router.replace("/");
 
               } catch (error) {
@@ -422,33 +493,86 @@ const updateProfile = async () => {
       />
 
       {/* ADDRESS */}
-      <TextInput
-        placeholder="Village Name, House No, Landmark"
-        placeholderTextColor="#666"
-        value={user.address}
-        multiline
-        numberOfLines={3}
-        selectionColor="#22c55e"
-        onChangeText={(text) =>
-          setUser({
-            ...user,
-            address: text,
-          })
-        }
-        style={styles.addressInput}
-      />
-
-      {/* FIXED CITY */}
- <TextInput
-  value={user.city || ""}
-  onChangeText={(text) =>
-    setUser({
-      ...user,
-      city: text,
-    })
-  }
+{/* VILLAGE */}
+<TouchableOpacity
   style={styles.input}
+  onPress={() => setShowVillage(true)}
+>
+<Text
+  style={{
+    fontSize:16,
+    color:"#111111",
+    fontWeight:"500"
+  }}
+>
+  {user.village || "Select Village"}
+</Text>
+</TouchableOpacity>
+
+<Modal
+  visible={showVillage}
+  transparent
+  animationType="slide"
+>
+  <View
+    style={{
+      flex:1,
+      justifyContent:"center",
+      backgroundColor:"rgba(0,0,0,0.5)"
+    }}
+  >
+    <View
+      style={{
+        backgroundColor:"#fff",
+        margin:20,
+        borderRadius:10,
+        padding:20,
+        maxHeight:400
+      }}
+    >
+     <FlatList
+  data={villages}
+  keyExtractor={(item:any)=>item._id}
+  renderItem={({item}:any)=>(
+          <TouchableOpacity
+            onPress={()=>{
+              setUser({
+                ...user,
+                village:item.name,
+                city:item.name,
+                pincode:item.pincode || ""
+              });
+
+              setShowVillage(false);
+            }}
+          >
+            <Text style={{padding:15,fontSize:18}}>
+              {item.name}
+            </Text>
+          </TouchableOpacity>
+        )}
+      />
+    </View>
+  </View>
+</Modal>
+
+
+{/* LANDMARK */}
+<TextInput
+placeholder="House No / Landmark"
+placeholderTextColor="#666"
+value={user.landmark}
+selectionColor="#22c55e"
+onChangeText={(text)=>
+setUser({
+...user,
+landmark:text
+})
+}
+style={styles.addressInput}
 />
+
+
 
       {/* PINCODE */}
       <TextInput

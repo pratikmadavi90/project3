@@ -17,6 +17,7 @@ const settingsRoutes = require("./routes/settingsRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const distanceRoutes =require("./routes/distanceRoutes");
+const supportRoutes = require("./routes/support");
 
 
 
@@ -111,7 +112,7 @@ app.use("/api/settings", settingsRoutes);
 app.use("/api/notification", notificationRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/distance",distanceRoutes);
-
+app.use("/api/support", supportRoutes);
 
 
 

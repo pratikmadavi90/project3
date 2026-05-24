@@ -32,10 +32,25 @@ exports.addZone = async (req, res) => {
 // 📋 Get All Areas
 exports.getZones = async (req, res) => {
   try {
-    const zones = await DeliveryZone.find().sort({ createdAt: -1 });
-    res.json(zones);
+
+    const zones = await DeliveryZone
+      .find({
+        isActive: true
+      })
+      .sort({ name: 1 });
+
+    res.json({
+      success: true,
+      data: zones
+    });
+
   } catch (err) {
-    res.status(500).json({ error: err.message });
+
+    res.status(500).json({
+      success: false,
+      error: err.message
+    });
+
   }
 };
 
