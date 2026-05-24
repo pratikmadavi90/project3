@@ -1,19 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <meta charset="UTF-8">
+
 <title>Support Tickets</title>
 
-<link rel="stylesheet" href="../css/support.css">
+<link rel="stylesheet"
+href="../css/support.css">
 
 </head>
+
 <body>
 
 <div class="container">
 
-<h2>Support Tickets</h2>
+<div class="header">
 
-<div id="ticketList"></div>
+<h2>
+Support Tickets
+</h2>
+
+<button
+onclick="loadTickets()"
+class="refreshBtn"
+>
+Refresh
+</button>
+
+</div>
+
+<div id="ticketList">
+
+<p class="loading">
+Loading tickets...
+</p>
+
+</div>
 
 </div>
 
@@ -21,4 +44,3 @@
 
 </body>
 </html>
-

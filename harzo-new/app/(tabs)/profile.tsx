@@ -647,14 +647,17 @@ style={styles.addressInput}
           Support
         </Text>
 
-        <TouchableOpacity
-          style={styles.option}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.optionText}>
-            🛠️ Help & Support
-          </Text>
-        </TouchableOpacity>
+<TouchableOpacity
+style={styles.option}
+activeOpacity={0.7}
+onPress={()=>
+router.push("/help-support")
+}
+>
+<Text style={styles.optionText}>
+🛠️ Help & Support
+</Text>
+</TouchableOpacity>
 
         <TouchableOpacity
           style={styles.option}

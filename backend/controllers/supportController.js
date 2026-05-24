@@ -9,7 +9,8 @@ exports.createTicket = async (req, res) => {
    const ticket = await Support.create({
       userId,
       subject,
-      message
+      message,
+      status:"open"
    });
 
    res.json(ticket);
@@ -43,6 +44,43 @@ exports.getTickets = async (req,res)=>{
    res.status(500).json({
       msg:"Error"
    });
+
+ }
+
+};
+
+
+exports.replyTicket = async(req,res)=>{
+
+ try{
+
+ const { id } = req.params;
+
+ const { reply } = req.body;
+
+ const ticket =
+ await Support.findByIdAndUpdate(
+
+ id,
+
+ {
+   reply,
+   status:"resolved"
+ },
+
+ {new:true}
+
+ );
+
+ res.json(ticket);
+
+ }catch(err){
+
+ console.log(err);
+
+ res.status(500).json({
+ msg:"Error"
+ });
 
  }
 
