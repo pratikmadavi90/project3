@@ -1,6 +1,6 @@
 const API = "https://api.harzo.in/api/support";
 
-async function loadTickets(){
+async function loadTickets() {
 
 try{
 
@@ -11,17 +11,25 @@ const tickets = await res.json();
 const ticketList =
 document.getElementById("ticketList");
 
-ticketList.innerHTML =
-tickets.map(ticket=>`
+ticketList.innerHTML = "";
 
-<div class="ticket">
+tickets.forEach(ticket=>{
+
+const div =
+document.createElement("div");
+
+div.className="ticket";
+
+div.innerHTML = `
 
 <div class="top">
 
 <h3>${ticket.subject}</h3>
 
-<span class="${ticket.status||"open"}">
-${ticket.status||"open"}
+<span class="${ticket.status || "open"}">
+
+${ticket.status || "open"}
+
 </span>
 
 </div>
@@ -32,11 +40,13 @@ ${ticket.status||"open"}
 User : ${ticket.userId}
 </small>
 
-${
-ticket.reply
-?
+`;
 
-`<div style="
+if(ticket.reply){
+
+div.innerHTML += `
+
+<div style="
 margin-top:15px;
 padding:12px;
 background:#111827;
@@ -44,32 +54,47 @@ border-radius:10px;
 color:#39ff14;
 ">
 
-<b>Reply :</b>
+<b>Reply:</b>
+
 ${ticket.reply}
 
-</div>`
+</div>
 
-:
+`;
 
-`<div>
+}else{
+
+div.innerHTML += `
+
+<div style="
+display:flex;
+margin-top:15px;
+gap:10px;
+">
 
 <input
 id="${ticket._id}"
 placeholder="Write reply..."
->
+style="flex:1"
+/>
 
 <button
 onclick="replyTicket('${ticket._id}')"
 >
-Reply
-</button>
 
-</div>`
-}
+Reply
+
+</button>
 
 </div>
 
-`).join("");
+`;
+
+}
+
+ticketList.appendChild(div);
+
+});
 
 }catch(err){
 
@@ -84,8 +109,7 @@ async function replyTicket(id){
 try{
 
 const reply =
-document.getElementById(id)
-.value;
+document.getElementById(id).value;
 
 if(!reply){
 
@@ -96,7 +120,9 @@ return;
 }
 
 await fetch(
+
 `${API}/reply/${id}`,
+
 {
 
 method:"PUT",
