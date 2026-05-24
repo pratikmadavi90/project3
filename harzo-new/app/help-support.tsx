@@ -56,10 +56,11 @@ headers:{
 
 body:JSON.stringify({
 
-userId:user.userId,
+name:user.name,
+phone:user.phone,
+address:user.address,
 
 subject,
-
 message
 
 })

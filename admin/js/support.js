@@ -11,7 +11,7 @@ const tickets = await res.json();
 const ticketList =
 document.getElementById("ticketList");
 
-ticketList.innerHTML = "";
+ticketList.innerHTML="";
 
 tickets.forEach(ticket=>{
 
@@ -20,31 +20,42 @@ document.createElement("div");
 
 div.className="ticket";
 
-div.innerHTML = `
+div.innerHTML=`
 
 <div class="top">
 
 <h3>${ticket.subject}</h3>
 
 <span class="${ticket.status || "open"}">
-
 ${ticket.status || "open"}
-
 </span>
 
 </div>
 
 <p>${ticket.message}</p>
 
-<small>
-User : ${ticket.userId}
-</small>
+<div style="
+margin-top:10px;
+line-height:28px;
+">
+
+<b>👤 ${ticket.name || "Unknown"}</b>
+
+<br>
+
+📞 ${ticket.phone || "No Phone"}
+
+<br>
+
+📍 ${ticket.address || "No Address"}
+
+</div>
 
 `;
 
 if(ticket.reply){
 
-div.innerHTML += `
+div.innerHTML +=`
 
 <div style="
 margin-top:15px;
@@ -64,7 +75,7 @@ ${ticket.reply}
 
 }else{
 
-div.innerHTML += `
+div.innerHTML +=`
 
 <div style="
 display:flex;
@@ -80,10 +91,8 @@ style="flex:1"
 
 <button
 onclick="replyTicket('${ticket._id}')"
->
-
+> 
 Reply
-
 </button>
 
 </div>
@@ -113,10 +122,11 @@ document.getElementById(id).value;
 
 if(!reply){
 
-alert("Write reply");
+alert(
+"Write reply"
+);
 
 return;
-
 }
 
 await fetch(
@@ -128,8 +138,7 @@ await fetch(
 method:"PUT",
 
 headers:{
-"Content-Type":
-"application/json"
+"Content-Type":"application/json"
 },
 
 body:JSON.stringify({

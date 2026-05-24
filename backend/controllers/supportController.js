@@ -2,86 +2,100 @@ const Support = require("../models/Support");
 
 exports.createTicket = async (req, res) => {
 
- try {
+try {
 
-   const { userId, subject, message } = req.body;
+const {
+name,
+phone,
+address,
+subject,
+message
+} = req.body;
 
-   const ticket = await Support.create({
-      userId,
-      subject,
-      message,
-      status:"open"
-   });
+const ticket = await Support.create({
 
-   res.json(ticket);
+name,
+phone,
+address,
 
- } catch(err){
+subject,
+message,
 
-   console.log(err);
+status:"open",
+reply:""
 
-   res.status(500).json({
-      msg:"Error"
-   });
+});
 
- }
+res.json(ticket);
+
+} catch(err){
+
+console.log(err);
+
+res.status(500).json({
+msg:"Error"
+});
+
+}
 
 };
 
 
-exports.getTickets = async (req,res)=>{
+exports.getTickets = async(req,res)=>{
 
- try{
+try{
 
-   const tickets = await Support.find()
-   .sort({ createdAt:-1 });
+const tickets =
+await Support.find()
+.sort({createdAt:-1});
 
-   res.json(tickets);
+res.json(tickets);
 
- }catch(err){
+}catch(err){
 
-   console.log(err);
+console.log(err);
 
-   res.status(500).json({
-      msg:"Error"
-   });
+res.status(500).json({
+msg:"Error"
+});
 
- }
+}
 
 };
 
 
 exports.replyTicket = async(req,res)=>{
 
- try{
+try{
 
- const { id } = req.params;
+const {id}=req.params;
 
- const { reply } = req.body;
+const {reply}=req.body;
 
- const ticket =
- await Support.findByIdAndUpdate(
+const ticket =
+await Support.findByIdAndUpdate(
 
- id,
+id,
 
- {
-   reply,
-   status:"resolved"
- },
+{
+reply,
+status:"resolved"
+},
 
- {new:true}
+{new:true}
 
- );
+);
 
- res.json(ticket);
+res.json(ticket);
 
- }catch(err){
+}catch(err){
 
- console.log(err);
+console.log(err);
 
- res.status(500).json({
- msg:"Error"
- });
+res.status(500).json({
+msg:"Error"
+});
 
- }
+}
 
 };
