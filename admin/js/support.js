@@ -1,99 +1,83 @@
 const API = "https://api.harzo.in/api/support";
 
-async function loadTickets() {
+async function loadTickets(){
 
- try {
+try{
 
-   const res = await fetch(API);
+const res = await fetch(API);
 
-   const tickets = await res.json();
+const tickets = await res.json();
 
-   const ticketList =
-   document.getElementById("ticketList");
+const ticketList =
+document.getElementById("ticketList");
 
-   ticketList.innerHTML =
-   tickets.map(ticket=>`
+ticketList.innerHTML =
+tickets.map(ticket=>`
 
-   <div class="ticket">
+<div class="ticket">
 
-      <div class="top">
+<div class="top">
 
-      <h3>${ticket.subject}</h3>
+<h3>${ticket.subject}</h3>
 
-      <span class="${ticket.status}">
-      ${ticket.status}
-      </span>
+<span class="${ticket.status||"open"}">
+${ticket.status||"open"}
+</span>
 
-      </div>
+</div>
 
-      <p>${ticket.message}</p>
+<p>${ticket.message}</p>
 
-      <small>
-      User : ${ticket.userId}
-      </small>
+<small>
+User : ${ticket.userId}
+</small>
 
-      <br><br>
+${
+ticket.reply
+?
 
-      ${
-      ticket.reply
-      ?
+`<div style="
+margin-top:15px;
+padding:12px;
+background:#111827;
+border-radius:10px;
+color:#39ff14;
+">
 
-      `<div style="
-      margin-top:10px;
-      padding:10px;
-      background:#1f2937;
-      border-radius:8px;
-      color:#22c55e;
-      ">
-      Reply :
-      ${ticket.reply}
-      </div>`
+<b>Reply :</b>
+${ticket.reply}
 
-      :
+</div>`
 
-      `
+:
 
-      <input
-      id="${ticket._id}"
-      placeholder="Write reply..."
-      style="
-      width:80%;
-      padding:10px;
-      border-radius:8px;
-      border:none;
-      margin-top:10px;
-      "
-      />
+`<div>
 
-      <button
-      onclick="replyTicket('${ticket._id}')"
-      style="
-      background:#22c55e;
-      border:none;
-      padding:10px 15px;
-      border-radius:8px;
-      margin-left:8px;
-      cursor:pointer;
-      "
-      >
-      Reply
-      </button>
+<input
+id="${ticket._id}"
+placeholder="Write reply..."
+>
 
-      `
-      }
+<button
+onclick="replyTicket('${ticket._id}')"
+>
+Reply
+</button>
 
-   </div>
+</div>`
+}
 
-   `).join("");
+</div>
 
- } catch(err){
+`).join("");
 
-   console.log(err);
+}catch(err){
 
- }
+console.log(err);
 
 }
 
+}
 
 async function replyTicket(id){
 
@@ -105,17 +89,14 @@ document.getElementById(id)
 
 if(!reply){
 
-alert(
-"Enter reply"
-);
+alert("Write reply");
 
 return;
+
 }
 
 await fetch(
-
 `${API}/reply/${id}`,
-
 {
 
 method:"PUT",
@@ -126,9 +107,7 @@ headers:{
 },
 
 body:JSON.stringify({
-
 reply
-
 })
 
 }
