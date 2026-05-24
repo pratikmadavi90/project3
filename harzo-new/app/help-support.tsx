@@ -80,6 +80,33 @@ const sendSupport=async()=>{
 
 try{
 
+const savedUser=
+await AsyncStorage.getItem(
+"user"
+);
+
+const user=
+JSON.parse(savedUser || "{}");
+
+
+// Profile check
+if(
+!user.name ||
+!user.phone ||
+!user.address
+){
+
+Alert.alert(
+"Complete Profile",
+"Please save profile and delivery address first"
+);
+
+return;
+
+}
+
+
+// Subject/message check
 if(!subject || !message){
 
 Alert.alert(
@@ -88,15 +115,8 @@ Alert.alert(
 );
 
 return;
+
 }
-
-const savedUser=
-await AsyncStorage.getItem(
-"user"
-);
-
-const user=
-JSON.parse(savedUser || "{}");
 
 const res=
 await fetch(API,{

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Returns</title>
+
+<link rel="stylesheet" href="returns.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Return Requests</h1>
+
+<div class="topBar">
+
+<input
+id="searchInput"
+type="text"
+placeholder="Search Return ID / Product / Order"
+>
+
+<select id="statusFilter">
+
+<option value="">All Status</option>
+
+<option value="Pending">Pending</option>
+
+<option value="Approved">Approved</option>
+
+<option value="Rejected">Rejected</option>
+
+<option value="Picked">Picked</option>
+
+<option value="Refunded">Refunded</option>
+
+</select>
+
+</div>
+
+<div id="loading">
+
+Loading...
+</div>
+
+<div id="returnList">
+
+</div>
+
+</div>
+
+<script src="returns.js"></script>
+
+</body>
+
+</html>

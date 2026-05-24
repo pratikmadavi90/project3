@@ -10,7 +10,6 @@ import React, {
 import {
   View,
   Text,
-  
   Image,
   ScrollView,
   StyleSheet,
@@ -18,6 +17,7 @@ import {
   Dimensions,
   TouchableOpacity,
   Modal,
+  BackHandler,
 } from "react-native";
 
 import {
@@ -25,7 +25,10 @@ import {
   router,
 } from "expo-router";
 
+import { useFocusEffect } from "@react-navigation/native";
+
 import { useCart } from "../context/CartContext";
+import { Ionicons } from "@expo/vector-icons";
 const { width } = Dimensions.get("window");
 
 export default function ProductDetail() {
@@ -39,6 +42,9 @@ export default function ProductDetail() {
 
   const [zoomImage, setZoomImage] =
     useState(null);
+
+  const [activeIndex, setActiveIndex] =
+useState(0);  
 
   const scrollRef = useRef(null);
 
@@ -73,6 +79,28 @@ export default function ProductDetail() {
       console.log("Parse error:", e);
     }
   }, [item]);
+
+useFocusEffect(
+  React.useCallback(() => {
+
+    const onBackPress = () => {
+
+      router.back();
+
+      return true;
+    };
+
+    const subscription =
+      BackHandler.addEventListener(
+        "hardwareBackPress",
+        onBackPress
+      );
+
+    return () =>
+      subscription.remove();
+
+  }, [])
+);
 
   // ✅ SAFE PARSE
   let parsedAllProducts = [];
@@ -118,40 +146,37 @@ export default function ProductDetail() {
   };
 
   // ✅ IMAGES
-  const images =
-    product?.images?.all?.length > 0
-      ? product.images.all
-      : product?.images?.thumbnail
-      ? [product.images.thumbnail]
-      : [];
+const images =
+product?.images?.gallery?.length > 0
+? product.images.gallery
+: product?.images?.thumbnail
+? [product.images.thumbnail]
+: [];
 
   return (
     <View style={{ flex: 1 }}>
 
 <TouchableOpacity
-  style={{
-    position: "absolute",
-    top: 50,
-    left: 15,
-    zIndex: 999,
-    backgroundColor: "#fff",
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
-    elevation: 5,
-  }}
+style={{
+position: "absolute",
+top: 50,
+left: 15,
+zIndex: 999,
+backgroundColor: "#fff",
+width: 40,
+height: 40,
+borderRadius: 20,
+justifyContent: "center",
+alignItems: "center",
+elevation: 5,
+}}
 onPress={() => router.back()}
 >
-  <Text
-    style={{
-      fontSize: 22,
-      fontWeight: "bold",
-    }}
-  >
-    ←
-  </Text>
+<Ionicons
+name="arrow-back"
+size={22}
+color="#000"
+/>
 </TouchableOpacity>
 
       <ScrollView
@@ -166,6 +191,14 @@ onPress={() => router.back()}
           data={images}
           horizontal
           pagingEnabled
+onMomentumScrollEnd={(e)=>{
+setActiveIndex(
+Math.round(
+e.nativeEvent.contentOffset.x / width
+)
+)
+}}
+
           showsHorizontalScrollIndicator={
             false
           }
@@ -189,7 +222,38 @@ onPress={() => router.back()}
           )}
         />
 
-       
+{images.length > 1 && (
+
+<View
+style={{
+flexDirection:"row",
+justifyContent:"center",
+marginTop:10
+}}
+>
+
+{images.map((_,index)=>(
+
+<View
+key={index}
+style={{
+width:10,
+height:10,
+borderRadius:5,
+marginHorizontal:5,
+
+backgroundColor:
+activeIndex===index
+? "green"
+: "gray"
+}}
+/>
+
+))}
+
+</View>
+
+)}
 
         {/* DETAILS */}
         <View style={styles.details}>
@@ -722,7 +786,7 @@ const styles =
 
     bottom: {
       position: "absolute",
-      bottom: 10,
+      bottom: 35,
       left: 10,
       right: 10,
       backgroundColor:
