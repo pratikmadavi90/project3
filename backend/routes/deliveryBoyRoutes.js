@@ -9,21 +9,36 @@ require(
 "../controllers/deliveryBoyController"
 );
 
+
+// Add
 router.post(
 "/add",
 controller.addDeliveryBoy
 );
 
+
+// Login
+router.post(
+"/login",
+controller.loginDeliveryBoy
+);
+
+
+// Get All
 router.get(
 "/all",
 controller.getAllDeliveryBoys
 );
 
+
+// Delete
 router.delete(
 "/delete/:id",
 controller.deleteDeliveryBoy
 );
 
+
+// Update
 router.put(
 "/update/:id",
 controller.updateDeliveryBoy

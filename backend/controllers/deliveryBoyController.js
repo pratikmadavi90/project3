@@ -46,6 +46,67 @@ message:err.message
 
 
 
+// Login
+
+exports.loginDeliveryBoy=
+async(req,res)=>{
+
+try{
+
+const {
+deliveryId,
+password
+}=req.body;
+
+const boy=
+await DeliveryBoy.findOne({
+
+deliveryId,
+password
+
+});
+
+if(!boy){
+
+return res.json({
+
+success:false,
+message:"Wrong Delivery ID or Password"
+
+});
+
+}
+
+
+// online status true
+boy.online=true;
+
+await boy.save();
+
+res.json({
+
+success:true,
+deliveryBoy:boy
+
+});
+
+}catch(err){
+
+res.status(500)
+.json({
+
+success:false,
+message:err.message
+
+});
+
+}
+
+};
+
+
+
+
 // Get All
 
 exports.getAllDeliveryBoys=
@@ -55,7 +116,9 @@ try{
 
 const data=
 await DeliveryBoy.find()
-.sort({createdAt:-1});
+.sort({
+createdAt:-1
+});
 
 res.json({
 success:true,
@@ -113,13 +176,10 @@ async(req,res)=>{
 try{
 
 const data=
-
 await DeliveryBoy.findByIdAndUpdate(
 
 req.params.id,
-
 req.body,
-
 {new:true}
 
 );

@@ -1,51 +1,92 @@
 // @ts-nocheck
 
-import React, { useState } from "react";
+import React,{useState} from "react";
+
 import {
 View,
 Text,
 TextInput,
 TouchableOpacity,
-StyleSheet,
-Alert
+StyleSheet
 } from "react-native";
 
 import { router } from "expo-router";
 
-export default function LoginScreen() {
+export default function LoginScreen(){
 
-const [deliveryId, setDeliveryId] = useState("");
-const [password, setPassword] = useState("");
+const [deliveryId,setDeliveryId]=useState("");
+const [password,setPassword]=useState("");
 
-const handleLogin = () => {
+const handleLogin=async()=>{
 
-if (
-deliveryId === "DLV001" &&
-password === "1234"
-) {
-Alert.alert("Success","Login Success");
+try{
 
-router.replace("/home")
+const res=await fetch(
+"https://api.harzo.in/api/delivery-boy/login",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+deliveryId,
+password
+})
+}
+);
 
-} else {
-Alert.alert(
-"Error",
+const data=await res.json();
+
+if(data.success){
+
+router.replace("/home");
+
+}else{
+
+alert(
+data.message ||
 "Wrong Delivery ID or Password"
 );
+
+}
+
+}catch{
+
+alert("Server Error");
+
 }
 
 };
 
-return (
+return(
 
 <View style={styles.container}>
 
-<Text style={styles.title}>
+<View style={styles.logoBox}>
+
+<Text style={styles.harzo}>
+HARZO
+</Text>
+
+<Text style={styles.mh}>
+MH34
+</Text>
+
+<Text style={styles.sars}>
+Sarswathi
+</Text>
+
+</View>
+
+<View style={styles.card}>
+
+<Text style={styles.loginText}>
 Delivery Login
 </Text>
 
 <TextInput
 placeholder="Delivery ID"
+placeholderTextColor="#888"
 value={deliveryId}
 onChangeText={setDeliveryId}
 style={styles.input}
@@ -53,9 +94,10 @@ style={styles.input}
 
 <TextInput
 placeholder="Password / PIN"
+placeholderTextColor="#888"
+secureTextEntry
 value={password}
 onChangeText={setPassword}
-secureTextEntry
 style={styles.input}
 />
 
@@ -65,10 +107,12 @@ onPress={handleLogin}
 >
 
 <Text style={styles.btnText}>
-Login
+LOGIN
 </Text>
 
 </TouchableOpacity>
+
+</View>
 
 </View>
 
@@ -76,40 +120,74 @@ Login
 
 }
 
-const styles = StyleSheet.create({
+const styles=StyleSheet.create({
 
 container:{
 flex:1,
+backgroundColor:"#081120",
 justifyContent:"center",
 padding:20
 },
 
-title:{
-fontSize:28,
+logoBox:{
+alignItems:"center",
+marginBottom:40
+},
+
+harzo:{
+fontSize:42,
 fontWeight:"bold",
-marginBottom:30,
+color:"#00ff88",
+letterSpacing:4
+},
+
+mh:{
+fontSize:18,
+color:"#fff",
+marginTop:5,
+fontWeight:"700"
+},
+
+sars:{
+fontSize:16,
+color:"#aaa",
+marginTop:5
+},
+
+card:{
+backgroundColor:"#12233d",
+padding:25,
+borderRadius:25
+},
+
+loginText:{
+fontSize:24,
+fontWeight:"bold",
+color:"#fff",
+marginBottom:25,
 textAlign:"center"
 },
 
 input:{
-borderWidth:1,
-borderColor:"#ddd",
-padding:14,
-borderRadius:10,
+backgroundColor:"#0a1730",
+color:"#fff",
+padding:16,
+borderRadius:14,
 marginBottom:15
 },
 
 button:{
-backgroundColor:"#000",
-padding:15,
-borderRadius:10
+backgroundColor:"#00ff88",
+padding:18,
+borderRadius:14,
+marginTop:10
 },
 
 btnText:{
-color:"#fff",
-fontSize:16,
+textAlign:"center",
 fontWeight:"bold",
-textAlign:"center"
+fontSize:16,
+color:"#000"
 }
 
 });
