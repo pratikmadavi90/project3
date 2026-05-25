@@ -37,6 +37,11 @@ default:"Active"
 online:{
 type:Boolean,
 default:false
+},
+
+token:{
+type:String,
+default:""
 }
 
 },

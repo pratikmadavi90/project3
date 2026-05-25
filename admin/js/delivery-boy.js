@@ -36,6 +36,8 @@ deliveryList.innerHTML += `
 
 <td>${boy.vehicle}</td>
 
+<td>${boy.online ? "🟢 Online" : "🔴 Offline"}</td>
+
 <td class="${
 boy.status==="Active"
 ?
