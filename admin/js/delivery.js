@@ -35,30 +35,49 @@ async function addArea() {
 
 // 📋 Load Areas
 async function loadAreas() {
-  const res = await fetch(`${API}/all`);
+
+const res = await fetch(`${API}/all`);
 
 if (!res.ok) {
-  throw new Error("Failed to load delivery areas");
+throw new Error("Failed to load delivery areas");
 }
 
-const data = await res.json();
+const result = await res.json();
 
-  const list = document.getElementById("areaList");
-  list.innerHTML = "";
+const data = result.data || [];
 
-  data.forEach(area => {
-    list.innerHTML += `
-      <tr>
-        <td>${area.name}</td>
-        <td>${area.pincode || "-"}</td>
-        <td>₹${area.charge || 0}</td>
-        <td>${area.time || "-"}</td>
-        <td>
-          <button onclick="deleteArea('${area._id}')">❌ Delete</button>
-        </td>
-      </tr>
-    `;
-  });
+const list = document.getElementById("areaList");
+
+list.innerHTML="";
+
+data.forEach(area=>{
+
+list.innerHTML += `
+
+<tr>
+
+<td>${area.name}</td>
+
+<td>${area.pincode || "-"}</td>
+
+<td>₹${area.charge || 0}</td>
+
+<td>${area.time || "-"}</td>
+
+<td>
+
+<button onclick="deleteArea('${area._id}')">
+❌ Delete
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
 }
 
 // ❌ Delete Area
