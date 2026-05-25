@@ -19,7 +19,7 @@ const orderRoutes = require("./routes/orderRoutes");
 const distanceRoutes =require("./routes/distanceRoutes");
 const supportRoutes = require("./routes/supportRoutes");
 const returnRoutes=require("./routes/returnRoutes");
-const deliveryBoyRoutes =require("./routes/deliveryRoutes");
+const deliveryBoyRoutes =require("./routes/deliveryBoyRoutes");
 
 
 
