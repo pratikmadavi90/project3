@@ -1,0 +1,141 @@
+const DeliveryBoy=
+require("../models/DeliveryBoy");
+
+
+
+// Add
+
+exports.addDeliveryBoy=
+async(req,res)=>{
+
+try{
+
+const count=
+await DeliveryBoy.countDocuments();
+
+const deliveryId=
+`DLV${String(
+count+1
+).padStart(3,"0")}`;
+
+const data=
+await DeliveryBoy.create({
+
+...req.body,
+deliveryId
+
+});
+
+res.json({
+success:true,
+data
+});
+
+}catch(err){
+
+res.status(500)
+.json({
+success:false,
+message:err.message
+});
+
+}
+
+};
+
+
+
+
+// Get All
+
+exports.getAllDeliveryBoys=
+async(req,res)=>{
+
+try{
+
+const data=
+await DeliveryBoy.find()
+.sort({createdAt:-1});
+
+res.json({
+success:true,
+data
+});
+
+}catch(err){
+
+res.status(500)
+.json({
+success:false
+});
+
+}
+
+};
+
+
+
+
+// Delete
+
+exports.deleteDeliveryBoy=
+async(req,res)=>{
+
+try{
+
+await DeliveryBoy.findByIdAndDelete(
+req.params.id
+);
+
+res.json({
+success:true
+});
+
+}catch(err){
+
+res.status(500)
+.json({
+success:false
+});
+
+}
+
+};
+
+
+
+
+// Update
+
+exports.updateDeliveryBoy=
+async(req,res)=>{
+
+try{
+
+const data=
+
+await DeliveryBoy.findByIdAndUpdate(
+
+req.params.id,
+
+req.body,
+
+{new:true}
+
+);
+
+res.json({
+success:true,
+data
+});
+
+}catch(err){
+
+res.status(500)
+.json({
+success:false
+});
+
+}
+
+};

@@ -1,72 +1,60 @@
-let count=1;
+const API = "https://api.harzo.in/api/delivery-boy";
 
-let saveBtn=document.getElementById("saveBtn");
-let deliveryList=document.getElementById("deliveryList");
-
-document.getElementById(
-"deliveryId"
-).value="DLV001";
-
-saveBtn.onclick=()=>{
-
-let name=
-document.getElementById("name").value;
-
-let mobile=
-document.getElementById("mobile").value;
-
-let deliveryId=
-document.getElementById("deliveryId").value;
-
-let vehicle=
-document.getElementById("vehicle").value;
-
-let status=
-document.getElementById("status").value;
+const saveBtn=document.getElementById("saveBtn");
+const deliveryList=document.getElementById("deliveryList");
+const search=document.getElementById("search");
 
 
-if(
-name=="" ||
-mobile==""
-){
+// Load delivery boys
+async function loadDeliveryBoys(){
 
-alert("Fill all fields");
-return;
+try{
 
-}
+const res=await fetch(`${API}/all`);
+
+const result=await res.json();
+
+const data=result.data || [];
+
+deliveryList.innerHTML="";
+
+data.forEach((boy,index)=>{
 
 deliveryList.innerHTML+=`
 
 <tr>
 
-<td>${name}</td>
+<td>${boy.name}</td>
 
-<td>${mobile}</td>
+<td>${boy.mobile}</td>
 
-<td>${deliveryId}</td>
+<td>${boy.deliveryId}</td>
 
-<td>${vehicle}</td>
+<td>${boy.vehicle}</td>
 
 <td class="${
-status=="Active"
+boy.status==="Active"
 ?
 "active"
 :
 "inactive"
 }">
-${status}
+${boy.status}
 </td>
 
 <td>
 
 <button
-class="edit">
+class="edit"
+onclick="editDeliveryBoy('${boy._id}')">
+
 Edit
+
 </button>
 
 <button
 class="delete"
-onclick="this.parentElement.parentElement.remove()">
+onclick="deleteDeliveryBoy('${boy._id}')">
 
 Delete
 
@@ -78,11 +66,153 @@ Delete
 
 `;
 
-count++;
+});
 
-document.getElementById(
-"deliveryId"
-).value=
-"DLV00"+count;
+}catch(err){
+
+console.log(err);
+
+alert("Failed to load delivery boys");
+
+}
+
+}
+
+
+
+// Save delivery boy
+
+saveBtn.onclick=async()=>{
+
+const name=
+document.getElementById("name").value;
+
+const mobile=
+document.getElementById("mobile").value;
+
+const password=
+document.getElementById("password").value;
+
+const vehicle=
+document.getElementById("vehicle").value;
+
+const status=
+document.getElementById("status").value;
+
+if(
+!name ||
+!mobile ||
+!password
+){
+
+return alert(
+"Fill all fields"
+);
+
+}
+
+await fetch(`${API}/add`,{
+
+method:"POST",
+
+headers:{
+"Content-Type":
+"application/json"
+},
+
+body:JSON.stringify({
+
+name,
+mobile,
+password,
+vehicle,
+status
+
+})
+
+});
+
+document.getElementById("name").value="";
+document.getElementById("mobile").value="";
+document.getElementById("password").value="";
+
+loadDeliveryBoys();
 
 };
+
+
+
+// Delete
+
+async function deleteDeliveryBoy(id){
+
+if(
+!confirm(
+"Delete delivery boy?"
+)
+)return;
+
+await fetch(
+
+`${API}/delete/${id}`,
+
+{
+method:"DELETE"
+}
+
+);
+
+loadDeliveryBoys();
+
+}
+
+
+
+// Edit structure
+
+function editDeliveryBoy(id){
+
+alert(
+"Edit feature backend next"
+);
+
+}
+
+
+
+// Search
+
+search.addEventListener(
+"keyup",
+()=>{
+
+let value=
+search.value.toLowerCase();
+
+let rows=
+document.querySelectorAll(
+"#deliveryList tr"
+);
+
+rows.forEach(row=>{
+
+row.style.display=
+row.innerText
+.toLowerCase()
+.includes(value)
+
+?
+
+""
+
+:
+
+"none";
+
+});
+
+});
+
+
+
+loadDeliveryBoys();
