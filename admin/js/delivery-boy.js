@@ -1,26 +1,30 @@
 const API = "https://api.harzo.in/api/delivery-boy";
 
-const saveBtn=document.getElementById("saveBtn");
-const deliveryList=document.getElementById("deliveryList");
-const search=document.getElementById("search");
+const saveBtn = document.getElementById("saveBtn");
+const deliveryList = document.getElementById("deliveryList");
+const search = document.getElementById("search");
 
 
-// Load delivery boys
+// Load Delivery Boys
 async function loadDeliveryBoys(){
 
 try{
 
-const res=await fetch(`${API}/all`);
+const res = await fetch(`${API}/all`);
 
-const result=await res.json();
+console.log("STATUS:",res.status);
 
-const data=result.data || [];
+const result = await res.json();
 
-deliveryList.innerHTML="";
+console.log("DATA:",result);
 
-data.forEach((boy,index)=>{
+const data = result.data || [];
 
-deliveryList.innerHTML+=`
+deliveryList.innerHTML = "";
+
+data.forEach((boy)=>{
+
+deliveryList.innerHTML += `
 
 <tr>
 
@@ -70,7 +74,7 @@ Delete
 
 }catch(err){
 
-console.log(err);
+console.log("ERROR:",err);
 
 alert("Failed to load delivery boys");
 
@@ -80,24 +84,24 @@ alert("Failed to load delivery boys");
 
 
 
-// Save delivery boy
+// Save Delivery Boy
+saveBtn.onclick = async()=>{
 
-saveBtn.onclick=async()=>{
-
-const name=
+const name =
 document.getElementById("name").value;
 
-const mobile=
+const mobile =
 document.getElementById("mobile").value;
 
-const password=
+const password =
 document.getElementById("password").value;
 
-const vehicle=
+const vehicle =
 document.getElementById("vehicle").value;
 
-const status=
+const status =
 document.getElementById("status").value;
+
 
 if(
 !name ||
@@ -111,13 +115,15 @@ return alert(
 
 }
 
-await fetch(`${API}/add`,{
+
+try{
+
+const res = await fetch(`${API}/add`,{
 
 method:"POST",
 
 headers:{
-"Content-Type":
-"application/json"
+"Content-Type":"application/json"
 },
 
 body:JSON.stringify({
@@ -132,18 +138,30 @@ status
 
 });
 
+const result = await res.json();
+
+console.log(result);
+
 document.getElementById("name").value="";
 document.getElementById("mobile").value="";
 document.getElementById("password").value="";
 
 loadDeliveryBoys();
 
+}catch(err){
+
+console.log("SAVE ERROR:",err);
+
+alert("Failed to save");
+
+}
+
 };
 
 
 
-// Delete
 
+// Delete
 async function deleteDeliveryBoy(id){
 
 if(
@@ -151,6 +169,9 @@ if(
 "Delete delivery boy?"
 )
 )return;
+
+
+try{
 
 await fetch(
 
@@ -164,16 +185,21 @@ method:"DELETE"
 
 loadDeliveryBoys();
 
+}catch(err){
+
+console.log("DELETE ERROR:",err);
+
+}
+
 }
 
 
 
-// Edit structure
-
+// Edit
 function editDeliveryBoy(id){
 
 alert(
-"Edit feature backend next"
+"Edit backend next"
 );
 
 }
@@ -181,15 +207,14 @@ alert(
 
 
 // Search
-
 search.addEventListener(
 "keyup",
 ()=>{
 
-let value=
+let value =
 search.value.toLowerCase();
 
-let rows=
+let rows =
 document.querySelectorAll(
 "#deliveryList tr"
 );
@@ -197,6 +222,7 @@ document.querySelectorAll(
 rows.forEach(row=>{
 
 row.style.display=
+
 row.innerText
 .toLowerCase()
 .includes(value)
@@ -214,5 +240,5 @@ row.innerText
 });
 
 
-
+// Auto Load
 loadDeliveryBoys();
