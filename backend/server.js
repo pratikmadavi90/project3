@@ -116,7 +116,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/distance",distanceRoutes);
 app.use("/api/support", supportRoutes);
 app.use("/api/returns",returnRoutes);
-app.use("/api/delivery-boy", deliveryRoutes);
+app.use("/api/delivery-boy", deliveryBoyRoutes);
 
 
 
