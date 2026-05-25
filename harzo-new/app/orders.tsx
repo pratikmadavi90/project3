@@ -8,7 +8,10 @@ import {
   Image,
   ActivityIndicator,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
+
+import { router } from "expo-router";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -405,6 +408,43 @@ currentKey
 
           </View>
 
+{
+true && (
+
+<TouchableOpacity
+style={styles.returnBtn}
+
+onPress={()=>
+router.push({
+pathname:"/return-request",
+params:{
+orderId:item?.orderId || item?._id,
+
+productName:
+item?.items?.map(
+(p)=>p?.name
+).join(", "),
+
+quantity:
+item?.items?.reduce(
+(sum,p)=>
+sum + (p?.quantity || p?.qty || 1),
+0
+)
+}
+})
+}
+>
+
+<Text style={styles.returnBtnText}>
+↩ Return Product
+</Text>
+
+</TouchableOpacity>
+
+)
+}
+
         </View>
       )}
     />
@@ -582,5 +622,19 @@ statusBox: {
     color: "#64748b",
     textAlign: "center",
   },
+
+  returnBtn:{
+backgroundColor:"#ef4444",
+padding:10,
+borderRadius:12,
+marginTop:12,
+alignItems:"center",
+},
+
+returnBtnText:{
+color:"#fff",
+fontSize:16,
+fontWeight:"700",
+},
 
 });

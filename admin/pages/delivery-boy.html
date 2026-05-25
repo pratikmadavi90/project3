@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Delivery Boy</title>
+
+<link rel="stylesheet" href="../css/delivery-boy.css">
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Delivery Boy Management</h2>
+
+<div class="card">
+
+<h3>Add Delivery Boy</h3>
+
+<div class="form-grid">
+
+<input type="text"
+id="name"
+placeholder="Name">
+
+<input type="number"
+id="mobile"
+placeholder="Mobile Number">
+
+<input type="text"
+id="deliveryId"
+placeholder="Delivery ID (DLV001)"
+readonly>
+
+<input type="password"
+id="password"
+placeholder="Password / PIN">
+
+<select id="vehicle">
+
+<option>Bike</option>
+<option>Scooter</option>
+<option>Cycle</option>
+
+</select>
+
+<select id="status">
+
+<option value="Active">Active</option>
+<option value="Inactive">Inactive</option>
+
+</select>
+
+</div>
+
+<button id="saveBtn">
+Save Delivery Boy
+</button>
+
+</div>
+
+
+<div class="card">
+
+<input
+type="text"
+id="search"
+placeholder="Search Delivery Boy">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Name</th>
+<th>Mobile</th>
+<th>ID</th>
+<th>Vehicle</th>
+<th>Status</th>
+<th>Actions</th>
+
+</tr>
+
+</thead>
+
+<tbody id="deliveryList">
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<script src="../js/delivery-boy.js"></script>
+
+</body>
+</html>
