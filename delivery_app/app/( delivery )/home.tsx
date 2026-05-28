@@ -216,6 +216,7 @@ status:"Accepted"
 router.push({
 pathname:"/order-details",
 params:{
+
 orderId:
 dashboard?.liveOrder?.orderId,
 
@@ -226,7 +227,17 @@ distance:
 dashboard?.liveOrder?.address?.city,
 
 amount:
-dashboard?.liveOrder?.finalAmount
+dashboard?.liveOrder?.finalAmount,
+
+landmark:
+dashboard?.liveOrder?.address?.fullAddress,
+
+phone:
+dashboard?.liveOrder?.user?.phone,
+
+status:
+dashboard?.liveOrder?.status
+
 }
 });
 
@@ -331,6 +342,18 @@ transform:[
 
 <Text style={styles.popupText}>
 💵 ₹{dashboard?.liveOrder?.finalAmount}
+</Text>
+
+<Text style={styles.popupText}>
+🏠 {dashboard?.liveOrder?.addressLine}
+</Text>
+
+<Text style={styles.popupText}>
+📞 {dashboard?.liveOrder?.user?.phone}
+</Text>
+
+<Text style={styles.popupText}>
+🚚 {dashboard?.liveOrder?.status}
 </Text>
 
 <View style={styles.timerBox}>
@@ -528,32 +551,10 @@ Accept Order
 
 </View>
 
-{dashboard?.orders?.map((item)=>(
 
-<View
-key={item._id}
-style={styles.orderCard}
->
 
-<Text style={styles.orderText}>
-📦 {item.orderId}
-</Text>
 
-<Text style={styles.orderText}>
-👤 {item.user?.name}
-</Text>
 
-<Text style={styles.orderText}>
-📍 {item.address?.city}
-</Text>
-
-<Text style={styles.orderText}>
-💵 ₹{item.finalAmount}
-</Text>
-
-</View>
-
-))}
 
 </ScrollView>
 

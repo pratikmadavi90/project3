@@ -24,12 +24,16 @@ const {
 orderId,
 customer,
 distance,
-amount
+amount,
+landmark,
+phone,
+status:initialStatus
 }=useLocalSearchParams();
 
 const [status,setStatus]=
-useState("Accepted");
-
+useState(
+initialStatus || "Accepted"
+);
 const updateStatus=async(newStatus)=>{
 
 try{
@@ -120,11 +124,11 @@ paddingBottom:40
 </Text>
 
 <Text style={styles.text}>
-🏠 Landmark: Near Main Road
+🏠 Landmark: {landmark || "-"}
 </Text>
 
 <Text style={styles.text}>
-📞 Customer Phone: 9876543210
+📞  Phone: {phone || "-"}
 </Text>
 
 <View style={styles.statusBox}>

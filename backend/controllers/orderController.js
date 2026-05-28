@@ -314,7 +314,11 @@ createdAt:-1
 
 console.log(
 "LIVE ORDER =",
-liveOrder
+JSON.stringify(
+liveOrder,
+null,
+2
+)
 );
 
 res.json({
