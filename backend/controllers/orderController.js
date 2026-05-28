@@ -333,7 +333,9 @@ orders.filter(
 o=>o.status!=="Delivered"
 ).length,
 
-liveOrder
+liveOrder,
+
+orders
 
 });
 

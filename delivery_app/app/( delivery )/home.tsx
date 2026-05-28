@@ -138,12 +138,7 @@ setDashboard(json);
 
 if(
 json.liveOrder &&
-[
-"Pending",
-"Accepted",
-"Packed",
-"Out for Delivery"
-].includes(
+["Pending"].includes(
 json.liveOrder.status
 )
 ){
@@ -243,13 +238,32 @@ console.log(err);
 
 };
 
-const rejectOrder=()=>{
+const rejectOrder=async()=>{
+
+try{
+
+await fetch(
+`https://api.harzo.in/api/orders/${dashboard?.liveOrder?._id}/status`,
+{
+method:"PUT",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+status:"Cancelled"
+})
+}
+);
 
 setShowPopup(false);
 
-setLastOrderId(
-dashboard?.liveOrder?._id
-);
+loadDashboard();
+
+}catch(err){
+
+console.log(err);
+
+}
 
 };
 
@@ -513,6 +527,33 @@ Accept Order
 </TouchableOpacity>
 
 </View>
+
+{dashboard?.orders?.map((item)=>(
+
+<View
+key={item._id}
+style={styles.orderCard}
+>
+
+<Text style={styles.orderText}>
+📦 {item.orderId}
+</Text>
+
+<Text style={styles.orderText}>
+👤 {item.user?.name}
+</Text>
+
+<Text style={styles.orderText}>
+📍 {item.address?.city}
+</Text>
+
+<Text style={styles.orderText}>
+💵 ₹{item.finalAmount}
+</Text>
+
+</View>
+
+))}
 
 </ScrollView>
 
