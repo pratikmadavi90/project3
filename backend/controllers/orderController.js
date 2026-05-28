@@ -209,73 +209,48 @@ exports.deleteOrder = async (req, res) => {
 
 
 // 📊 DELIVERY DASHBOARD
-
 exports.deliveryDashboard =
 async(req,res)=>{
 
-const deliveryBoyId =
-req.query.deliveryBoyId;
-
 try{
 
-const todayStart = new Date();
+const deliveryBoyId =
+String(req.query.deliveryBoyId);
 
-todayStart.setHours(0,0,0,0);
-
-const todayEnd = new Date();
-
-todayEnd.setHours(23,59,59,999);
+console.log(
+"DELIVERY ID =",
+deliveryBoyId
+);
 
 
 // 📦 Total Orders
 const totalOrders =
 await Order.countDocuments({
-
-deliveryBoyId:deliveryBoyId,
-
-createdAt:{
-$gte:todayStart,
-$lte:todayEnd
-}
-
+deliveryBoyId
 });
 
 
-// ✅ Delivered Orders
+// ✅ Delivered
 const deliveredOrders =
 await Order.countDocuments({
-
-deliveryBoyId:deliveryBoyId,
-
-status:"Delivered",
-
-createdAt:{
-$gte:todayStart,
-$lte:todayEnd
-}
-
+deliveryBoyId,
+status:"Delivered"
 });
 
 
-// ⏳ Pending Orders
+// ⏳ Pending
 const pendingOrders =
 await Order.countDocuments({
 
-deliveryBoyId:deliveryBoyId,
+deliveryBoyId,
 
 status:{
 $in:[
-"Placed",
 "Pending",
 "Accepted",
 "Picked Up",
 "Out for Delivery"
 ]
-},
-
-createdAt:{
-$gte:todayStart,
-$lte:todayEnd
 }
 
 });
@@ -285,11 +260,10 @@ $lte:todayEnd
 const liveOrder =
 await Order.findOne({
 
-deliveryBoyId:deliveryBoyId,
+deliveryBoyId,
 
 status:{
 $in:[
-"Placed",
 "Pending",
 "Accepted",
 "Picked Up",
@@ -301,6 +275,11 @@ $in:[
 createdAt:-1
 });
 
+
+console.log(
+"LIVE ORDER =",
+liveOrder
+);
 
 res.json({
 
@@ -314,6 +293,8 @@ liveOrder
 });
 
 }catch(err){
+
+console.log(err);
 
 res.status(500).json({
 success:false,
