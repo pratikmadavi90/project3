@@ -138,10 +138,20 @@ setDashboard(json);
 
 if(
 json.liveOrder &&
-json.liveOrder.status==="Pending"
+[
+"Pending",
+"Accepted",
+"Packed",
+"Out for Delivery"
+].includes(
+json.liveOrder.status
+)
 ){
 
-if(lastOrderId!==json.liveOrder._id){
+if(
+json.liveOrder._id &&
+lastOrderId!==json.liveOrder._id
+){
 
 setShowPopup(true);
 

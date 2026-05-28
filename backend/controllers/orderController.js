@@ -120,43 +120,79 @@ exports.updateStatus = async (req, res) => {
 
 
 // 🚚 ASSIGN DELIVERY BOY
+
 exports.assignDelivery = async (req, res) => {
+
   try {
+
     const { deliveryBoy } = req.body;
 
     if (!deliveryBoy || !deliveryBoy.name) {
-      return res.status(400).json({ message: "Delivery Boy info required" });
+
+      return res.status(400).json({
+        message: "Delivery Boy info required"
+      });
+
     }
 
-const order = await Order.findByIdAndUpdate(
-req.params.id,
-{
-deliveryBoy:{
-name:deliveryBoy.name,
-deliveryId:String(
-deliveryBoy.deliveryId
-)
-},
+    const order =
+    await Order.findByIdAndUpdate(
 
-deliveryBoyId:String(
-deliveryBoy.deliveryId
-)
-},
-{ new: true }
-);
+      req.params.id,
+
+      {
+
+        deliveryBoy:{
+          name:deliveryBoy.name,
+          phone:deliveryBoy.phone,
+          deliveryId:String(
+            deliveryBoy.deliveryId
+          )
+        },
+
+        deliveryBoyId:String(
+          deliveryBoy.deliveryId
+        ),
+
+        status:"Pending"
+
+      },
+
+      { new:true }
+
+    );
 
     if (!order) {
-      return res.status(404).json({ message: "Order not found" });
+
+      return res.status(404).json({
+        message: "Order not found"
+      });
+
     }
 
-    res.json({
-      message: "Delivery Assigned",
+    console.log(
+      "ASSIGNED ORDER =",
       order
+    );
+
+    res.json({
+
+      success:true,
+      message:"Delivery Assigned",
+      order
+
     });
 
   } catch (err) {
-    res.status(500).json({ error: err.message });
+
+    console.log(err);
+
+    res.status(500).json({
+      error: err.message
+    });
+
   }
+
 };
 
 
