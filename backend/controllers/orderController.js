@@ -28,6 +28,22 @@ if (!user) {
   });
 }
 
+const DeliveryBoy =
+require("../models/DeliveryBoy");
+
+const deliveryBoy =
+await DeliveryBoy.findOne({
+online:true
+});
+
+if(!deliveryBoy){
+
+return res.status(400).json({
+message:"No Delivery Boy Online"
+});
+
+}
+
 const order = new Order({
 
   ...req.body,
