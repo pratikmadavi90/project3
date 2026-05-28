@@ -131,9 +131,16 @@ exports.assignDelivery = async (req, res) => {
 const order = await Order.findByIdAndUpdate(
 req.params.id,
 {
-deliveryBoy,
-deliveryBoyId:
+deliveryBoy:{
+name:deliveryBoy.name,
+deliveryId:String(
 deliveryBoy.deliveryId
+)
+},
+
+deliveryBoyId:String(
+deliveryBoy.deliveryId
+)
 },
 { new: true }
 );

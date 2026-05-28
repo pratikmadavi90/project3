@@ -109,17 +109,19 @@ const loadDashboard=async()=>{
 
 try{
 
-const dataStorage =
+const savedUser =
 await AsyncStorage.getItem(
 "deliveryBoy"
 );
 
-const deliveryBoy =
-JSON.parse(dataStorage);    
+const user =
+JSON.parse(savedUser);
 
 const data=
 await fetch(
-`https://api.harzo.in/api/orders/delivery-dashboard?deliveryBoyId=${deliveryBoy.deliveryId}`
+
+`https://api.harzo.in/api/orders/delivery-dashboard?deliveryBoyId=${user.deliveryId || user.id}`
+
 );
 
 const json=
