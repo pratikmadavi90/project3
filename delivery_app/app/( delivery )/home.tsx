@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import React,{useEffect,useState} from "react";
+import React,{useEffect,useRef,useState} from "react";
 
 import {
 View,
@@ -8,14 +8,14 @@ Text,
 StyleSheet,
 TouchableOpacity,
 ScrollView,
-ActivityIndicator
+ActivityIndicator,
+Modal,
+Animated
 } from "react-native";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { router } from "expo-router";
-
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function HomeScreen(){
 
@@ -24,6 +24,13 @@ const [online,setOnline]=useState(true);
 const [loading,setLoading]=useState(true);
 
 const [dashboard,setDashboard]=useState(null);
+
+const [showPopup,setShowPopup]=useState(false);
+
+const [seconds,setSeconds]=useState(20);
+
+const scaleAnim=
+useRef(new Animated.Value(1)).current;
 
 useEffect(()=>{
 
@@ -39,6 +46,60 @@ loadDashboard();
 return ()=>clearInterval(interval);
 
 },[]);
+
+useEffect(()=>{
+
+if(showPopup){
+
+Animated.loop(
+
+Animated.sequence([
+
+Animated.timing(scaleAnim,{
+toValue:1.05,
+duration:500,
+useNativeDriver:true
+}),
+
+Animated.timing(scaleAnim,{
+toValue:1,
+duration:500,
+useNativeDriver:true
+})
+
+])
+
+).start();
+
+}
+
+},[showPopup]);
+
+useEffect(()=>{
+
+let timer;
+
+if(showPopup && seconds>0){
+
+timer=setTimeout(()=>{
+
+setSeconds(seconds-1);
+
+},1000);
+
+}
+
+if(seconds===0){
+
+setShowPopup(false);
+
+setSeconds(20);
+
+}
+
+return ()=>clearTimeout(timer);
+
+},[showPopup,seconds]);
 
 const loadDashboard=async()=>{
 
@@ -56,6 +117,8 @@ if(json.success){
 
 setDashboard(json);
 
+setShowPopup(true);
+
 }
 
 }catch(err){
@@ -72,6 +135,35 @@ setLoading(false);
 
 const toggleStatus=()=>{
 setOnline(!online);
+};
+
+const acceptOrder=()=>{
+
+setShowPopup(false);
+
+router.push({
+pathname:"/order-details",
+params:{
+orderId:
+dashboard?.liveOrder?.orderId,
+
+customer:
+dashboard?.liveOrder?.user?.name,
+
+distance:
+dashboard?.liveOrder?.address?.city,
+
+amount:
+dashboard?.liveOrder?.finalAmount
+}
+});
+
+};
+
+const rejectOrder=()=>{
+
+setShowPopup(false);
+
 };
 
 if(loading){
@@ -98,6 +190,87 @@ color="#2563eb"
 return(
 
 <SafeAreaView style={{flex:1}}>
+
+{/* POPUP */}
+
+<Modal
+visible={showPopup}
+transparent={true}
+animationType="slide"
+>
+
+<View style={styles.popupContainer}>
+
+<Animated.View
+style={[
+styles.popupBox,
+{
+transform:[
+{scale:scaleAnim}
+]
+}
+]}
+>
+
+<Text style={styles.popupTitle}>
+🚨 New Order
+</Text>
+
+<Text style={styles.popupText}>
+📦 {dashboard?.liveOrder?.orderId}
+</Text>
+
+<Text style={styles.popupText}>
+👤 {dashboard?.liveOrder?.user?.name}
+</Text>
+
+<Text style={styles.popupText}>
+📍 {dashboard?.liveOrder?.address?.city}
+</Text>
+
+<Text style={styles.popupText}>
+💵 ₹{dashboard?.liveOrder?.finalAmount}
+</Text>
+
+<View style={styles.timerBox}>
+
+<Text style={styles.timerText}>
+⏰ {seconds}s
+</Text>
+
+</View>
+
+<View style={styles.popupBtnRow}>
+
+<TouchableOpacity
+style={styles.rejectBtn}
+onPress={rejectOrder}
+>
+
+<Text style={styles.popupBtnText}>
+Reject
+</Text>
+
+</TouchableOpacity>
+
+<TouchableOpacity
+style={styles.acceptPopupBtn}
+onPress={acceptOrder}
+>
+
+<Text style={styles.popupBtnText}>
+Accept
+</Text>
+
+</TouchableOpacity>
+
+</View>
+
+</Animated.View>
+
+</View>
+
+</Modal>
 
 <ScrollView
 style={styles.container}
@@ -243,25 +416,7 @@ Current Order
 
 <TouchableOpacity
 style={styles.acceptBtn}
-
-onPress={()=>
-router.push({
-pathname:"/order-details",
-params:{
-orderId:
-dashboard?.liveOrder?.orderId,
-
-customer:
-dashboard?.liveOrder?.user?.name,
-
-distance:
-dashboard?.liveOrder?.address?.city,
-
-amount:
-dashboard?.liveOrder?.finalAmount
-}
-})
-}
+onPress={acceptOrder}
 >
 
 <Text style={styles.acceptText}>
@@ -297,19 +452,20 @@ marginBottom:15,
 },
 
 title:{
-fontSize:18,
+fontSize:24,
 fontWeight:"bold",
 width:180,
 },
 
 subtitle:{
-fontSize:13,
+fontSize:14,
 color:"gray",
+marginTop:3,
 },
 
 statusBtn:{
-paddingHorizontal:12,
-height:35,
+paddingHorizontal:16,
+height:38,
 borderRadius:20,
 justifyContent:"center",
 alignItems:"center",
@@ -329,49 +485,121 @@ justifyContent:"space-between",
 
 card:{
 width:"48%",
-height:85,
-borderRadius:15,
-marginBottom:10,
+height:100,
+borderRadius:18,
+marginBottom:12,
 justifyContent:"center",
 alignItems:"center",
+elevation:3,
 },
 
 number:{
-fontSize:22,
+fontSize:26,
 fontWeight:"bold",
+marginBottom:4,
 },
 
 heading:{
-fontSize:18,
+fontSize:22,
 fontWeight:"bold",
 marginTop:5,
-marginBottom:8,
+marginBottom:10,
 },
 
 orderCard:{
 backgroundColor:"#fff",
-padding:12,
-borderRadius:15,
+padding:15,
+borderRadius:18,
+elevation:3,
 },
 
 orderText:{
-fontSize:14,
-marginBottom:6,
+fontSize:15,
+marginBottom:8,
 },
 
 acceptBtn:{
 backgroundColor:"#2563eb",
-padding:12,
-borderRadius:12,
+padding:15,
+borderRadius:14,
 marginTop:12,
 marginBottom:10,
 },
 
 acceptText:{
 color:"#fff",
-fontSize:16,
+fontSize:18,
 fontWeight:"bold",
 textAlign:"center",
+},
+
+popupContainer:{
+flex:1,
+backgroundColor:"rgba(0,0,0,0.5)",
+justifyContent:"center",
+alignItems:"center",
+padding:20,
+},
+
+popupBox:{
+backgroundColor:"#fff",
+width:"100%",
+borderRadius:25,
+padding:20,
+},
+
+popupTitle:{
+fontSize:24,
+fontWeight:"bold",
+marginBottom:15,
+textAlign:"center",
+},
+
+popupText:{
+fontSize:17,
+marginBottom:10,
+},
+
+timerBox:{
+backgroundColor:"#fee2e2",
+padding:10,
+borderRadius:12,
+marginTop:10,
+alignItems:"center",
+},
+
+timerText:{
+fontSize:20,
+fontWeight:"bold",
+color:"#dc2626",
+},
+
+popupBtnRow:{
+flexDirection:"row",
+justifyContent:"space-between",
+marginTop:20,
+},
+
+rejectBtn:{
+backgroundColor:"#dc2626",
+padding:14,
+borderRadius:12,
+width:"48%",
+alignItems:"center",
+},
+
+acceptPopupBtn:{
+backgroundColor:"#16a34a",
+padding:14,
+borderRadius:12,
+width:"48%",
+alignItems:"center",
+},
+
+popupBtnText:{
+color:"#fff",
+fontSize:16,
+fontWeight:"bold",
 }
 
 });

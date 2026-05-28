@@ -221,7 +221,7 @@ $ne:"Delivered"
 
 const liveOrder=
 await Order.findOne({
-status:"Out for Delivery"
+status:"Pending"
 }).sort({
 createdAt:-1
 });
