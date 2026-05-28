@@ -29,13 +29,23 @@ if (!user) {
 }
 
 const order = new Order({
+
   ...req.body,
 
-  // database ki original userId hi save hogi
-  userId: user.userId,
+  userId:user.userId,
 
   finalAmount,
-  orderId: "ORD" + Date.now()
+
+  orderId:"ORD"+Date.now(),
+
+  deliveryBoy:{
+    name:deliveryBoy.name,
+    phone:deliveryBoy.mobile
+  },
+
+  deliveryBoyId:
+  deliveryBoy.deliveryId
+
 });
 
     await order.save();
