@@ -204,27 +204,78 @@ async(req,res)=>{
 
 try{
 
-const totalOrders=
-await Order.countDocuments();
+const todayStart = new Date();
 
-const deliveredOrders=
-await Order.countDocuments({
-status:"Delivered"
-});
+todayStart.setHours(0,0,0,0);
 
-const pendingOrders=
+const todayEnd = new Date();
+
+todayEnd.setHours(23,59,59,999);
+
+
+// 📦 Today Total Orders
+const totalOrders =
 await Order.countDocuments({
-status:{
-$ne:"Delivered"
+
+createdAt:{
+$gte:todayStart,
+$lte:todayEnd
 }
+
 });
 
-const liveOrder=
-await Order.findOne({
-status:"Pending"
-}).sort({
-createdAt:-1
+
+// ✅ Today Delivered
+const deliveredOrders =
+await Order.countDocuments({
+
+status:"Delivered",
+
+createdAt:{
+$gte:todayStart,
+$lte:todayEnd
+}
+
 });
+
+
+// ⏳ Today Pending
+const pendingOrders =
+await Order.countDocuments({
+
+status:{
+$in:[
+"Pending",
+"Accepted",
+"Out for Delivery"
+]
+},
+
+createdAt:{
+$gte:todayStart,
+$lte:todayEnd
+}
+
+});
+
+
+// 🚚 Live Order
+const liveOrder =
+await Order.findOne({
+
+status:"Pending",
+
+createdAt:{
+$gte:todayStart,
+$lte:todayEnd
+}
+
+}).sort({
+
+createdAt:-1
+
+});
+
 
 res.json({
 

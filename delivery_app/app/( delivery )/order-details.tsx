@@ -1,10 +1,13 @@
+// @ts-nocheck
+
 import React from "react";
 
 import {
 View,
 Text,
 StyleSheet,
-TouchableOpacity
+TouchableOpacity,
+Alert
 } from "react-native";
 
 import {
@@ -22,6 +25,51 @@ customer,
 distance,
 amount
 }=useLocalSearchParams();
+
+const acceptOrder=async()=>{
+
+try{
+
+const response=
+await fetch(
+`https://api.harzo.in/api/orders/${orderId}/status`,
+{
+method:"PUT",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+status:"Accepted"
+})
+}
+);
+
+const data=
+await response.json();
+
+if(data){
+
+Alert.alert(
+"Success",
+"Order Accepted"
+);
+
+router.replace("/map-screen");
+
+}
+
+}catch(err){
+
+console.log(err);
+
+Alert.alert(
+"Error",
+"Something went wrong"
+);
+
+}
+
+};
 
 return(
 
@@ -57,13 +105,11 @@ Order Details
 
 <TouchableOpacity
 style={styles.btn}
-onPress={()=>
-router.push("/map-screen")
-}
+onPress={acceptOrder}
 >
 
 <Text style={styles.btnText}>
-Start Delivery
+Accept & Start Delivery
 </Text>
 
 </TouchableOpacity>
@@ -100,7 +146,7 @@ marginBottom:12,
 },
 
 btn:{
-backgroundColor:"#2563eb",
+backgroundColor:"#16a34a",
 padding:15,
 borderRadius:12,
 marginTop:20,

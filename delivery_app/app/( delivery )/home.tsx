@@ -29,6 +29,8 @@ const [showPopup,setShowPopup]=useState(false);
 
 const [seconds,setSeconds]=useState(20);
 
+const [lastOrderId,setLastOrderId]=useState(null);
+
 const scaleAnim=
 useRef(new Animated.Value(1)).current;
 
@@ -117,7 +119,26 @@ if(json.success){
 
 setDashboard(json);
 
+if(
+json.liveOrder &&
+json.liveOrder.status==="Pending"
+){
+
+if(lastOrderId!==json.liveOrder._id){
+
 setShowPopup(true);
+
+setSeconds(20);
+
+setLastOrderId(json.liveOrder._id);
+
+}
+
+}else{
+
+setShowPopup(false);
+
+}
 
 }
 
@@ -137,9 +158,38 @@ const toggleStatus=()=>{
 setOnline(!online);
 };
 
-const acceptOrder=()=>{
+const acceptOrder=async()=>{
+
+try{
+
+await fetch(
+`https://api.harzo.in/api/orders/${dashboard?.liveOrder?._id}/status`,
+{
+method:"PUT",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+status:"Accepted"
+})
+}
+);
 
 setShowPopup(false);
+
+setLastOrderId(
+dashboard?.liveOrder?._id
+);
+
+loadDashboard();
+
+setDashboard({
+...dashboard,
+liveOrder:{
+...dashboard.liveOrder,
+status:"Accepted"
+}
+});
 
 router.push({
 pathname:"/order-details",
@@ -158,11 +208,21 @@ dashboard?.liveOrder?.finalAmount
 }
 });
 
+}catch(err){
+
+console.log(err);
+
+}
+
 };
 
 const rejectOrder=()=>{
 
 setShowPopup(false);
+
+setLastOrderId(
+dashboard?.liveOrder?._id
+);
 
 };
 
