@@ -96,7 +96,15 @@ await boy.save();
 res.json({
 
 success:true,
-deliveryBoy:boy
+
+deliveryBoy:{
+_id:boy._id,
+name:boy.name,
+mobile:boy.mobile,
+deliveryId:boy.deliveryId,
+vehicle:boy.vehicle,
+online:boy.online
+}
 
 });
 
