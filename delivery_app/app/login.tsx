@@ -11,6 +11,7 @@ StyleSheet
 } from "react-native";
 
 import { router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function LoginScreen(){
 
@@ -39,10 +40,14 @@ const data=await res.json();
 
 if(data.success){
 
+await AsyncStorage.setItem(
+"deliveryBoy",
+JSON.stringify(data.deliveryBoy)
+);
+
 router.replace("/home");
 
 }else{
-
 alert(
 data.message ||
 "Wrong Delivery ID or Password"

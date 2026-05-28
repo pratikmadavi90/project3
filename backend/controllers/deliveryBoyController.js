@@ -27,8 +27,18 @@ deliveryId
 });
 
 res.json({
+
 success:true,
-data
+
+deliveryBoy:{
+_id:boy._id,
+name:boy.name,
+mobile:boy.mobile,
+deliveryId:boy.deliveryId,
+vehicleType:boy.vehicleType,
+online:boy.online
+}
+
 });
 
 }catch(err){
