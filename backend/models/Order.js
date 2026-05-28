@@ -19,20 +19,20 @@ const orderSchema = new mongoose.Schema({
     pincode: String,
   },
 
-items: [
-  {
-    productId: String,
-    name: String,
-    image: String,
-    qty: Number,
-    price: Number,
-
-    weight: String
-  }
-],
+  items: [
+    {
+      productId: String,
+      name: String,
+      image: String,
+      qty: Number,
+      price: Number,
+      weight: String
+    }
+  ],
 
   totalAmount: Number,
-  finalAmount: Number, 
+
+  finalAmount: Number,
 
   payment: {
     method: String,
@@ -55,8 +55,12 @@ items: [
   deliveryBoy: {
     name: String,
     phone: String
-  }
+  },
+
+  // 👇 NEW
+  deliveryBoyId:String
 
 }, { timestamps: true });
 
-module.exports = mongoose.model("Order", orderSchema);
+module.exports =
+mongoose.model("Order", orderSchema);

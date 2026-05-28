@@ -1,19 +1,99 @@
-import React, { useState } from "react";
+// @ts-nocheck
+
+import React,{useEffect,useState} from "react";
 
 import {
 View,
 Text,
 StyleSheet,
 TouchableOpacity,
-ScrollView
+ScrollView,
+ActivityIndicator
 } from "react-native";
 
 import { SafeAreaView } from "react-native-safe-area-context";
+
 import { router } from "expo-router";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function HomeScreen(){
 
 const [online,setOnline]=useState(true);
+
+const [loading,setLoading]=useState(true);
+
+const [dashboard,setDashboard]=useState(null);
+
+useEffect(()=>{
+
+loadDashboard();
+
+const interval=
+setInterval(()=>{
+
+loadDashboard();
+
+},5000);
+
+return ()=>clearInterval(interval);
+
+},[]);
+
+const loadDashboard=async()=>{
+
+try{
+
+const data=
+await fetch(
+"https://api.harzo.in/api/orders/delivery-dashboard"
+);
+
+const json=
+await data.json();
+
+if(json.success){
+
+setDashboard(json);
+
+}
+
+}catch(err){
+
+console.log(err);
+
+}finally{
+
+setLoading(false);
+
+}
+
+};
+
+const toggleStatus=()=>{
+setOnline(!online);
+};
+
+if(loading){
+
+return(
+
+<View style={{
+flex:1,
+justifyContent:"center",
+alignItems:"center"
+}}>
+
+<ActivityIndicator
+size="large"
+color="#2563eb"
+/>
+
+</View>
+
+);
+
+}
 
 return(
 
@@ -49,7 +129,7 @@ backgroundColor:
 online?"#16a34a":"#dc2626"
 }
 ]}
-onPress={()=>setOnline(!online)}
+onPress={toggleStatus}
 >
 
 <Text style={styles.statusText}>
@@ -62,24 +142,72 @@ onPress={()=>setOnline(!online)}
 
 <View style={styles.cardContainer}>
 
-<View style={[styles.card,{backgroundColor:"#dbeafe"}]}>
-<Text style={styles.number}>12</Text>
-<Text>📦 Orders</Text>
+<View style={[
+styles.card,
+{
+backgroundColor:"#dbeafe"
+}
+]}>
+
+<Text style={styles.number}>
+{dashboard?.totalOrders || 0}
+</Text>
+
+<Text>
+📦 Orders
+</Text>
+
 </View>
 
-<View style={[styles.card,{backgroundColor:"#dcfce7"}]}>
-<Text style={styles.number}>8</Text>
-<Text>✅ Delivered</Text>
+<View style={[
+styles.card,
+{
+backgroundColor:"#dcfce7"
+}
+]}>
+
+<Text style={styles.number}>
+{dashboard?.deliveredOrders || 0}
+</Text>
+
+<Text>
+✅ Delivered
+</Text>
+
 </View>
 
-<View style={[styles.card,{backgroundColor:"#fef3c7"}]}>
-<Text style={styles.number}>4</Text>
-<Text>⏳ Pending</Text>
+<View style={[
+styles.card,
+{
+backgroundColor:"#fef3c7"
+}
+]}>
+
+<Text style={styles.number}>
+{dashboard?.pendingOrders || 0}
+</Text>
+
+<Text>
+⏳ Pending
+</Text>
+
 </View>
 
-<View style={[styles.card,{backgroundColor:"#f3e8ff"}]}>
-<Text style={styles.number}>₹450</Text>
-<Text>💰 Earnings</Text>
+<View style={[
+styles.card,
+{
+backgroundColor:"#f3e8ff"
+}
+]}>
+
+<Text style={styles.number}>
+₹450
+</Text>
+
+<Text>
+💰 Earnings
+</Text>
+
 </View>
 
 </View>
@@ -91,19 +219,26 @@ Current Order
 <View style={styles.orderCard}>
 
 <Text style={styles.orderText}>
-📦 Order ID: ORD1001
+📦 Order ID:
+{" "}
+{dashboard?.liveOrder?.orderId || "No Order"}
 </Text>
 
 <Text style={styles.orderText}>
-👤 Customer: Rahul
+👤 Customer:
+{" "}
+{dashboard?.liveOrder?.user?.name || "-"}
 </Text>
 
 <Text style={styles.orderText}>
-📍 Distance: 2.5 km
+📍 City:
+{" "}
+{dashboard?.liveOrder?.address?.city || "-"}
 </Text>
 
 <Text style={styles.orderText}>
-💵 Amount: ₹350
+💵 Amount:
+₹{dashboard?.liveOrder?.finalAmount || 0}
 </Text>
 
 <TouchableOpacity
@@ -113,10 +248,17 @@ onPress={()=>
 router.push({
 pathname:"/order-details",
 params:{
-orderId:"ORD1001",
-customer:"Rahul",
-distance:"2.5 km",
-amount:"350"
+orderId:
+dashboard?.liveOrder?.orderId,
+
+customer:
+dashboard?.liveOrder?.user?.name,
+
+distance:
+dashboard?.liveOrder?.address?.city,
+
+amount:
+dashboard?.liveOrder?.finalAmount
 }
 })
 }

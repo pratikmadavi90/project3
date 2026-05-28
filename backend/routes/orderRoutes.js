@@ -48,5 +48,11 @@ router.get(
 orderController.deliveryDashboard
 );
 
+// 🚚 Delivery Boy Current Order
+router.get(
+"/delivery-boy/:id",
+orderController.getDeliveryOrder
+);
+
 // ==============================
 module.exports = router;
