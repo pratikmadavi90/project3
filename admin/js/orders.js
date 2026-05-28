@@ -101,9 +101,11 @@ async function assignDelivery(id) {
 
   const name = prompt("Delivery Boy Name:");
 
+ const deliveryId =prompt("Delivery Boy ID:"); 
+
   const phone = prompt("Phone:");
 
-  if (!name) return;
+  if (!name || !deliveryId) return;
 
   await fetch(`${API}/${id}/assign-delivery`, {
     method: "PUT",
@@ -113,10 +115,11 @@ async function assignDelivery(id) {
     },
 
     body: JSON.stringify({
-      deliveryBoy: {
-        name,
-        phone,
-      },
+     deliveryBoy: {
+  name,
+  phone,
+  deliveryId,
+},
     }),
   });
 
