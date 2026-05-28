@@ -287,6 +287,7 @@ deliveryBoyId:deliveryBoyId,
 
 status:{
 $in:[
+"Placed",
 "Pending",
 "Accepted",
 "Picked Up",
