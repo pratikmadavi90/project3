@@ -218,49 +218,24 @@ const deliveryBoyId =
 String(req.query.deliveryBoyId);
 
 console.log(
-"DELIVERY ID =",
+"QUERY ID =",
 deliveryBoyId
 );
 
-
-// 📦 Total Orders
-const totalOrders =
-await Order.countDocuments({
-deliveryBoyId
+const orders =
+await Order.find({
+deliveryBoyId:deliveryBoyId
 });
 
+console.log(
+"FOUND ORDERS =",
+orders
+);
 
-// ✅ Delivered
-const deliveredOrders =
-await Order.countDocuments({
-deliveryBoyId,
-status:"Delivered"
-});
-
-
-// ⏳ Pending
-const pendingOrders =
-await Order.countDocuments({
-
-deliveryBoyId,
-
-status:{
-$in:[
-"Pending",
-"Accepted",
-"Picked Up",
-"Out for Delivery"
-]
-}
-
-});
-
-
-// 🚚 Live Order
 const liveOrder =
 await Order.findOne({
 
-deliveryBoyId,
+deliveryBoyId:deliveryBoyId,
 
 status:{
 $in:[
@@ -275,7 +250,6 @@ $in:[
 createdAt:-1
 });
 
-
 console.log(
 "LIVE ORDER =",
 liveOrder
@@ -285,9 +259,18 @@ res.json({
 
 success:true,
 
-totalOrders,
-deliveredOrders,
-pendingOrders,
+totalOrders:orders.length,
+
+deliveredOrders:
+orders.filter(
+o=>o.status==="Delivered"
+).length,
+
+pendingOrders:
+orders.filter(
+o=>o.status!=="Delivered"
+).length,
+
 liveOrder
 
 });
@@ -297,8 +280,7 @@ liveOrder
 console.log(err);
 
 res.status(500).json({
-success:false,
-error:err.message
+success:false
 });
 
 }
