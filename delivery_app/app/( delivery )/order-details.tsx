@@ -1,13 +1,14 @@
 // @ts-nocheck
 
-import React from "react";
+import React,{useState} from "react";
 
 import {
 View,
 Text,
 StyleSheet,
 TouchableOpacity,
-Alert
+Alert,
+ScrollView
 } from "react-native";
 
 import {
@@ -26,7 +27,10 @@ distance,
 amount
 }=useLocalSearchParams();
 
-const acceptOrder=async()=>{
+const [status,setStatus]=
+useState("Accepted");
+
+const updateStatus=async(newStatus)=>{
 
 try{
 
@@ -39,7 +43,7 @@ headers:{
 "Content-Type":"application/json"
 },
 body:JSON.stringify({
-status:"Accepted"
+status:newStatus
 })
 }
 );
@@ -49,12 +53,23 @@ await response.json();
 
 if(data){
 
+setStatus(newStatus);
+
 Alert.alert(
 "Success",
-"Order Accepted"
+`Order ${newStatus}`
 );
 
-router.replace("/map-screen");
+if(newStatus==="Delivered"){
+
+Alert.alert(
+"Completed",
+"Order Delivered Successfully"
+);
+
+router.replace("/home");
+
+}
 
 }
 
@@ -75,8 +90,15 @@ return(
 
 <SafeAreaView style={styles.container}>
 
+<ScrollView
+showsVerticalScrollIndicator={false}
+contentContainerStyle={{
+paddingBottom:40
+}}
+>
+
 <Text style={styles.heading}>
-Order Details
+🚚 Order Details
 </Text>
 
 <View style={styles.card}>
@@ -90,7 +112,7 @@ Order Details
 </Text>
 
 <Text style={styles.text}>
-📍 Distance: {distance}
+📍 Area: {distance}
 </Text>
 
 <Text style={styles.text}>
@@ -98,21 +120,128 @@ Order Details
 </Text>
 
 <Text style={styles.text}>
-🏠 Address: Main Road, Mumbai
+🏠 Landmark: Near Main Road
+</Text>
+
+<Text style={styles.text}>
+📞 Customer Phone: 9876543210
+</Text>
+
+<View style={styles.statusBox}>
+
+<Text style={styles.statusTitle}>
+Current Status
+</Text>
+
+<Text style={styles.status}>
+🚚 {status}
 </Text>
 
 </View>
 
+</View>
+
+<Text style={styles.timelineTitle}>
+Delivery Timeline
+</Text>
+
+<View style={styles.timelineBox}>
+
+<Text style={[
+styles.timelineText,
+status==="Accepted" && styles.activeStep
+]}>
+✅ Order Accepted
+</Text>
+
+<Text style={[
+styles.timelineText,
+(
+status==="Picked Up" ||
+status==="Out for Delivery" ||
+status==="Delivered"
+) && styles.activeStep
+]}>
+📦 Picked Up
+</Text>
+
+<Text style={[
+styles.timelineText,
+(
+status==="Out for Delivery" ||
+status==="Delivered"
+) && styles.activeStep
+]}>
+🚚 Out for Delivery
+</Text>
+
+<Text style={[
+styles.timelineText,
+status==="Delivered" &&
+styles.activeStep
+]}>
+🏁 Delivered
+</Text>
+
+</View>
+
+
+{/* BUTTONS */}
+
+{status==="Accepted" && (
+
 <TouchableOpacity
-style={styles.btn}
-onPress={acceptOrder}
+style={styles.pickupBtn}
+onPress={()=>
+updateStatus("Picked Up")
+}
 >
 
 <Text style={styles.btnText}>
-Accept & Start Delivery
+📦 Picked Up
 </Text>
 
 </TouchableOpacity>
+
+)}
+
+
+{status==="Picked Up" && (
+
+<TouchableOpacity
+style={styles.deliveryBtn}
+onPress={()=>
+updateStatus("Out for Delivery")
+}
+>
+
+<Text style={styles.btnText}>
+🚚 Start Delivery
+</Text>
+
+</TouchableOpacity>
+
+)}
+
+
+{status==="Out for Delivery" && (
+
+<TouchableOpacity
+style={styles.completeBtn}
+onPress={()=>
+updateStatus("Delivered")
+}
+>
+
+<Text style={styles.btnText}>
+✅ Mark as Delivered
+</Text>
+
+</TouchableOpacity>
+
+)}
+
+</ScrollView>
 
 </SafeAreaView>
 
@@ -129,27 +258,86 @@ padding:15,
 },
 
 heading:{
-fontSize:24,
+fontSize:28,
 fontWeight:"bold",
 marginBottom:20,
 },
 
 card:{
 backgroundColor:"#fff",
-padding:15,
-borderRadius:15,
+padding:18,
+borderRadius:20,
+elevation:4,
 },
 
 text:{
-fontSize:18,
-marginBottom:12,
+fontSize:17,
+marginBottom:14,
 },
 
-btn:{
+statusBox:{
+marginTop:10,
+padding:14,
+backgroundColor:"#eff6ff",
+borderRadius:14,
+},
+
+statusTitle:{
+fontSize:16,
+fontWeight:"bold",
+marginBottom:6,
+},
+
+status:{
+fontSize:20,
+fontWeight:"bold",
+color:"#2563eb",
+},
+
+timelineTitle:{
+fontSize:22,
+fontWeight:"bold",
+marginTop:25,
+marginBottom:15,
+},
+
+timelineBox:{
+backgroundColor:"#fff",
+padding:18,
+borderRadius:18,
+elevation:3,
+},
+
+timelineText:{
+fontSize:17,
+marginBottom:14,
+color:"#9ca3af",
+fontWeight:"600",
+},
+
+activeStep:{
+color:"#16a34a",
+},
+
+pickupBtn:{
+backgroundColor:"#f59e0b",
+padding:16,
+borderRadius:14,
+marginTop:25,
+},
+
+deliveryBtn:{
+backgroundColor:"#2563eb",
+padding:16,
+borderRadius:14,
+marginTop:25,
+},
+
+completeBtn:{
 backgroundColor:"#16a34a",
-padding:15,
-borderRadius:12,
-marginTop:20,
+padding:16,
+borderRadius:14,
+marginTop:25,
 },
 
 btnText:{

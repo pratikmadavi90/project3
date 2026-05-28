@@ -128,11 +128,15 @@ exports.assignDelivery = async (req, res) => {
       return res.status(400).json({ message: "Delivery Boy info required" });
     }
 
-    const order = await Order.findByIdAndUpdate(
-      req.params.id,
-      { deliveryBoy },
-      { new: true }
-    );
+const order = await Order.findByIdAndUpdate(
+req.params.id,
+{
+deliveryBoy,
+deliveryBoyId:
+deliveryBoy.deliveryId
+},
+{ new: true }
+);
 
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
@@ -202,6 +206,9 @@ exports.deleteOrder = async (req, res) => {
 exports.deliveryDashboard=
 async(req,res)=>{
 
+ const deliveryBoyId =
+req.query.deliveryBoyId; 
+
 try{
 
 const todayStart = new Date();
@@ -263,7 +270,16 @@ $lte:todayEnd
 const liveOrder =
 await Order.findOne({
 
-status:"Pending",
+deliveryBoyId,
+
+status:{
+$in:[
+"Pending",
+"Accepted",
+"Picked Up",
+"Out for Delivery"
+]
+},
 
 createdAt:{
 $gte:todayStart,

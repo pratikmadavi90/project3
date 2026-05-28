@@ -17,6 +17,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { router } from "expo-router";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export default function HomeScreen(){
 
 const [online,setOnline]=useState(true);
@@ -107,9 +109,17 @@ const loadDashboard=async()=>{
 
 try{
 
+const dataStorage =
+await AsyncStorage.getItem(
+"deliveryBoy"
+);
+
+const deliveryBoy =
+JSON.parse(dataStorage);    
+
 const data=
 await fetch(
-"https://api.harzo.in/api/orders/delivery-dashboard"
+`https://api.harzo.in/api/orders/delivery-dashboard?deliveryBoyId=${deliveryBoy.deliveryId}`
 );
 
 const json=
