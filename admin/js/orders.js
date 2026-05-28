@@ -99,29 +99,38 @@ async function updateStatus(id, status) {
 // 🚚 ASSIGN DELIVERY
 async function assignDelivery(id) {
 
-  const name = prompt("Delivery Boy Name:");
+  const name =
+  prompt("Delivery Boy Name:");
 
- const deliveryId =prompt("Delivery Boy ID:"); 
+  const phone =
+  prompt("Phone:");
 
-  const phone = prompt("Phone:");
+  const deliveryId =
+  prompt("Delivery Boy ID:");
 
   if (!name || !deliveryId) return;
 
-  await fetch(`${API}/${id}/assign-delivery`, {
-    method: "PUT",
+  await fetch(
+    `${API}/${id}/assign-delivery`,
+    {
+      method:"PUT",
 
-    headers: {
-      "Content-Type": "application/json",
-    },
+      headers:{
+        "Content-Type":
+        "application/json",
+      },
 
-    body: JSON.stringify({
-     deliveryBoy: {
-  name,
-  phone,
-  deliveryId,
-},
-    }),
-  });
+      body:JSON.stringify({
+
+        deliveryBoy:{
+          name,
+          phone,
+          deliveryId
+        }
+
+      }),
+    }
+  );
 
   alert("Delivery Assigned");
 

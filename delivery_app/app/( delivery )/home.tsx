@@ -127,6 +127,11 @@ await fetch(
 const json=
 await data.json();
 
+console.log(
+"DASHBOARD DATA =",
+json
+);
+
 if(json.success){
 
 setDashboard(json);
