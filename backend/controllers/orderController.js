@@ -224,6 +224,8 @@ todayEnd.setHours(23,59,59,999);
 const totalOrders =
 await Order.countDocuments({
 
+deliveryBoyId,
+
 createdAt:{
 $gte:todayStart,
 $lte:todayEnd
@@ -236,6 +238,8 @@ $lte:todayEnd
 const deliveredOrders =
 await Order.countDocuments({
 
+deliveryBoyId,
+
 status:"Delivered",
 
 createdAt:{
@@ -245,10 +249,11 @@ $lte:todayEnd
 
 });
 
-
 // ⏳ Today Pending
 const pendingOrders =
 await Order.countDocuments({
+
+deliveryBoyId,  
 
 status:{
 $in:[
