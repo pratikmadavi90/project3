@@ -247,3 +247,37 @@ error:err.message
 }
 
 };
+
+// 🚚 Delivery Boy Current Order
+
+exports.getDeliveryOrder =
+async (req, res) => {
+
+  try {
+
+    const order =
+    await Order.findOne({
+
+      deliveryBoyId:req.params.id,
+
+      status:"Out for Delivery"
+
+    }).sort({
+      createdAt:-1
+    });
+
+    res.json({
+      success:true,
+      order
+    });
+
+  } catch (err) {
+
+    res.status(500).json({
+      success:false,
+      error:err.message
+    });
+
+  }
+
+};
