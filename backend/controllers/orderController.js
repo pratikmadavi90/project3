@@ -210,11 +210,11 @@ exports.deleteOrder = async (req, res) => {
 
 // 📊 DELIVERY DASHBOARD
 
-exports.deliveryDashboard=
+exports.deliveryDashboard =
 async(req,res)=>{
 
- const deliveryBoyId =
-req.query.deliveryBoyId; 
+const deliveryBoyId =
+req.query.deliveryBoyId;
 
 try{
 
@@ -227,11 +227,11 @@ const todayEnd = new Date();
 todayEnd.setHours(23,59,59,999);
 
 
-// 📦 Today Total Orders
+// 📦 Total Orders
 const totalOrders =
 await Order.countDocuments({
 
-
+deliveryBoyId:deliveryBoyId,
 
 createdAt:{
 $gte:todayStart,
@@ -241,11 +241,11 @@ $lte:todayEnd
 });
 
 
-// ✅ Today Delivered
+// ✅ Delivered Orders
 const deliveredOrders =
 await Order.countDocuments({
 
-
+deliveryBoyId:deliveryBoyId,
 
 status:"Delivered",
 
@@ -256,11 +256,12 @@ $lte:todayEnd
 
 });
 
-// ⏳ Today Pending
+
+// ⏳ Pending Orders
 const pendingOrders =
 await Order.countDocuments({
 
- 
+deliveryBoyId:deliveryBoyId,
 
 status:{
 $in:[
@@ -282,7 +283,7 @@ $lte:todayEnd
 const liveOrder =
 await Order.findOne({
 
-
+deliveryBoyId:deliveryBoyId,
 
 status:{
 $in:[
@@ -299,9 +300,7 @@ $lte:todayEnd
 }
 
 }).sort({
-
 createdAt:-1
-
 });
 
 
