@@ -51,6 +51,26 @@ const handleLogout=async()=>{
 
 try{
 
+const data=
+await AsyncStorage.getItem(
+"deliveryBoy"
+);
+
+const user=
+JSON.parse(data);
+
+await fetch(
+
+`https://api.harzo.in/api/delivery/logout/${user.id}`,
+
+{
+method:"PUT"
+}
+
+);
+
+
+
 await AsyncStorage.removeItem(
 "deliveryBoy"
 );

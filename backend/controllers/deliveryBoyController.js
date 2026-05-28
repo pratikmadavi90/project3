@@ -87,6 +87,42 @@ message:"Wrong Delivery ID or Password"
 
 }
 
+
+
+// online status true
+boy.online=true;
+
+await boy.save();
+
+res.json({
+
+success:true,
+
+deliveryBoy:{
+_id:boy._id,
+name:boy.name,
+mobile:boy.mobile,
+deliveryId:boy.deliveryId,
+vehicle:boy.vehicle,
+online:boy.online
+}
+
+});
+
+}catch(err){
+
+res.status(500)
+.json({
+
+success:false,
+message:err.message
+
+});
+
+}
+
+};
+
 // Logout / Offline
 
 exports.logoutDeliveryBoy=
@@ -127,42 +163,6 @@ success:false
 }
 
 };
-
-// online status true
-boy.online=true;
-
-await boy.save();
-
-res.json({
-
-success:true,
-
-deliveryBoy:{
-_id:boy._id,
-name:boy.name,
-mobile:boy.mobile,
-deliveryId:boy.deliveryId,
-vehicle:boy.vehicle,
-online:boy.online
-}
-
-});
-
-}catch(err){
-
-res.status(500)
-.json({
-
-success:false,
-message:err.message
-
-});
-
-}
-
-};
-
-
 
 
 // Get All
