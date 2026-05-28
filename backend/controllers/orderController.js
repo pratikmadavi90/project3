@@ -265,8 +265,10 @@ deliveryBoyId:deliveryBoyId,
 
 status:{
 $in:[
+"Placed",
 "Pending",
 "Accepted",
+"Picked Up",
 "Out for Delivery"
 ]
 },
@@ -293,11 +295,6 @@ $in:[
 "Picked Up",
 "Out for Delivery"
 ]
-},
-
-createdAt:{
-$gte:todayStart,
-$lte:todayEnd
 }
 
 }).sort({
@@ -326,6 +323,8 @@ error:err.message
 }
 
 };
+
+
 
 // 🚚 Delivery Boy Current Order
 
