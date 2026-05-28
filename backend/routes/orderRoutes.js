@@ -1,46 +1,23 @@
 const express = require("express");
 const router = express.Router();
 
-// Controller import (IMPORTANT: path check)
-const orderController = require("../controllers/orderController");
+const orderController =
+require("../controllers/orderController");
 
 
-// ==============================
-// 📦 ORDER ROUTES
-// ==============================
+// Create Order
+router.post(
+"/create",
+orderController.createOrder
+);
 
 
-// 🧾 Create Order
-// POST /api/orders/create
-router.post("/create", orderController.createOrder);
+// Get All Orders
+router.get(
+"/",
+orderController.getOrders
+);
 
-
-// 📋 Get All Orders (Admin)
-/// GET /api/orders
-router.get("/", orderController.getOrders);
-
-
-// 🔍 Get Single Order
-// GET /api/orders/:id
-router.get("/:id", orderController.getSingleOrder);
-
-
-// 🔄 Update Order Status
-// PUT /api/orders/:id/status
-router.put("/:id/status", orderController.updateStatus);
-
-
-// 🚚 Assign Delivery Boy
-// PUT /api/orders/:id/assign-delivery
-router.put("/:id/assign-delivery", orderController.assignDelivery);
-
-
-// ❌ Cancel Order
-// PUT /api/orders/:id/cancel
-router.put("/:id/cancel", orderController.cancelOrder);
-
-// 🗑 Delete Order
-router.delete("/:id", orderController.deleteOrder);
 
 // 📊 Delivery Dashboard
 router.get(
@@ -48,11 +25,46 @@ router.get(
 orderController.deliveryDashboard
 );
 
+
 // 🚚 Delivery Boy Current Order
 router.get(
 "/delivery-boy/:id",
 orderController.getDeliveryOrder
 );
 
-// ==============================
+
+// Get Single Order
+router.get(
+"/:id",
+orderController.getSingleOrder
+);
+
+
+// Update Status
+router.put(
+"/:id/status",
+orderController.updateStatus
+);
+
+
+// Assign Delivery Boy
+router.put(
+"/:id/assign-delivery",
+orderController.assignDelivery
+);
+
+
+// Cancel Order
+router.put(
+"/:id/cancel",
+orderController.cancelOrder
+);
+
+
+// Delete Order
+router.delete(
+"/:id",
+orderController.deleteOrder
+);
+
 module.exports = router;
