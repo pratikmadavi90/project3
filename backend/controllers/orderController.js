@@ -282,7 +282,7 @@ $lte:todayEnd
 const liveOrder =
 await Order.findOne({
 
-deliveryBoyId,
+
 
 status:{
 $in:[
