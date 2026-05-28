@@ -59,15 +59,21 @@ await AsyncStorage.getItem(
 const user=
 JSON.parse(data);
 
+const response=
 await fetch(
 
-`https://api.harzo.in/api/delivery/logout/${user.id}`,
+`https://api.harzo.in/api/delivery-boy/logout/${user.deliveryId}`,
 
 {
 method:"PUT"
 }
 
 );
+
+const result=
+await response.json();
+
+console.log(result);
 
 
 

@@ -42,5 +42,11 @@ router.put("/:id/cancel", orderController.cancelOrder);
 // 🗑 Delete Order
 router.delete("/:id", orderController.deleteOrder);
 
+// 📊 Delivery Dashboard
+router.get(
+"/delivery-dashboard",
+orderController.deliveryDashboard
+);
+
 // ==============================
 module.exports = router;

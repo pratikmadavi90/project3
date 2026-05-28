@@ -195,3 +195,55 @@ exports.deleteOrder = async (req, res) => {
     });
   }
 };
+
+
+// 📊 DELIVERY DASHBOARD
+
+exports.deliveryDashboard=
+async(req,res)=>{
+
+try{
+
+const totalOrders=
+await Order.countDocuments();
+
+const deliveredOrders=
+await Order.countDocuments({
+status:"Delivered"
+});
+
+const pendingOrders=
+await Order.countDocuments({
+status:{
+$ne:"Delivered"
+}
+});
+
+const liveOrder=
+await Order.findOne({
+status:"Out for Delivery"
+}).sort({
+createdAt:-1
+});
+
+res.json({
+
+success:true,
+
+totalOrders,
+deliveredOrders,
+pendingOrders,
+liveOrder
+
+});
+
+}catch(err){
+
+res.status(500).json({
+success:false,
+error:err.message
+});
+
+}
+
+};
