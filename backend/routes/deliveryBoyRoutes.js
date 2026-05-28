@@ -23,6 +23,12 @@ router.post(
 controller.loginDeliveryBoy
 );
 
+// Logout
+router.put(
+"/logout/:id",
+controller.logoutDeliveryBoy
+);
+
 
 // Get All
 router.get(

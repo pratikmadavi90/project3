@@ -87,6 +87,46 @@ message:"Wrong Delivery ID or Password"
 
 }
 
+// Logout / Offline
+
+exports.logoutDeliveryBoy=
+async(req,res)=>{
+
+try{
+
+const boy=
+await DeliveryBoy.findOne({
+
+deliveryId:req.params.id
+
+});
+
+if(!boy){
+
+return res.json({
+success:false
+});
+
+}
+
+boy.online=false;
+
+await boy.save();
+
+res.json({
+success:true
+});
+
+}catch(err){
+
+res.status(500)
+.json({
+success:false
+});
+
+}
+
+};
 
 // online status true
 boy.online=true;
