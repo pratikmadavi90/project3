@@ -410,10 +410,51 @@ exports.deliveryHistory = async (req, res) => {
       deliveredAt:-1
     });
 
+    const groupedData = {};
+
+    orders.forEach(order => {
+
+      const date =
+      new Date(
+        order.deliveredAt || order.updatedAt
+      ).toLocaleDateString("en-GB");
+
+      if(!groupedData[date]){
+
+        groupedData[date] = {
+          date,
+          totalOrders:0,
+          earning:0,
+          orders:[]
+        };
+
+      }
+
+      groupedData[date].totalOrders += 1;
+
+      groupedData[date].earning += 20;
+
+      groupedData[date].orders.push({
+        orderId:order.orderId,
+        customer:order?.user?.name,
+        city:order?.address?.city,
+        amount:order?.totalAmount
+      });
+
+    });
+
     res.json({
+
       success:true,
-      totalDelivered:orders.length,
-      orders
+
+      totalDelivered:
+      orders.length,
+
+      history:
+      Object.values(
+        groupedData
+      )
+
     });
 
   } catch (err) {
