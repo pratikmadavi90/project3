@@ -18,6 +18,21 @@ type:String,
 required:true
 },
 
+userName:{
+type:String,
+default:""
+},
+
+mobile:{
+type:String,
+default:""
+},
+
+address:{
+type:String,
+default:""
+},
+
 productId:{
 type:String,
 required:true

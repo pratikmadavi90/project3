@@ -7,7 +7,9 @@ View,
 Text,
 TextInput,
 TouchableOpacity,
-StyleSheet
+StyleSheet,
+KeyboardAvoidingView,
+ScrollView
 } from "react-native";
 
 import { router } from "expo-router";
@@ -65,6 +67,18 @@ alert("Server Error");
 
 return(
 
+<KeyboardAvoidingView
+style={{flex:1}}
+behavior="height"
+>
+
+<ScrollView
+contentContainerStyle={{
+flexGrow:1
+}}
+keyboardShouldPersistTaps="handled"
+>
+
 <View style={styles.container}>
 
 <View style={styles.logoBox}>
@@ -121,6 +135,10 @@ LOGIN
 
 </View>
 
+</ScrollView>
+
+</KeyboardAvoidingView>
+
 );
 
 }
@@ -129,60 +147,66 @@ const styles=StyleSheet.create({
 
 container:{
 flex:1,
-backgroundColor:"#081120",
+backgroundColor:"#ffffff",
 justifyContent:"center",
-padding:20
+padding:24
 },
 
 logoBox:{
 alignItems:"center",
-marginBottom:40
+marginBottom:45
 },
 
 harzo:{
 fontSize:42,
 fontWeight:"bold",
-color:"#00ff88",
-letterSpacing:4
+color:"#16a34a",
+letterSpacing:3
 },
 
 mh:{
 fontSize:18,
-color:"#fff",
-marginTop:5,
+color:"#111827",
+marginTop:6,
 fontWeight:"700"
 },
 
 sars:{
-fontSize:16,
-color:"#aaa",
-marginTop:5
+fontSize:15,
+color:"#6b7280",
+marginTop:4
 },
 
 card:{
-backgroundColor:"#12233d",
-padding:25,
-borderRadius:25
+backgroundColor:"#ffffff",
+padding:24,
+borderRadius:24,
+borderWidth:1,
+borderColor:"#e5e7eb",
+elevation:4
 },
 
 loginText:{
-fontSize:24,
+fontSize:28,
 fontWeight:"bold",
-color:"#fff",
+color:"#111827",
 marginBottom:25,
 textAlign:"center"
 },
 
 input:{
-backgroundColor:"#0a1730",
-color:"#fff",
+backgroundColor:"#f9fafb",
+color:"#111827",
 padding:16,
 borderRadius:14,
-marginBottom:15
+marginBottom:15,
+borderWidth:1,
+borderColor:"#d1d5db",
+fontSize:16
 },
 
 button:{
-backgroundColor:"#00ff88",
+backgroundColor:"#16a34a",
 padding:18,
 borderRadius:14,
 marginTop:10
@@ -191,8 +215,8 @@ marginTop:10
 btnText:{
 textAlign:"center",
 fontWeight:"bold",
-fontSize:16,
-color:"#000"
+fontSize:17,
+color:"#ffffff"
 }
 
 });

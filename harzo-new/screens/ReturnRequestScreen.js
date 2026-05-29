@@ -11,8 +11,15 @@ ScrollView
 } from "react-native";
 
 import {createReturn} from "../services/returnService";
+import { useLocalSearchParams } from "expo-router";
 
 export default function ReturnRequestScreen(){
+
+ const {
+  orderId,
+  productName,
+  quantity
+} = useLocalSearchParams();   
 
 const [reason,setReason]=useState("");
 const [comment,setComment]=useState("");
@@ -45,15 +52,26 @@ try{
 
 setLoading(true);
 
-const data={
+const data = {
 
-orderId:"ORD123",
-userId:"USER123",
-productId:"PROD123",
-productName:"Product",
-quantity:1,
+orderId: orderId || "",
+
+userId: userId || "",
+
+userName: userName || "",
+
+mobile: mobile || "",
+
+address: address || "",
+
+productId: "PROD123",
+
+productName: productName || "",
+
+quantity: Number(quantity) || 1,
 
 reason,
+
 comment
 
 };

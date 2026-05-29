@@ -453,11 +453,12 @@ sum + (p?.quantity || p?.qty || 1),
 
 const styles = StyleSheet.create({
 
-  container: {
-    padding: 16,
-    backgroundColor: "#f1f5f9",
-    paddingBottom: 100,
-  },
+container: {
+  paddingHorizontal: 16,
+  paddingTop: 40,
+  paddingBottom: 100,
+  backgroundColor: "#f1f5f9",
+},
 
   card: {
     backgroundColor: "#fff",
