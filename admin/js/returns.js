@@ -144,11 +144,38 @@ ${item.orderId}
 </p>
 
 <p>
+User ID:
+${item.userId || "-"}
+</p>
+
+<p>
+Name:
+${item.userName || "-"}
+</p>
+
+<p>
+Mobile:
+${item.mobile || "-"}
+</p>
+
+<p>
+Address:
+${item.address || "-"}
+</p>
+
+<p>
+Comment:
+${item.comment || "-"}
+</p>
+
+<p>
 
 Product:
 ${item.productName}
 
 </p>
+
+
 
 <p>
 

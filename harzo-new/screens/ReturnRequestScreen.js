@@ -15,11 +15,15 @@ import { useLocalSearchParams } from "expo-router";
 
 export default function ReturnRequestScreen(){
 
- const {
+const {
   orderId,
+  userId,
+  userName,
+  mobile,
+  address,
   productName,
   quantity
-} = useLocalSearchParams();   
+} = useLocalSearchParams();  
 
 const [reason,setReason]=useState("");
 const [comment,setComment]=useState("");
