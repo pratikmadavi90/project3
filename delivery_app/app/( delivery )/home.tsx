@@ -466,7 +466,7 @@ backgroundColor:"#f3e8ff"
 ]}>
 
 <Text style={styles.number}>
-₹450
+₹{(dashboard?.deliveredOrders || 0) * 20}
 </Text>
 
 <Text>

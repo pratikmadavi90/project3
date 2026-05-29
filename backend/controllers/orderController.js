@@ -285,9 +285,19 @@ console.log(
 deliveryBoyId
 );
 
+const startOfDay = new Date();
+startOfDay.setHours(0,0,0,0);
+
+const endOfDay = new Date();
+endOfDay.setHours(23,59,59,999);
+
 const orders =
 await Order.find({
-deliveryBoyId:deliveryBoyId
+  deliveryBoyId:deliveryBoyId,
+  createdAt:{
+    $gte:startOfDay,
+    $lte:endOfDay
+  }
 });
 
 console.log(
