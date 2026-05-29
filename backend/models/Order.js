@@ -52,13 +52,17 @@ const orderSchema = new mongoose.Schema({
     default: "Pending"
   },
 
-  deliveryBoy: {
-    name: String,
-    phone: String
-  },
+deliveryBoy: {
+  name: String,
+  phone: String
+},
 
-  // 👇 NEW
-  deliveryBoyId:String
+deliveryBoyId:String,
+
+deliveredAt:{
+  type:Date,
+  default:null
+}
 
 }, { timestamps: true });
 

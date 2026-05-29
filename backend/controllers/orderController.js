@@ -122,6 +122,7 @@ exports.updateStatus = async (req, res) => {
     if (status === "Accepted") update["timestamps.acceptedAt"] = new Date();
     if (status === "Packed") update["timestamps.packedAt"] = new Date();
     if (status === "Out for Delivery") update["timestamps.outForDeliveryAt"] = new Date();
+    if (status === "Delivered")update["deliveredAt"] = new Date();
     if (status === "Delivered") update["timestamps.deliveredAt"] = new Date();
 
     const order = await Order.findByIdAndUpdate(
@@ -381,6 +382,43 @@ async (req, res) => {
     });
 
   } catch (err) {
+
+    res.status(500).json({
+      success:false,
+      error:err.message
+    });
+
+  }
+
+};
+
+
+// 📜 DELIVERY HISTORY
+
+exports.deliveryHistory = async (req, res) => {
+
+  try {
+
+    const deliveryBoyId =
+    String(req.params.id);
+
+    const orders =
+    await Order.find({
+      deliveryBoyId,
+      status:"Delivered"
+    }).sort({
+      deliveredAt:-1
+    });
+
+    res.json({
+      success:true,
+      totalDelivered:orders.length,
+      orders
+    });
+
+  } catch (err) {
+
+    console.log(err);
 
     res.status(500).json({
       success:false,

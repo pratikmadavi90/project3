@@ -25,6 +25,11 @@ router.get(
 orderController.deliveryDashboard
 );
 
+// 📜 Delivery History
+router.get(
+"/delivery-history/:id",
+orderController.deliveryHistory
+);
 
 // 🚚 Delivery Boy Current Order
 router.get(

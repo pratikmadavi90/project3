@@ -21,6 +21,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function OrderDetails(){
 
 const {
+id,
 orderId,
 customer,
 distance,
@@ -34,13 +35,19 @@ const [status,setStatus]=
 useState(
 initialStatus || "Accepted"
 );
+
+
+
+const [showOptions,setShowOptions]=
+useState(false);
+
 const updateStatus=async(newStatus)=>{
 
 try{
 
 const response=
 await fetch(
-`https://api.harzo.in/api/orders/${orderId}/status`,
+`https://api.harzo.in/api/orders/${id}/status`,
 {
 method:"PUT",
 headers:{
@@ -52,12 +59,18 @@ status:newStatus
 }
 );
 
-const data=
+const data =
 await response.json();
+
+console.log(
+"UPDATE RESPONSE =",
+data
+);
 
 if(data){
 
 setStatus(newStatus);
+setShowOptions(false);
 
 Alert.alert(
 "Success",
@@ -128,7 +141,7 @@ paddingBottom:40
 </Text>
 
 <Text style={styles.text}>
-📞  Phone: {phone || "-"}
+📞 Phone: {phone || "-"}
 </Text>
 
 <View style={styles.statusBox}>
@@ -145,103 +158,67 @@ Current Status
 
 </View>
 
-<Text style={styles.timelineTitle}>
-Delivery Timeline
-</Text>
-
-<View style={styles.timelineBox}>
-
-<Text style={[
-styles.timelineText,
-status==="Accepted" && styles.activeStep
-]}>
-✅ Order Accepted
-</Text>
-
-<Text style={[
-styles.timelineText,
-(
-status==="Picked Up" ||
-status==="Out for Delivery" ||
-status==="Delivered"
-) && styles.activeStep
-]}>
-📦 Picked Up
-</Text>
-
-<Text style={[
-styles.timelineText,
-(
-status==="Out for Delivery" ||
-status==="Delivered"
-) && styles.activeStep
-]}>
-🚚 Out for Delivery
-</Text>
-
-<Text style={[
-styles.timelineText,
-status==="Delivered" &&
-styles.activeStep
-]}>
-🏁 Delivered
-</Text>
-
-</View>
-
-
-{/* BUTTONS */}
-
-{status==="Accepted" && (
 
 <TouchableOpacity
-style={styles.pickupBtn}
+style={styles.statusBtn}
+onPress={()=>
+setShowOptions(!showOptions)
+}
+>
+
+<Text style={styles.statusBtnText}>
+Update Status
+</Text>
+
+</TouchableOpacity>
+
+
+{showOptions && (
+
+<View style={styles.optionBox}>
+
+
+
+
+<TouchableOpacity
 onPress={()=>
 updateStatus("Picked Up")
 }
 >
 
-<Text style={styles.btnText}>
+<Text style={styles.optionText}>
 📦 Picked Up
 </Text>
 
 </TouchableOpacity>
 
-)}
-
-
-{status==="Picked Up" && (
 
 <TouchableOpacity
-style={styles.deliveryBtn}
 onPress={()=>
 updateStatus("Out for Delivery")
 }
 >
 
-<Text style={styles.btnText}>
-🚚 Start Delivery
+<Text style={styles.optionText}>
+🚚 Out for Delivery
 </Text>
 
 </TouchableOpacity>
 
-)}
-
-
-{status==="Out for Delivery" && (
 
 <TouchableOpacity
-style={styles.completeBtn}
 onPress={()=>
 updateStatus("Delivered")
 }
 >
 
-<Text style={styles.btnText}>
-✅ Mark as Delivered
+<Text style={styles.optionText}>
+🏁 Delivered
 </Text>
 
 </TouchableOpacity>
+
+</View>
 
 )}
 
@@ -258,97 +235,74 @@ const styles=StyleSheet.create({
 container:{
 flex:1,
 backgroundColor:"#f3f4f6",
-padding:15,
+padding:12,
 },
 
 heading:{
-fontSize:28,
+fontSize:22,
 fontWeight:"bold",
-marginBottom:20,
+marginBottom:14,
 },
 
 card:{
 backgroundColor:"#fff",
-padding:18,
-borderRadius:20,
-elevation:4,
+padding:14,
+borderRadius:16,
+elevation:3,
 },
 
 text:{
-fontSize:17,
-marginBottom:14,
+fontSize:15,
+marginBottom:10,
+color:"#333",
 },
 
 statusBox:{
-marginTop:10,
-padding:14,
+marginTop:8,
+padding:10,
 backgroundColor:"#eff6ff",
-borderRadius:14,
+borderRadius:12,
 },
 
 statusTitle:{
-fontSize:16,
+fontSize:15,
 fontWeight:"bold",
-marginBottom:6,
+marginBottom:4,
 },
 
 status:{
-fontSize:20,
+fontSize:17,
 fontWeight:"bold",
 color:"#2563eb",
 },
 
-timelineTitle:{
-fontSize:22,
-fontWeight:"bold",
-marginTop:25,
-marginBottom:15,
+statusBtn:{
+backgroundColor:"#2563eb",
+padding:14,
+borderRadius:12,
+marginTop:20,
 },
 
-timelineBox:{
+statusBtnText:{
+color:"#fff",
+fontSize:16,
+fontWeight:"bold",
+textAlign:"center",
+},
+
+optionBox:{
 backgroundColor:"#fff",
-padding:18,
-borderRadius:18,
+marginTop:10,
+borderRadius:14,
+padding:10,
 elevation:3,
 },
 
-timelineText:{
-fontSize:17,
-marginBottom:14,
-color:"#9ca3af",
+optionText:{
+fontSize:15,
+paddingVertical:10,
 fontWeight:"600",
+color:"#333",
 },
-
-activeStep:{
-color:"#16a34a",
-},
-
-pickupBtn:{
-backgroundColor:"#f59e0b",
-padding:16,
-borderRadius:14,
-marginTop:25,
-},
-
-deliveryBtn:{
-backgroundColor:"#2563eb",
-padding:16,
-borderRadius:14,
-marginTop:25,
-},
-
-completeBtn:{
-backgroundColor:"#16a34a",
-padding:16,
-borderRadius:14,
-marginTop:25,
-},
-
-btnText:{
-color:"#fff",
-fontSize:18,
-fontWeight:"bold",
-textAlign:"center",
-}
 
 });

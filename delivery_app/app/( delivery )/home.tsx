@@ -127,10 +127,6 @@ await fetch(
 const json=
 await data.json();
 
-console.log(
-"DASHBOARD DATA =",
-json
-);
 
 if(json.success){
 
@@ -180,12 +176,12 @@ const toggleStatus=()=>{
 setOnline(!online);
 };
 
-const acceptOrder=async()=>{
+const acceptOrder = async(order)=>{
 
 try{
 
 await fetch(
-`https://api.harzo.in/api/orders/${dashboard?.liveOrder?._id}/status`,
+`https://api.harzo.in/api/orders/${order._id}/status`,
 {
 method:"PUT",
 headers:{
@@ -197,47 +193,19 @@ status:"Accepted"
 }
 );
 
-setShowPopup(false);
-
-setLastOrderId(
-dashboard?.liveOrder?._id
-);
-
 loadDashboard();
-
-setDashboard({
-...dashboard,
-liveOrder:{
-...dashboard.liveOrder,
-status:"Accepted"
-}
-});
 
 router.push({
 pathname:"/order-details",
 params:{
-
-orderId:
-dashboard?.liveOrder?.orderId,
-
-customer:
-dashboard?.liveOrder?.user?.name,
-
-distance:
-dashboard?.liveOrder?.address?.city,
-
-amount:
-dashboard?.liveOrder?.finalAmount,
-
-landmark:
-dashboard?.liveOrder?.address?.fullAddress,
-
-phone:
-dashboard?.liveOrder?.user?.phone,
-
-status:
-dashboard?.liveOrder?.status
-
+id:order._id,
+orderId:order.orderId,
+customer:order?.user?.name,
+distance:order?.address?.city,
+amount:order?.finalAmount,
+landmark:order?.address?.fullAddress,
+phone:order?.user?.phone,
+status:"Accepted"
 }
 });
 
@@ -341,15 +309,15 @@ transform:[
 </Text>
 
 <Text style={styles.popupText}>
-💵 ₹{dashboard?.liveOrder?.finalAmount}
-</Text>
-
-<Text style={styles.popupText}>
-🏠 {dashboard?.liveOrder?.addressLine}
+🏠 {dashboard?.liveOrder?.address?.fullAddress}
 </Text>
 
 <Text style={styles.popupText}>
 📞 {dashboard?.liveOrder?.user?.phone}
+</Text>
+
+<Text style={styles.popupText}>
+💵 ₹{dashboard?.liveOrder?.totalAmount}
 </Text>
 
 <Text style={styles.popupText}>
@@ -379,7 +347,7 @@ Reject
 
 <TouchableOpacity
 style={styles.acceptPopupBtn}
-onPress={acceptOrder}
+onPress={() => acceptOrder(dashboard?.liveOrder)}
 >
 
 <Text style={styles.popupBtnText}>
@@ -513,34 +481,93 @@ backgroundColor:"#f3e8ff"
 Current Order
 </Text>
 
-<View style={styles.orderCard}>
+{dashboard?.orders?.length > 0 ? (
+
+dashboard.orders
+.filter(
+order =>
+["Pending","Accepted","Picked Up","Out for Delivery"]
+.includes(order.status)
+)
+.map((order,index)=>(
+
+<View
+key={order._id}
+style={[
+styles.orderCard,
+{marginBottom:15}
+]}
+>
 
 <Text style={styles.orderText}>
-📦 Order ID:
-{" "}
-{dashboard?.liveOrder?.orderId || "No Order"}
+📦 Order ID: {order.orderId}
 </Text>
 
 <Text style={styles.orderText}>
-👤 Customer:
-{" "}
-{dashboard?.liveOrder?.user?.name || "-"}
+👤 Customer: {order?.user?.name}
 </Text>
 
 <Text style={styles.orderText}>
-📍 City:
-{" "}
-{dashboard?.liveOrder?.address?.city || "-"}
+📍 City: {order?.address?.city}
 </Text>
 
 <Text style={styles.orderText}>
-💵 Amount:
-₹{dashboard?.liveOrder?.finalAmount || 0}
+🏠 Address: {order?.address?.fullAddress || "N/A"}
+</Text>
+
+<Text style={styles.orderText}>
+    💵 Amount: ₹{order?.totalAmount}
+</Text>
+
+<Text style={styles.orderText}>
+🚚 Status: {order?.status}
 </Text>
 
 <TouchableOpacity
 style={styles.acceptBtn}
-onPress={acceptOrder}
+onPress={async()=>{
+
+try{
+
+await fetch(
+`https://api.harzo.in/api/orders/${order._id}/status`,
+{
+method:"PUT",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+status:"Accepted"
+})
+}
+);
+
+loadDashboard();
+
+console.log("ORDER =", order);
+console.log("AMOUNT =", order?.totalAmount);
+
+router.push({
+pathname:"/order-details",
+params:{
+id:order._id,
+orderId:order.orderId,
+customer:order?.user?.name,
+distance:order?.address?.city,
+amount:order?.totalAmount,
+landmark:order?.address?.fullAddress,
+phone:order?.user?.phone,
+status:"Accepted"
+}
+});
+
+}catch(err){
+
+console.log(err);
+
+}
+
+}}
 >
 
 <Text style={styles.acceptText}>
@@ -550,6 +577,20 @@ Accept Order
 </TouchableOpacity>
 
 </View>
+
+))
+
+) : (
+
+<View style={styles.orderCard}>
+
+<Text style={styles.orderText}>
+No Orders Found
+</Text>
+
+</View>
+
+)}
 
 
 
@@ -672,9 +713,9 @@ padding:20,
 
 popupBox:{
 backgroundColor:"#fff",
-width:"100%",
-borderRadius:25,
-padding:20,
+width:"85%",
+borderRadius:22,
+padding:16,
 },
 
 popupTitle:{
@@ -685,8 +726,8 @@ textAlign:"center",
 },
 
 popupText:{
-fontSize:17,
-marginBottom:10,
+fontSize:15,
+marginBottom:8,
 },
 
 timerBox:{
@@ -710,25 +751,25 @@ marginTop:20,
 },
 
 rejectBtn:{
-backgroundColor:"#dc2626",
-padding:14,
+flex:1,
+backgroundColor:"#ef4444",
+paddingVertical:10,
 borderRadius:12,
-width:"48%",
-alignItems:"center",
+marginRight:8,
 },
 
 acceptPopupBtn:{
-backgroundColor:"#16a34a",
-padding:14,
+flex:1,
+backgroundColor:"#22c55e",
+paddingVertical:10,
 borderRadius:12,
-width:"48%",
-alignItems:"center",
 },
 
 popupBtnText:{
 color:"#fff",
-fontSize:16,
+fontSize:14,
 fontWeight:"bold",
-}
+textAlign:"center",
+},
 
 });
