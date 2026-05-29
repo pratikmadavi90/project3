@@ -335,7 +335,13 @@ o=>o.status==="Delivered"
 
 pendingOrders:
 orders.filter(
-o=>o.status!=="Delivered"
+o=>
+[
+"Pending",
+"Accepted",
+"Picked Up",
+"Out for Delivery"
+].includes(o.status)
 ).length,
 
 liveOrder,

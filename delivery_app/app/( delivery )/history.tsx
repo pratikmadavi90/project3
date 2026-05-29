@@ -7,7 +7,8 @@ View,
 Text,
 ScrollView,
 StyleSheet,
-ActivityIndicator
+ActivityIndicator,
+TouchableOpacity
 } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -16,11 +17,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HistoryScreen(){
 
-const [loading,setLoading]=
-useState(true);
+const [loading,setLoading]=useState(true);
 
-const [history,setHistory]=
-useState(null);
+const [history,setHistory]=useState(null);
+
+const [expanded,setExpanded]=useState({});
 
 useEffect(()=>{
 
@@ -42,9 +43,7 @@ JSON.parse(savedUser);
 
 const response =
 await fetch(
-
 `https://api.harzo.in/api/orders/delivery-history/${user.deliveryId || user.id}`
-
 );
 
 const data =
@@ -61,6 +60,18 @@ console.log(err);
 setLoading(false);
 
 }
+
+};
+
+const toggleOrders=(index)=>{
+
+setExpanded(prev=>({
+
+...prev,
+
+[index]:!prev[index]
+
+}));
 
 };
 
@@ -100,52 +111,76 @@ paddingBottom:40
 📜 Delivery History
 </Text>
 
-<View style={styles.summaryCard}>
+{history?.history?.length > 0 ? (
 
-<Text style={styles.summaryTitle}>
-Total Delivered Orders
+history.history.map((day,index)=>(
+
+<View
+key={index}
+style={styles.card}
+>
+
+<Text style={styles.dateTitle}>
+📅 {day.date}
 </Text>
 
-<Text style={styles.summaryNumber}>
-{history?.totalDelivered || 0}
+<Text style={styles.info}>
+📦 Total Orders: {day.totalOrders}
+</Text>
+
+<Text style={styles.info}>
+💰 Earnings: ₹{day.earning}
+</Text>
+
+<TouchableOpacity
+style={styles.viewBtn}
+onPress={()=>
+toggleOrders(index)
+}
+>
+
+<Text style={styles.viewBtnText}>
+{expanded[index]
+? "Hide Orders"
+: "View Orders"}
+</Text>
+
+</TouchableOpacity>
+
+{expanded[index] && (
+
+<View style={styles.orderContainer}>
+
+{day.orders.map((order,i)=>(
+
+<View
+key={i}
+style={styles.orderBox}
+>
+
+<Text style={styles.orderText}>
+📦 {order.orderId}
+</Text>
+
+<Text style={styles.orderText}>
+👤 {order.customer}
+</Text>
+
+<Text style={styles.orderText}>
+📍 {order.city}
+</Text>
+
+<Text style={styles.orderText}>
+💵 ₹{order.amount}
 </Text>
 
 </View>
 
-{history?.orders?.length > 0 ? (
+))}
 
-history.orders.map((order)=>(
+</View>
 
-<View
-key={order._id}
-style={styles.card}
->
-
-<Text style={styles.text}>
-📦 {order.orderId}
-</Text>
-
-<Text style={styles.text}>
-👤 {order?.user?.name}
-</Text>
-
-<Text style={styles.text}>
-📍 {order?.address?.city}
-</Text>
-
-<Text style={styles.text}>
-💵 ₹{order?.totalAmount}
-</Text>
-
-<Text style={styles.text}>
-📅 {
-order?.deliveredAt
-? new Date(
-order.deliveredAt
-).toLocaleDateString()
-: "-"
-}
-</Text>
+)}
 
 </View>
 
@@ -155,7 +190,7 @@ order.deliveredAt
 
 <View style={styles.card}>
 
-<Text style={styles.text}>
+<Text style={styles.info}>
 No Delivered Orders Found
 </Text>
 
@@ -185,36 +220,53 @@ fontWeight:"bold",
 marginBottom:15,
 },
 
-summaryCard:{
-backgroundColor:"#dcfce7",
-padding:20,
-borderRadius:18,
-marginBottom:15,
-alignItems:"center",
-},
-
-summaryTitle:{
-fontSize:16,
-fontWeight:"600",
-},
-
-summaryNumber:{
-fontSize:32,
-fontWeight:"bold",
-marginTop:8,
-},
-
 card:{
 backgroundColor:"#fff",
 padding:15,
-borderRadius:16,
-marginBottom:12,
+borderRadius:18,
+marginBottom:15,
 elevation:3,
 },
 
-text:{
-fontSize:15,
+dateTitle:{
+fontSize:20,
+fontWeight:"bold",
+marginBottom:10,
+},
+
+info:{
+fontSize:16,
 marginBottom:8,
-}
+},
+
+viewBtn:{
+backgroundColor:"#2563eb",
+paddingVertical:10,
+borderRadius:10,
+marginTop:10,
+},
+
+viewBtnText:{
+color:"#fff",
+fontWeight:"bold",
+textAlign:"center",
+fontSize:15,
+},
+
+orderContainer:{
+marginTop:12,
+},
+
+orderBox:{
+backgroundColor:"#f8fafc",
+padding:12,
+borderRadius:12,
+marginBottom:10,
+},
+
+orderText:{
+fontSize:14,
+marginBottom:4,
+},
 
 });
