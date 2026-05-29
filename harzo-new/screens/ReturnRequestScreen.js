@@ -25,6 +25,8 @@ const {
   quantity
 } = useLocalSearchParams();  
 
+
+
 const [reason,setReason]=useState("");
 const [comment,setComment]=useState("");
 const [loading,setLoading]=useState(false);
@@ -79,6 +81,8 @@ reason,
 comment
 
 };
+
+console.log("RETURN DATA", data);
 
 await createReturn(data);
 
