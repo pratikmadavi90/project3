@@ -14,6 +14,7 @@ import {
 import { router } from "expo-router";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getMyReturns } from "../services/returnService";
 
 const API = "https://api.harzo.in/api/orders";
 
@@ -21,6 +22,9 @@ export default function OrdersScreen() {
 
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+const [returns, setReturns] = useState([]);
+
+
 
   useEffect(() => {
     fetchOrders();
@@ -45,6 +49,35 @@ export default function OrdersScreen() {
       }
 
       const user = JSON.parse(savedUser);
+
+     try {
+
+ console.log("USER", user);
+
+const returnRes =
+await getMyReturns(
+"USR1780106224010"
+);
+
+   console.log(
+"RETURN RESPONSE:",
+JSON.stringify(returnRes,null,2)
+); 
+
+  if (returnRes?.success) {
+
+    setReturns(returnRes.data || []);
+
+  }
+
+} catch (err) {
+
+  console.log(
+    "RETURN ERROR:",
+    err
+  );
+
+} 
 
       // ✅ LOCAL ORDERS
       const savedOrders =
@@ -207,6 +240,8 @@ currentKey
       showsVerticalScrollIndicator={false}
 
       renderItem={({ item }: any) => (
+
+        
 
         <View style={styles.card}>
 
@@ -411,19 +446,29 @@ currentKey
           </View>
 
 {
-true && (
+returns.length > 0 ? (
+
+<View style={styles.returnBtn}>
+<Text style={styles.returnBtnText}>
+↩ Return Requested
+</Text>
+</View>
+
+) : (
 
 <TouchableOpacity
 style={styles.returnBtn}
 
 onPress={()=>
-  
 router.push({
 pathname:"/return-request",
 params:{
 orderId:item?.orderId || item?._id,
 
-userId:"TEST123",
+userId:
+item?.userId ||
+item?.user?._id ||
+"",
 
 userName:
 item?.user?.name || "",

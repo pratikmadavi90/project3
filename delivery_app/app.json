@@ -5,6 +5,17 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
-    "assetBundlePatterns": ["*/"]
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "android": {
+      "package": "in.harzo.delivery",
+      "googleServicesFile": "./google-services.json"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "11613a1d-85e8-4eff-b795-e9285c64f977"
+      }
+    }
   }
 }

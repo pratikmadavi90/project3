@@ -59,6 +59,22 @@ deliveryBoy: {
 
 deliveryBoyId:String,
 
+deliveryAssignedAt:{
+  type:Date,
+  default:null
+},
+
+deliveryAccepted:{
+  type:Boolean,
+  default:false
+},
+
+deliveryRejectedBy:[
+  {
+    type:String
+  }
+],
+
 deliveredAt:{
   type:Date,
   default:null

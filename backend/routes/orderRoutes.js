@@ -58,6 +58,17 @@ router.put(
 orderController.assignDelivery
 );
 
+// Accept Order
+router.put(
+"/accept/:id",
+orderController.acceptOrder
+);
+
+// Reject Order
+router.put(
+"/reject/:id",
+orderController.rejectOrder
+);
 
 // Cancel Order
 router.put(

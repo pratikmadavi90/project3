@@ -52,10 +52,19 @@ const [showVillage, setShowVillage] = useState(false);
 
         if (savedUser) {
 
-          const parsedUser =
-            JSON.parse(savedUser);
+const parsedUser =
+  JSON.parse(savedUser);
 
-          setUser({
+console.log(
+  "ASYNC USER:",
+  JSON.stringify(
+    parsedUser,
+    null,
+    2
+  )
+);
+
+setUser({
   ...parsedUser
 });
         }

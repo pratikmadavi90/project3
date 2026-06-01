@@ -31,16 +31,48 @@ if (!user) {
 const DeliveryBoy =
 require("../models/DeliveryBoy");
 
-const deliveryBoy =
-await DeliveryBoy.findOne({
-online:true
+const onlineBoys =
+await DeliveryBoy.find({
+  online:true,
+  status:"Active"
 });
 
-if(!deliveryBoy){
+if(onlineBoys.length===0){
 
-return res.status(400).json({
-message:"No Delivery Boy Online"
-});
+  return res.status(400).json({
+    message:"No Delivery Boy Online"
+  });
+
+}
+
+// sab delivery boys ke active orders count karo
+let selectedBoy=null;
+let minOrders=999999;
+
+for(const boy of onlineBoys){
+
+  const activeOrders =
+  await Order.countDocuments({
+
+    deliveryBoyId:boy.deliveryId,
+
+    status:{
+      $in:[
+        "Pending",
+        "Accepted",
+        "Packed",
+        "Out for Delivery"
+      ]
+    }
+
+  });
+
+  if(activeOrders < minOrders){
+
+    minOrders = activeOrders;
+    selectedBoy = boy;
+
+  }
 
 }
 
@@ -54,13 +86,15 @@ const order = new Order({
 
   orderId:"ORD"+Date.now(),
 
-  deliveryBoy:{
-    name:deliveryBoy.name,
-    phone:deliveryBoy.mobile
-  },
+deliveryBoy:{
+  name:selectedBoy.name,
+  phone:selectedBoy.mobile
+},
 
-  deliveryBoyId:
-  deliveryBoy.deliveryId
+deliveryBoyId:
+selectedBoy.deliveryId,
+
+deliveryAssignedAt:new Date()
 
 });
 
@@ -483,5 +517,118 @@ exports.deliveryHistory = async (req, res) => {
     });
 
   }
+
+};
+
+
+exports.acceptOrder = async (req,res)=>{
+
+try{
+
+const order =
+await Order.findByIdAndUpdate(
+
+req.params.id,
+
+{
+deliveryAccepted:true,
+status:"Accepted"
+},
+
+{new:true}
+
+);
+
+res.json({
+success:true,
+order
+});
+
+}catch(err){
+
+res.status(500).json({
+success:false,
+error:err.message
+});
+
+}
+
+};
+
+const DeliveryBoy =
+require("../models/DeliveryBoy");
+
+exports.rejectOrder = async (req,res)=>{
+
+try{
+
+const order =
+await Order.findById(req.params.id);
+
+if(!order){
+
+return res.status(404).json({
+message:"Order not found"
+});
+
+}
+
+const currentBoyId =
+order.deliveryBoyId;
+
+const onlineBoys =
+await DeliveryBoy.find({
+
+online:true,
+status:"Active",
+
+deliveryId:{
+$ne:currentBoyId
+}
+
+});
+
+if(onlineBoys.length===0){
+
+return res.json({
+success:false,
+message:"No other delivery boy available"
+});
+
+}
+
+const nextBoy =
+onlineBoys[0];
+
+order.deliveryBoy = {
+name:nextBoy.name,
+phone:nextBoy.mobile
+};
+
+order.deliveryBoyId =
+nextBoy.deliveryId;
+
+order.deliveryAssignedAt =
+new Date();
+
+order.deliveryAccepted =
+false;
+
+await order.save();
+
+res.json({
+success:true,
+message:"Order reassigned",
+order
+});
+
+}catch(err){
+
+res.status(500).json({
+success:false,
+error:err.message
+});
+
+}
 
 };

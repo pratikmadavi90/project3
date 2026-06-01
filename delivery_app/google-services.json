@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "989160646321",
+    "project_id": "harzo-delivery-471c9",
+    "storage_bucket": "harzo-delivery-471c9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:989160646321:android:2afef441bbc03b5cd96490",
+        "android_client_info": {
+          "package_name": "in.harzo.delivery"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7KQSGLaUK2WNu_ttYtR9zs9DXK7DP37U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
