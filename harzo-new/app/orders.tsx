@@ -26,9 +26,9 @@ const [returns, setReturns] = useState([]);
 
 
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
+useEffect(() => {
+  fetchOrders();
+}, []);
 
   // ✅ FETCH ORDERS
   const fetchOrders = async () => {
@@ -56,7 +56,7 @@ const [returns, setReturns] = useState([]);
 
 const returnRes =
 await getMyReturns(
-"USR1780106224010"
+user.userId
 );
 
    console.log(
@@ -446,61 +446,62 @@ currentKey
           </View>
 
 {
-returns.length > 0 ? (
+returns.some(
+(r: any) => r?.orderId === item?.orderId
+) ? (
 
 <View style={styles.returnBtn}>
-<Text style={styles.returnBtnText}>
-↩ Return Requested
-</Text>
+  <Text style={styles.returnBtnText}>
+    ↩ Return Requested
+  </Text>
 </View>
 
 ) : (
 
 <TouchableOpacity
-style={styles.returnBtn}
+  style={styles.returnBtn}
+  onPress={() =>
+    router.push({
+      pathname: "/return-request",
+      params: {
+        orderId: item?.orderId || item?._id,
 
-onPress={()=>
-router.push({
-pathname:"/return-request",
-params:{
-orderId:item?.orderId || item?._id,
 
-userId:
-item?.userId ||
-item?.user?._id ||
-"",
 
-userName:
-item?.user?.name || "",
+        userId:
+item?.userId || "",
 
-mobile:
-item?.user?.phone || "",
 
-address:
+
+        userName:
+          item?.user?.name || "",
+
+        mobile:
+          item?.user?.phone || "",
+
+        address:
 `${item?.address?.fullAddress || ""}
- ${item?.address?.city || ""}
- ${item?.address?.pincode || ""}`,
+${item?.address?.city || ""}
+${item?.address?.pincode || ""}`,
 
-productName:
-item?.items?.map(
-(p)=>p?.name
-).join(", "),
+        productName:
+          item?.items
+            ?.map((p: any) => p?.name)
+            .join(", "),
 
-quantity:
-item?.items?.reduce(
-(sum,p)=>
-sum + (p?.quantity || p?.qty || 1),
-0
-)
-}
-})
-}
+        quantity:
+          item?.items?.reduce(
+            (sum: number, p: any) =>
+              sum + (p?.quantity || p?.qty || 1),
+            0
+          ),
+      },
+    })
+  }
 >
-
-<Text style={styles.returnBtnText}>
-↩ Return Product
-</Text>
-
+  <Text style={styles.returnBtnText}>
+    ↩ Return Product
+  </Text>
 </TouchableOpacity>
 
 )

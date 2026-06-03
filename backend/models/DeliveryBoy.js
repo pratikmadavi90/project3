@@ -39,6 +39,11 @@ type:Boolean,
 default:false
 },
 
+lastAssignedAt:{
+type:Date,
+default:null
+},
+
 token:{
 type:String,
 default:""

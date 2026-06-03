@@ -576,6 +576,10 @@ message:"Order not found"
 const currentBoyId =
 order.deliveryBoyId;
 
+order.deliveryRejectedBy.push(
+currentBoyId
+);
+
 const onlineBoys =
 await DeliveryBoy.find({
 
@@ -583,7 +587,10 @@ online:true,
 status:"Active",
 
 deliveryId:{
-$ne:currentBoyId
+$nin:[
+currentBoyId,
+...order.deliveryRejectedBy
+]
 }
 
 });

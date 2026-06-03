@@ -61,6 +61,20 @@ href:null
 />
 
 <Tabs.Screen
+  name="earnings"
+  options={{
+    href:null
+  }}
+/>
+
+<Tabs.Screen
+  name="delivery-status"
+  options={{
+    href:null
+  }}
+/>
+
+<Tabs.Screen
 name="wallet"
 options={{
 href:null
@@ -74,12 +88,7 @@ href:null
 }}
 />
 
-<Tabs.Screen
-name="live-orders"
-options={{
-href:null
-}}
-/>
+
 
 <Tabs.Screen
 name="map-screen"

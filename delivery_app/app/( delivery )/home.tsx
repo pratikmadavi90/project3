@@ -222,15 +222,9 @@ const rejectOrder=async()=>{
 try{
 
 await fetch(
-`https://api.harzo.in/api/orders/${dashboard?.liveOrder?._id}/status`,
+`https://api.harzo.in/api/orders/reject/${dashboard?.liveOrder?._id}`,
 {
-method:"PUT",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-status:"Cancelled"
-})
+method:"PUT"
 }
 );
 
@@ -355,6 +349,8 @@ Accept
 </Text>
 
 </TouchableOpacity>
+
+
 
 </View>
 
@@ -530,15 +526,9 @@ onPress={async()=>{
 try{
 
 await fetch(
-`https://api.harzo.in/api/orders/${order._id}/status`,
+`https://api.harzo.in/api/orders/accept/${order._id}`,
 {
-method:"PUT",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-status:"Accepted"
-})
+method:"PUT"
 }
 );
 

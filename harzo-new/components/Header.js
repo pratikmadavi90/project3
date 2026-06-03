@@ -23,7 +23,7 @@ export default function Header() {
       <View style={styles.topRow}>
 
         <Text style={styles.time}>
-          ⚡ one day delivery
+          ⚡ 20 Minute delivery
         </Text>
 
       </View>
@@ -42,7 +42,7 @@ export default function Header() {
         activeOpacity={0.9}
         onPress={openSearch}
       >
-
+ 
         <View style={styles.searchRow}>
 
           <TextInput
@@ -61,6 +61,10 @@ export default function Header() {
 
       </TouchableOpacity>
 
+       <Text style={styles.storeTime}>
+  ⏰ Store Timeng: 5:00 AM - 12:00 AM
+</Text>
+
     </View>
   );
 }
@@ -70,15 +74,15 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: "#facc15",
 
-    paddingVertical: 36,
-    paddingHorizontal: 18,
+    paddingVertical: 40,
+    paddingHorizontal: 20,
 
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
 
-    marginBottom: 18,
+    marginBottom: 10,
 
-    minHeight: 220,
+    minHeight: 260,
   },
 
   topRow: {
@@ -124,20 +128,20 @@ const styles = StyleSheet.create({
         ? "700"
         : "bold",
 
-    fontSize: 15,
+    fontSize: 20,
 
     includeFontPadding: false,
   },
 
   // ✅ SUBTEXT FIX
   subText: {
-    fontSize: 13,
+    fontSize: 16,
 
     color: "#111111",
 
-    marginTop: 2,
+    marginTop: 3,
 
-    fontWeight: "600",
+    fontWeight: "500",
 
     includeFontPadding: false,
   },
@@ -195,5 +199,13 @@ const styles = StyleSheet.create({
 
     includeFontPadding: false,
   },
+
+  storeTime: {
+  fontSize: 13,
+  color: "#333",
+  marginTop: 25,
+  marginLeft: 5,
+  fontWeight: "600",
+},
 
 });

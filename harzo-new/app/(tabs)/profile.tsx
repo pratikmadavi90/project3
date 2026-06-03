@@ -669,6 +669,36 @@ router.push("/help-support")
 </TouchableOpacity>
 
 <TouchableOpacity
+  style={styles.option}
+  activeOpacity={0.7}
+  onPress={() => router.push("../privacy-policy")}
+>
+  <Text style={styles.optionText}>
+    🔒 Privacy Policy
+  </Text>
+</TouchableOpacity>
+
+<TouchableOpacity
+  style={styles.option}
+  activeOpacity={0.7}
+  onPress={() => router.push("../terms-conditions")}
+>
+  <Text style={styles.optionText}>
+    📜 Terms & Conditions
+  </Text>
+</TouchableOpacity>
+
+<TouchableOpacity
+  style={styles.option}
+  activeOpacity={0.7}
+  onPress={() => router.push("../refund-policy")}
+>
+  <Text style={styles.optionText}>
+    ↩️ Refund Policy
+  </Text>
+</TouchableOpacity>
+
+<TouchableOpacity
     style={styles.option}
     activeOpacity={0.7}
     onPress={() => {
@@ -789,7 +819,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#e5e7eb",
 
-    borderRadius: 16,
+    borderRadius: 12,
 
     paddingHorizontal: 16,
     paddingVertical: Platform.OS === "android"
@@ -905,12 +935,12 @@ const styles = StyleSheet.create({
   option: {
     backgroundColor: "#ffffff",
 
-    paddingVertical: 18,
-    paddingHorizontal: 18,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
 
-    borderRadius: 18,
+    borderRadius: 14,
 
-    marginBottom: 12,
+    marginBottom: 8,
 
     elevation: 2,
 
