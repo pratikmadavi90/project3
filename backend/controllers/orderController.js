@@ -579,6 +579,9 @@ order.deliveryBoyId;
 order.deliveryRejectedBy.push(
 currentBoyId
 );
+order.markModified(
+"deliveryRejectedBy"
+);
 
 const onlineBoys =
 await DeliveryBoy.find({
@@ -597,6 +600,11 @@ currentBoyId,
 
 if(onlineBoys.length===0){
 
+order.status =
+"Delivery Rejected";
+
+await order.save();
+
 return res.json({
 success:false,
 message:"No other delivery boy available"
@@ -605,7 +613,12 @@ message:"No other delivery boy available"
 }
 
 const nextBoy =
-onlineBoys[0];
+onlineBoys[
+Math.floor(
+Math.random() *
+onlineBoys.length
+)
+];
 
 order.deliveryBoy = {
 name:nextBoy.name,
