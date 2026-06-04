@@ -10,6 +10,8 @@
   "author": "Pratik",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-ses": "^3.1061.0",
+    "aws-sdk": "^2.1693.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.6.1",

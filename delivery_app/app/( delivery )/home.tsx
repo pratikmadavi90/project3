@@ -18,6 +18,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function HomeScreen(){
 
@@ -375,6 +376,14 @@ paddingBottom:90,
 <Text style={styles.title}>
 Hi, Delivery Partner 👋
 </Text>
+
+<Text>TEST ICON</Text>
+
+<Ionicons
+  name="person"
+  size={60}
+  color="red"
+/>
 
 <Text style={styles.subtitle}>
 Welcome to Harzo Delivery
