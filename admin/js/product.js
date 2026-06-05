@@ -68,28 +68,41 @@ clearForm();
 
 document.getElementById("saveBtn").innerText = "Save Product";
 
-// 🔥 DELETE FUNCTION
+// 🔥 DELETE PRODUCT
 async function deleteProduct(id) {
+
+  const confirmDelete = confirm(
+    "Are you sure you want to delete this product?"
+  );
+
+  if (!confirmDelete) return;
+
   try {
 
-    const res = await fetch(`${BASE_URL}/api/products/${id}`, {
-      method: "DELETE"
-    });
+    const res = await fetch(
+      `${BASE_URL}/api/products/${id}`,
+      {
+        method: "DELETE"
+      }
+    );
+
+    const data = await res.json();
 
     if (!res.ok) {
-      alert("Delete failed");
+      alert(data.message || "Delete failed ❌");
       return;
     }
 
-    // UI se bhi remove
-    allProducts = allProducts.filter(p => p._id !== id);
-
-    displayProducts(allProducts);
-
     alert("Product deleted ✅");
 
+    // 🔥 Fresh products DB se reload
+    await getProducts();
+
   } catch (error) {
-    console.error("Delete error:", error);
+
+    console.error("Delete Error:", error);
+
+    alert("Something went wrong ❌");
   }
 }
 

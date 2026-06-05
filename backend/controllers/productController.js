@@ -124,24 +124,9 @@ const updateProduct = async (req, res) => {
 // 👉 DELETE PRODUCT
 const deleteProduct = async (req, res) => {
   try {
-
-    console.log("DELETE ID:", req.params.id);
-
-    const check = await Product.findById(req.params.id);
-    console.log("FOUND BEFORE DELETE:", check);
-
-    const deleted = await Product.findByIdAndDelete(req.params.id);
-    console.log("DELETED PRODUCT:", deleted);
-
-    const afterDelete = await Product.findById(req.params.id);
-    console.log("FOUND AFTER DELETE:", afterDelete);
-
-    res.json({
-      message: "Deleted ✅"
-    });
-
+    await Product.findByIdAndDelete(req.params.id);
+    res.json({ message: "Deleted ✅" });
   } catch (err) {
-    console.log("DELETE ERROR:", err);
     res.status(500).json({ message: err.message });
   }
 };
