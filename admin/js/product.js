@@ -357,42 +357,23 @@ document.addEventListener("DOMContentLoaded", () => {
       "Iced Tea","Syrups & Squash","Coconut Water"
     ],
 
-    "Personal Care": [
-      "Bath Soap","Body Wash","Shampoo","Conditioner","Hair Oil",
-      "Hair Gel","Hair Color","Face Wash","Face Cream","Sunscreen",
-      "Talcum Powder","Deodorant","Perfume","Toothpaste",
-      "Toothbrush","Mouthwash","Shaving Cream","Razor",
-      "Sanitary Pads","Tampons","Baby Care"
-    ],
+"Personal Care": [
+  "Shampoo",
+  "Soap",
+  "Facewash",
+  "Cream",
+  "Toothpaste",
+  "Perfume"
+],
 
-    "Household": [
-  "Cleaning Supplies",
-  "Detergents",
+"Household": [
+  "Detergent",
+  "Floor Cleaner",
   "Dishwash",
-  "Floor Cleaners",
-  "Toilet Cleaners",
-  "Glass Cleaners",
-  "Drain Cleaners",
   "Phenyl",
-  "Bleach",
-  "Room Fresheners",
-  "Air Freshener Spray",
-  "Garbage Bags",
-  "Aluminium Foil",
-  "Cling Wrap",
-  "Tissue Paper",
-  "Paper Towels",
-  "Mops & Brushes",
-  "Brooms",
-  "Buckets & Mugs",
-  "Handwash",
-  "Hand Sanitizer",
-  "Insect Repellent",
-  "Mosquito Coil / Liquid",
-  "Matchbox",
-  "Candles",
-  "Pooja Items"
-]
+  "Glass Cleaner",
+  "Toilet Cleaner"
+],
 
   };
 

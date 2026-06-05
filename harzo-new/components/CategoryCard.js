@@ -18,10 +18,12 @@ export default function ProductCard({ item }) {
         shadowRadius: 4,
       }}
     >
-      <Image
-        source={{ uri: item.image }}
-        style={{ width: "100%", height: 100, borderRadius: 8 }}
-      />
+ <Image
+  source={{
+    uri: item.images?.thumbnail || "https://via.placeholder.com/150"
+  }}
+  style={{ width: "100%", height: 100, borderRadius: 8 }}
+/> 
 
       <Text style={{ marginTop: 5, fontWeight: "600" }}>
         {item.name}

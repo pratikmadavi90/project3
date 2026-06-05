@@ -190,7 +190,7 @@ const getImage = (name) => {
                 params: {
                 category: section.title,
                subCategory: item.name,
-               products: JSON.stringify(products) // 🔥 MUST ADD
+               
               }
               })
                   }

@@ -88,10 +88,7 @@ export default function CategoryScreen() {
   }, [subCategory]);
 
   // FINAL PRODUCTS
-  const finalProducts =
-    parsedProducts.length > 0
-      ? parsedProducts
-      : apiProducts;
+  const finalProducts = apiProducts;
 
   // LEFT MENU CATEGORIES
   const subCategories = useMemo(() => {
