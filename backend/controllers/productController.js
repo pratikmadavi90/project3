@@ -124,20 +124,9 @@ const updateProduct = async (req, res) => {
 // 👉 DELETE PRODUCT
 const deleteProduct = async (req, res) => {
   try {
-
-    console.log("DELETE ID:", req.params.id);
-
-    const deleted = await Product.findByIdAndDelete(req.params.id);
-
-    console.log("DELETED PRODUCT:", deleted);
-
-    res.json({
-      message: "Deleted ✅",
-      deleted
-    });
-
+    await Product.findByIdAndDelete(req.params.id);
+    res.json({ message: "Deleted ✅" });
   } catch (err) {
-    console.log("DELETE ERROR:", err);
     res.status(500).json({ message: err.message });
   }
 };

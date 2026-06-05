@@ -71,13 +71,22 @@ document.getElementById("saveBtn").innerText = "Save Product";
 // 🔥 DELETE FUNCTION
 async function deleteProduct(id) {
   try {
-   await fetch(`${BASE_URL}/api/products/${id}`, { 
+
+    const res = await fetch(`${BASE_URL}/api/products/${id}`, {
       method: "DELETE"
     });
 
-    alert("Product deleted ✅");
+    if (!res.ok) {
+      alert("Delete failed");
+      return;
+    }
 
-    loadProducts(document.getElementById("category")?.value || "grocery");
+    // UI se bhi remove
+    allProducts = allProducts.filter(p => p._id !== id);
+
+    displayProducts(allProducts);
+
+    alert("Product deleted ✅");
 
   } catch (error) {
     console.error("Delete error:", error);
