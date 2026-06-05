@@ -327,28 +327,31 @@ document.addEventListener("DOMContentLoaded", () => {
   // 🔥 SUBCATEGORY DATA
   const subcategories = {
 
-    Snacks: [
-      "Chips","Namkeen","Bhujia & Mixtures","Biscuits","Cookies",
-      "Cream Biscuits","Crackers","Rusk & Toast","Instant Noodles",
-      "Pasta & Macaroni","Vermicelli","Ready Meals","Frozen Snacks",
-      "Popcorn","Nachos","Khakhra","Papad","Energy Bars",
-      "Chocolates","Candies & Toffees","Chewing Gum"
-    ],
+Snacks: [
+  "Chips",
+  "Namkeen",
+  "Biscuits",
+  "Sweets",
+  "Chocolates",
+  "Cookies"
+],
 
-    Grocery: [
-      "Atta & Flour","Rice","Dal & Pulses","Cooking Oil","Ghee",
-      "Whole Spices","Powder Masala","Ready Masala","Salt",
-      "Sugar","Jaggery","Honey","Dry Fruits","Seeds","Pickles",
-      "Chutney","Sauces & Ketchup","Vinegar","Baking Items",
-      "Cornflour","Poha","Suji / Rava","Oats","Breakfast Cereals",
-      "Peanut Butter","Jam & Spreads"
-    ],
-
-    Dairy: [
-      "Milk","Curd","Paneer","Cheese","Butter","Ghee","Cream",
-      "Condensed Milk","Flavoured Milk","Lassi","Buttermilk",
-      "Milk Powder","Yogurt"
-    ],
+Grocery: [
+  "Atta",
+  "Rice",
+  "Dal",
+  "Oil",
+  "Salt",
+  "Masala"
+],
+  Dairy: [
+  "Milk",
+  "Curd",
+  "Bread",
+  "Eggs",
+  "Butter",
+  "Paneer"
+],
 
     Beverages: [
       "Soft Drinks","Fruit Juices","Packaged Water","Soda",
