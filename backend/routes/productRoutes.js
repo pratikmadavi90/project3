@@ -16,7 +16,7 @@ const s3 = new S3Client({
   }
 });
 
-const path = require("path");
+
 
 const upload = multer({
   storage: multerS3({
