@@ -115,6 +115,32 @@ export default function CategoryScreen() {
     ];
   }, [finalProducts, category]);
 
+ const subCategoryImages = useMemo(() => {
+  const map = {};
+
+  finalProducts.forEach((p) => {
+    const key = (
+      p.subCategory ||
+      p.subcategory ||
+      ""
+    ).toLowerCase().trim();
+
+if (key && !map[key]) {
+ map[key] =
+  p.images?.thumbnail ||
+  p.images?.gallery?.[0] ||
+  (Array.isArray(p.images)
+    ? p.images[0]
+    : null) ||
+  p.image ||
+  p.thumbnail ||
+  "https://dummyimage.com/100x100/cccccc/000000";
+}
+  });
+
+  return map;
+}, [finalProducts]); 
+
   // FILTERED PRODUCTS
   const filteredProducts =
     useMemo(() => {
@@ -191,75 +217,95 @@ export default function CategoryScreen() {
           flex: 1,
         }}
       >
-        {/* LEFT SIDE CATEGORY */}
-        <View style={styles.leftMenu}>
-          <FlatList
-            showsVerticalScrollIndicator={
-              false
-            }
-            data={subCategories}
-            keyExtractor={(
-              item,
-              index
-            ) =>
-              item +
-              index.toString()
-            }
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                activeOpacity={0.8}
-                style={[
-                  styles.categoryItem,
-                  selectedSubCategory ===
-                    item && {
-                    backgroundColor:
-                      "#e8f5e9",
-                    borderRadius: 10,
-                  },
-                ]}
-                onPress={() =>
-                  setSelectedSubCategory(
-                    item
-                  )
-                }
-              >
-                <View
-                  style={
-                    styles.categoryCircle
-                  }
-                >
-                  <Image
-                    source={{
-                      uri:
-                        finalProducts.find(
-                          (p) =>
-                            (
-                              p.subCategory ||
-                              p.subcategory
-                            )?.toLowerCase() ===
-                            item
-                        )?.images
-                          ?.thumbnail ||
-                        "https://dummyimage.com/100x100/cccccc/000000",
-                    }}
-                    style={
-                      styles.categoryImage
-                    }
-                  />
-                </View>
+ 
+ {/* LEFT SIDE CATEGORY */}
+<View style={styles.leftMenu}>
+<FlatList
+  showsVerticalScrollIndicator={false}
+  data={subCategories}
+  extraData={subCategoryImages}
+  removeClippedSubviews={false}
+  initialNumToRender={20}
+  maxToRenderPerBatch={20}
+  windowSize={21}
 
-                <Text
-                  style={
-                    styles.categoryText
-                  }
-                  numberOfLines={2}
-                >
-                  {item}
-                </Text>
-              </TouchableOpacity>
-            )}
-          />
-        </View>
+    keyExtractor={(item, index) =>
+      item + index.toString()
+    }
+    renderItem={({ item }) => {
+      console.log(
+        "SubCategory:",
+        item,
+        "Image:",
+        subCategoryImages[
+          item?.toLowerCase()?.trim()
+        ]
+      );
+
+      return (
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={[
+            styles.categoryItem,
+            selectedSubCategory ===
+              item && {
+              backgroundColor:
+                "#e8f5e9",
+              borderRadius: 10,
+            },
+          ]}
+          onPress={() =>
+            setSelectedSubCategory(
+              item
+            )
+          }
+        >
+          <View
+            style={
+              styles.categoryCircle
+            }
+          >
+<Image
+  key={
+    subCategoryImages[
+      item
+        ?.toLowerCase()
+        ?.trim()
+    ]
+  }
+  source={{
+    uri:
+      subCategoryImages[
+        item
+          ?.toLowerCase()
+          ?.trim()
+      ] ||
+      "https://dummyimage.com/100x100/cccccc/000000",
+  }}
+  style={styles.categoryImage}
+  resizeMode="cover"
+  onError={() =>
+    console.log(
+      "Image failed:",
+      item
+    )
+  }
+/>
+          </View>
+
+          <Text
+            style={
+              styles.categoryText
+            }
+            numberOfLines={2}
+          >
+            {item}
+          </Text>
+        </TouchableOpacity>
+      );
+    }}
+  />
+</View>
 
         {/* RIGHT PRODUCTS */}
         <View style={{ flex: 1 }}>

@@ -67,15 +67,21 @@ const getImage = (name) => {
     return "https://via.placeholder.com/100";
   }
 
-  const product = products.find(
-    (p) => (p?.subCategory || p?.subcategory) === name
-  );
+const product = products.find(
+  (p) =>
+    ((p?.subCategory || p?.subcategory || "")
+      .toLowerCase()
+      .trim()) === name.toLowerCase().trim()
+);
 
-  return (
-    product?.images?.thumbnail ||
-    product?.images?.[0] ||
-    "https://via.placeholder.com/100"
-  );
+return (
+  product?.images?.thumbnail ||
+  product?.images?.gallery?.[0] ||
+  (Array.isArray(product?.images)
+    ? product.images[0]
+    : null) ||
+  "https://via.placeholder.com/100"
+);
 };
 
   // ✅ AB sections niche (IMPORTANT FIX)
@@ -113,8 +119,8 @@ const getImage = (name) => {
     { name: "Masala", image: getImage("Masala") }
   ]
 },
-    {
-  title: "Dairy",
+  {
+  title: "Dairy Products",
   data: [
     { name: "Milk", image: getImage("Milk") },
     { name: "Curd", image: getImage("Curd") },
@@ -186,7 +192,7 @@ const getImage = (name) => {
                   key={i}
                   onPress={() =>
                  router.push({
-                pathname: "/category",
+                pathname: "/subcategory",
                 params: {
                 category: section.title,
                subCategory: item.name,

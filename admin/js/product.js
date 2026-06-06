@@ -297,14 +297,14 @@ document.getElementById("filterCategory").addEventListener("change", function ()
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  const categories = [
-    "Grocery",
-    "Snacks",
-    "Beverages",
-    "Dairy",
-    "Personal Care",
-    "Household"
-  ];
+const categories = [
+  "Grocery",
+  "Snacks",
+  "Beverages",
+  "Dairy Products",
+  "Personal Care",
+  "Household"
+];
 
   // 🔹 Category dropdown
   const category = document.getElementById("category");
@@ -344,7 +344,8 @@ Grocery: [
   "Salt",
   "Masala"
 ],
-  Dairy: [
+
+ "Dairy Products": [
   "Milk",
   "Curd",
   "Bread",
