@@ -64,8 +64,8 @@ const onRefresh = () => {
   // ✅ HELPER (image nikalne ke liye)
 const getImage = (name) => {
   if (!products || products.length === 0) {
-    return "https://via.placeholder.com/100";
-  }
+  return null;
+}
 
 const product = products.find(
   (p) =>
@@ -89,67 +89,67 @@ return (
     {
   title: "Beverages",
   data: [
-    { name: "Soft Drinks", image: getImage("Soft Drinks") },
-    { name: "Juices", image: getImage("Juices") },
-    { name: "Energy", image: getImage("Energy") },
-    { name: "Water", image: getImage("Water") },
-    { name: "Soda", image: getImage("Soda") },
-    { name: "Cold Coffee", image: getImage("Cold Coffee") }
+    { name: "soft drinks", image: getImage("soft drinks") },
+    { name: "juices", image: getImage("juices") },
+    { name: "energy", image: getImage("energy") },
+    { name: "water", image: getImage("water") },
+    { name: "soda", image: getImage("soda") },
+    { name: "cold coffee", image: getImage("cold coffee") }
   ]
 },
     {
   title: "Snacks",
   data: [
-    { name: "Chips", image: getImage("Chips") },
-    { name: "Namkeen", image: getImage("Namkeen") },
-    { name: "Biscuits", image: getImage("Biscuits") },
-    { name: "Sweets", image: getImage("Sweets") },
-    { name: "Chocolates", image: getImage("Chocolates") },
-    { name: "Cookies", image: getImage("Cookies") }
+    { name: "chips", image: getImage("chips") },
+    { name: "namkeen", image: getImage("namkeen") },
+    { name: "biscuits", image: getImage("biscuits") },
+    { name: "sweets", image: getImage("sweets") },
+    { name: "chocolates", image: getImage("chocolates") },
+    { name: "cookies", image: getImage("cookies") }
   ]
 },
     {
   title: "Grocery",
   data: [
-    { name: "Atta", image: getImage("Atta") },
-    { name: "Rice", image: getImage("Rice") },
-    { name: "Dal", image: getImage("Dal") },
-    { name: "Oil", image: getImage("Oil") },
-    { name: "Salt", image: getImage("Salt") },
-    { name: "Masala", image: getImage("Masala") }
+    { name: "atta", image: getImage("atta") },
+    { name: "rice", image: getImage("rice") },
+    { name: "dal", image: getImage("dal") },
+    { name: "oil", image: getImage("oil") },
+    { name: "salt", image: getImage("salt") },
+    { name: "masala", image: getImage("masala") }
   ]
 },
   {
-  title: "Dairy Products",
+  title: "Dairy ",
   data: [
-    { name: "Milk", image: getImage("Milk") },
-    { name: "Curd", image: getImage("Curd") },
-    { name: "Bread", image: getImage("Bread") },
-    { name: "Eggs", image: getImage("Eggs") },
-    { name: "Butter", image: getImage("Butter") },
-    { name: "Paneer", image: getImage("Paneer") }
+    { name: "milk", image: getImage("milk") },
+    { name: "curd", image: getImage("curd") },
+    { name: "bread", image: getImage("bread") },
+    { name: "eggs", image: getImage("eggs") },
+    { name: "butter", image: getImage("butter") },
+    { name: "paneer", image: getImage("paneer") }
   ]
 },
     {
       title: "Personal Care",
       data: [
-        { name: "Shampoo", image: getImage("Shampoo") },
-        { name: "Soap", image: getImage("Soap") },
-        { name: "Facewash", image: getImage("Facewash") },
-        { name: "Cream", image: getImage("Cream") },
-        { name: "Toothpaste", image: getImage("Toothpaste") },
-        { name: "Perfume", image: getImage("Perfume") }
+        { name: "shampoo", image: getImage("shampoo") },
+        { name: "soap", image: getImage("soap") },
+        { name: "facewash", image: getImage("facewash") },
+        { name: "cream", image: getImage("cream") },
+        { name: "toothpaste", image: getImage("toothpaste") },
+        { name: "perfume", image: getImage("perfume") }
       ]
     },
     {
       title: "Household",
       data: [
-        { name: "Detergent", image: getImage("Detergent") },
-        { name: "Floor Cleaner", image: getImage("Floor Cleaner") },
-        { name: "Dishwash", image: getImage("Dishwash") },
-        { name: "Phenyl", image: getImage("Phenyl") },
-        { name: "Glass Cleaner", image: getImage("Glass Cleaner") },
-        { name: "Toilet Cleaner", image: getImage("Toilet Cleaner") }
+        { name: "detergent", image: getImage("detergent") },
+        { name: "floor Cleaner", image: getImage("floor cleaner") },
+        { name: "dishwash", image: getImage("dishwash") },
+        { name: "phenyl", image: getImage("phenyl") },
+        { name: "glass Cleaner", image: getImage("glass cleaner") },
+        { name: "toilet Cleaner", image: getImage("toilet cleaner") }
       ]
     }
   ];
@@ -214,10 +214,19 @@ return (
                     justifyContent: "center",
                     alignItems: "center"
                   }}>
-                    <Image
-                      source={{ uri: item.image }}
-                      style={{ width: 80, height: 80 }}
-                    />
+                   {item.image ? (
+  <Image
+    source={{ uri: item.image }}
+    style={{ width: 80, height: 80 }}
+  />
+) : (
+  <View
+    style={{
+      width: 80,
+      height: 80,
+    }}
+  />
+)}
                   </View>
 
                   <Text style={{

@@ -65,8 +65,21 @@ const upload = multer({
     s3: s3,
     bucket: "harzo-images-storage",
     contentType: multerS3.AUTO_CONTENT_TYPE,
+
     key: (req, file, cb) => {
-      cb(null, Date.now().toString() + "-" + file.originalname);
+      const ext = path.extname(file.originalname);
+
+      const fileName = file.originalname
+        .replace(ext, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "");
+
+      cb(
+        null,
+        `${Date.now()}-${fileName}${ext.toLowerCase()}`
+      );
     }
   })
 });
