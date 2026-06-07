@@ -5,6 +5,16 @@ const generateSKU = () => {
   return "SKU-" + Math.floor(100000 + Math.random() * 900000);
 };
 
+// 👉 Normalize text
+const normalizeText = (text) => {
+  if (!text) return "";
+
+  return text
+    .toString()
+    .trim()
+    .replace(/\s+/g, " ");
+};
+
 // 👉 ADD PRODUCT (S3 + MULTIPLE IMAGES)
 const addProduct = async (req, res) => {
   try {
@@ -18,11 +28,10 @@ const addProduct = async (req, res) => {
       : [];
 
     const product = new Product({
-      name: req.body.name,
-      category: req.body.category,
-      brand: req.body.brand,
-      subCategory: req.body.subCategory,
-
+    name: normalizeText(req.body.name),
+category: normalizeText(req.body.category),
+brand: normalizeText(req.body.brand),
+subCategory: normalizeText(req.body.subCategory),
       weight: req.body.weight,
       description: req.body.description,
 
@@ -81,11 +90,13 @@ const updateProduct = async (req, res) => {
   try {
 
     let updateData = {
-      name: req.body.name,
-      category: req.body.category,
-      brand: req.body.brand,
-      weight: req.body.weight,
-      description: req.body.description,
+  name: normalizeText(req.body.name),
+  category: normalizeText(req.body.category),
+  brand: normalizeText(req.body.brand),
+  subCategory: normalizeText(req.body.subCategory),
+
+  weight: req.body.weight,
+  description: req.body.description,
 
       pricing: {
         mrp: Number(req.body.mrp) || 0,

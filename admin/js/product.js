@@ -268,7 +268,7 @@ window.slideLeft = function(btn) {
 // 👉 CLEAR FORM
 function clearForm() {
   document.getElementById("name").value = "";
-  document.getElementById("category").value = "";
+  
   document.getElementById("brand").value = "";
   document.getElementById("mrp").value = "";
   document.getElementById("price").value = "";
@@ -302,7 +302,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "Grocery",
     "Snacks",
     "Beverages",
-    "Dairy ",
+    "Dairy",
     "Personal Care",
     "Household"
   ];
@@ -328,72 +328,59 @@ document.addEventListener("DOMContentLoaded", () => {
   // 🔥 SUBCATEGORY DATA
   const subcategories = {
 
-    Snacks: [
-      "Chips","Namkeen","Bhujia & Mixtures","Biscuits","Cookies",
-      "Cream Biscuits","Crackers","Rusk & Toast","Instant Noodles",
-      "Pasta & Macaroni","Vermicelli","Ready Meals","Frozen Snacks",
-      "Popcorn","Nachos","Khakhra","Papad","Energy Bars",
-      "Chocolates","Candies & Toffees","Chewing Gum"
-    ],
+   Snacks: [
+  "Chips",
+  "Namkeen",
+  "Biscuits",
+  "Sweets",
+  "Chocolates",
+  "Cookies"
+],
 
-    Grocery: [
-      "Atta & Flour","Rice","Dal & Pulses","Cooking Oil","Ghee",
-      "Whole Spices","Powder Masala","Ready Masala","Salt",
-      "Sugar","Jaggery","Honey","Dry Fruits","Seeds","Pickles",
-      "Chutney","Sauces & Ketchup","Vinegar","Baking Items",
-      "Cornflour","Poha","Suji / Rava","Oats","Breakfast Cereals",
-      "Peanut Butter","Jam & Spreads"
-    ],
+Grocery: [
+  "Atta",
+  "Rice",
+  "Dal",
+  "Oil",
+  "Salt",
+  "Masala"
+],
 
-    Dairy: [
-      "Milk","Curd","Paneer","Cheese","Butter","Ghee","Cream",
-      "Condensed Milk","Flavoured Milk","Lassi","Buttermilk",
-      "Milk Powder","Yogurt"
-    ],
+Dairy: [
+  "Milk",
+  "Curd",
+  "Bread",
+  "Eggs",
+  "Butter",
+  "Paneer"
+],
 
-    Beverages: [
-      "Soft Drinks","Fruit Juices","Packaged Water","Soda",
-      "Energy Drinks","Sports Drinks","Tea","Coffee",
-      "Health Drinks","Flavoured Milk Drinks","Cold Coffee",
-      "Iced Tea","Syrups & Squash","Coconut Water"
-    ],
+Beverages: [
+  "Soft Drinks",
+  "Juices",
+  "Energy",
+  "Water",
+  "Soda",
+  "Cold Coffee"
+],
 
-    "Personal Care": [
-      "Bath Soap","Body Wash","Shampoo","Conditioner","Hair Oil",
-      "Hair Gel","Hair Color","Face Wash","Face Cream","Sunscreen",
-      "Talcum Powder","Deodorant","Perfume","Toothpaste",
-      "Toothbrush","Mouthwash","Shaving Cream","Razor",
-      "Sanitary Pads","Tampons","Baby Care"
-    ],
+"Personal Care": [
+  "Shampoo",
+  "Soap",
+  "Facewash",
+  "Cream",
+  "Toothpaste",
+  "Perfume"
+],
 
-    "Household": [
-  "Cleaning Supplies",
-  "Detergents",
+Household: [
+  "Detergent",
+  "Floor Cleaner",
   "Dishwash",
-  "Floor Cleaners",
-  "Toilet Cleaners",
-  "Glass Cleaners",
-  "Drain Cleaners",
   "Phenyl",
-  "Bleach",
-  "Room Fresheners",
-  "Air Freshener Spray",
-  "Garbage Bags",
-  "Aluminium Foil",
-  "Cling Wrap",
-  "Tissue Paper",
-  "Paper Towels",
-  "Mops & Brushes",
-  "Brooms",
-  "Buckets & Mugs",
-  "Handwash",
-  "Hand Sanitizer",
-  "Insect Repellent",
-  "Mosquito Coil / Liquid",
-  "Matchbox",
-  "Candles",
-  "Pooja Items"
-]
+  "Glass Cleaner",
+  "Toilet Cleaner"
+],
 
   };
 
