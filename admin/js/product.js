@@ -302,7 +302,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "Grocery",
     "Snacks",
     "Beverages",
-    "Dairy",
+    "Dairy Products",
     "Personal Care",
     "Household"
   ];
