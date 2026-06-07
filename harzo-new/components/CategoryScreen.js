@@ -119,28 +119,34 @@ export default function CategoryScreen() {
   }, [finalProducts, category]);
 
   // FILTERED PRODUCTS
-  const filteredProducts =
-    useMemo(() => {
-      return finalProducts.filter(
-        (p) =>
-          p.category
-            ?.toLowerCase()
-            .trim() ===
-            category
-              ?.toLowerCase()
-              .trim() &&
-          (!selectedSubCategory ||
-            (
-              p.subCategory ||
-              p.subcategory
-            )?.toLowerCase() ===
-              selectedSubCategory)
-      );
-    }, [
-      finalProducts,
-      category,
-      selectedSubCategory,
-    ]);
+const filteredProducts = useMemo(() => {
+  return finalProducts.filter(
+    (p) =>
+      p.category
+        ?.toLowerCase()
+        .trim() ===
+      category
+        ?.toLowerCase()
+        .trim() &&
+      (
+        !selectedSubCategory ||
+        (
+          p.subCategory ||
+          p.subcategory ||
+          ""
+        )
+          .toLowerCase()
+          .trim() ===
+        selectedSubCategory
+          ?.toLowerCase()
+          .trim()
+      )
+  );
+}, [
+  finalProducts,
+  category,
+  selectedSubCategory,
+]);
 
   // GET QTY
   const getQty = (id) => {
