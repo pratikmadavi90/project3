@@ -64,24 +64,18 @@ const onRefresh = () => {
   // ✅ HELPER (image nikalne ke liye)
 const getImage = (name) => {
   if (!products || products.length === 0) {
-  return null;
-}
+    return "https://via.placeholder.com/100";
+  }
 
-const product = products.find(
-  (p) =>
-    ((p?.subCategory || p?.subcategory || "")
-      .toLowerCase()
-      .trim()) === name.toLowerCase().trim()
-);
+  const product = products.find(
+    (p) => (p?.subCategory || p?.subcategory) === name
+  );
 
-return (
-  product?.images?.thumbnail ||
-  product?.images?.gallery?.[0] ||
-  (Array.isArray(product?.images)
-    ? product.images[0]
-    : null) ||
-  "https://via.placeholder.com/100"
-);
+  return (
+    product?.images?.thumbnail ||
+    product?.images?.[0] ||
+    "https://via.placeholder.com/100"
+  );
 };
 
   // ✅ AB sections niche (IMPORTANT FIX)
@@ -89,67 +83,67 @@ return (
     {
   title: "Beverages",
   data: [
-    { name: "soft drinks", image: getImage("soft drinks") },
-    { name: "juices", image: getImage("juices") },
-    { name: "energy", image: getImage("energy") },
-    { name: "water", image: getImage("water") },
-    { name: "soda", image: getImage("soda") },
-    { name: "cold coffee", image: getImage("cold coffee") }
+    { name: "Soft Drinks", image: getImage("Soft Drinks") },
+    { name: "Juices", image: getImage("Juices") },
+    { name: "Energy", image: getImage("Energy") },
+    { name: "Water", image: getImage("Water") },
+    { name: "Soda", image: getImage("Soda") },
+    { name: "Cold Coffee", image: getImage("Cold Coffee") }
   ]
 },
     {
   title: "Snacks",
   data: [
-    { name: "chips", image: getImage("chips") },
-    { name: "namkeen", image: getImage("namkeen") },
-    { name: "biscuits", image: getImage("biscuits") },
-    { name: "sweets", image: getImage("sweets") },
-    { name: "chocolates", image: getImage("chocolates") },
-    { name: "cookies", image: getImage("cookies") }
+    { name: "Chips", image: getImage("Chips") },
+    { name: "Namkeen", image: getImage("Namkeen") },
+    { name: "Biscuits", image: getImage("Biscuits") },
+    { name: "Sweets", image: getImage("Sweets") },
+    { name: "Chocolates", image: getImage("Chocolates") },
+    { name: "Cookies", image: getImage("Cookies") }
   ]
 },
     {
   title: "Grocery",
   data: [
-    { name: "atta", image: getImage("atta") },
-    { name: "rice", image: getImage("rice") },
-    { name: "dal", image: getImage("dal") },
-    { name: "oil", image: getImage("oil") },
-    { name: "salt", image: getImage("salt") },
-    { name: "masala", image: getImage("masala") }
+    { name: "Atta", image: getImage("Atta") },
+    { name: "Rice", image: getImage("Rice") },
+    { name: "Dal", image: getImage("Dal") },
+    { name: "Oil", image: getImage("Oil") },
+    { name: "Salt", image: getImage("Salt") },
+    { name: "Masala", image: getImage("Masala") }
   ]
 },
-  {
-  title: "Dairy ",
+    {
+  title: "Dairy",
   data: [
-    { name: "milk", image: getImage("milk") },
-    { name: "curd", image: getImage("curd") },
-    { name: "bread", image: getImage("bread") },
-    { name: "eggs", image: getImage("eggs") },
-    { name: "butter", image: getImage("butter") },
-    { name: "paneer", image: getImage("paneer") }
+    { name: "Milk", image: getImage("Milk") },
+    { name: "Curd", image: getImage("Curd") },
+    { name: "Bread", image: getImage("Bread") },
+    { name: "Eggs", image: getImage("Eggs") },
+    { name: "Butter", image: getImage("Butter") },
+    { name: "Paneer", image: getImage("Paneer") }
   ]
 },
     {
       title: "Personal Care",
       data: [
-        { name: "shampoo", image: getImage("shampoo") },
-        { name: "soap", image: getImage("soap") },
-        { name: "facewash", image: getImage("facewash") },
-        { name: "cream", image: getImage("cream") },
-        { name: "toothpaste", image: getImage("toothpaste") },
-        { name: "perfume", image: getImage("perfume") }
+        { name: "Shampoo", image: getImage("Shampoo") },
+        { name: "Soap", image: getImage("Soap") },
+        { name: "Facewash", image: getImage("Facewash") },
+        { name: "Cream", image: getImage("Cream") },
+        { name: "Toothpaste", image: getImage("Toothpaste") },
+        { name: "Perfume", image: getImage("Perfume") }
       ]
     },
     {
       title: "Household",
       data: [
-        { name: "detergent", image: getImage("detergent") },
-        { name: "floor Cleaner", image: getImage("floor cleaner") },
-        { name: "dishwash", image: getImage("dishwash") },
-        { name: "phenyl", image: getImage("phenyl") },
-        { name: "glass Cleaner", image: getImage("glass cleaner") },
-        { name: "toilet Cleaner", image: getImage("toilet cleaner") }
+        { name: "Detergent", image: getImage("Detergent") },
+        { name: "Floor Cleaner", image: getImage("Floor Cleaner") },
+        { name: "Dishwash", image: getImage("Dishwash") },
+        { name: "Phenyl", image: getImage("Phenyl") },
+        { name: "Glass Cleaner", image: getImage("Glass Cleaner") },
+        { name: "Toilet Cleaner", image: getImage("Toilet Cleaner") }
       ]
     }
   ];
@@ -192,11 +186,11 @@ return (
                   key={i}
                   onPress={() =>
                  router.push({
-                pathname: "/subcategory",
+                pathname: "/category",
                 params: {
                 category: section.title,
                subCategory: item.name,
-               
+               products: JSON.stringify(products) // 🔥 MUST ADD
               }
               })
                   }
@@ -214,19 +208,10 @@ return (
                     justifyContent: "center",
                     alignItems: "center"
                   }}>
-                   {item.image ? (
-  <Image
-    source={{ uri: item.image }}
-    style={{ width: 80, height: 80 }}
-  />
-) : (
-  <View
-    style={{
-      width: 80,
-      height: 80,
-    }}
-  />
-)}
+                    <Image
+                      source={{ uri: item.image }}
+                      style={{ width: 80, height: 80 }}
+                    />
                   </View>
 
                   <Text style={{

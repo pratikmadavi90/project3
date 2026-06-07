@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", () => {
   getProducts();
 });
@@ -67,6 +66,7 @@ clearForm();
 }
 
 document.getElementById("saveBtn").innerText = "Save Product";
+
 
 // 🔥 DELETE PRODUCT
 async function deleteProduct(id) {
@@ -138,6 +138,7 @@ function cancelEdit() {
   editId = null;
 
   document.getElementById("saveBtn").innerText = "Save Product";
+
 
   // form clear
   document.getElementById("name").value = "";
@@ -297,14 +298,14 @@ document.getElementById("filterCategory").addEventListener("change", function ()
 
 document.addEventListener("DOMContentLoaded", () => {
 
-const categories = [
-  "Grocery",
-  "Snacks",
-  "Beverages",
-  "Dairy Products",
-  "Personal Care",
-  "Household"
-];
+  const categories = [
+    "Grocery",
+    "Snacks",
+    "Beverages",
+    "Dairy",
+    "Personal Care",
+    "Household"
+  ];
 
   // 🔹 Category dropdown
   const category = document.getElementById("category");
@@ -327,32 +328,28 @@ const categories = [
   // 🔥 SUBCATEGORY DATA
   const subcategories = {
 
-Snacks: [
-  "Chips",
-  "Namkeen",
-  "Biscuits",
-  "Sweets",
-  "Chocolates",
-  "Cookies"
-],
+    Snacks: [
+      "Chips","Namkeen","Bhujia & Mixtures","Biscuits","Cookies",
+      "Cream Biscuits","Crackers","Rusk & Toast","Instant Noodles",
+      "Pasta & Macaroni","Vermicelli","Ready Meals","Frozen Snacks",
+      "Popcorn","Nachos","Khakhra","Papad","Energy Bars",
+      "Chocolates","Candies & Toffees","Chewing Gum"
+    ],
 
-Grocery: [
-  "Atta",
-  "Rice",
-  "Dal",
-  "Oil",
-  "Salt",
-  "Masala"
-],
+    Grocery: [
+      "Atta & Flour","Rice","Dal & Pulses","Cooking Oil","Ghee",
+      "Whole Spices","Powder Masala","Ready Masala","Salt",
+      "Sugar","Jaggery","Honey","Dry Fruits","Seeds","Pickles",
+      "Chutney","Sauces & Ketchup","Vinegar","Baking Items",
+      "Cornflour","Poha","Suji / Rava","Oats","Breakfast Cereals",
+      "Peanut Butter","Jam & Spreads"
+    ],
 
- "Dairy ": [
-  "Milk",
-  "Curd",
-  "Bread",
-  "Eggs",
-  "Butter",
-  "Paneer"
-],
+    Dairy: [
+      "Milk","Curd","Paneer","Cheese","Butter","Ghee","Cream",
+      "Condensed Milk","Flavoured Milk","Lassi","Buttermilk",
+      "Milk Powder","Yogurt"
+    ],
 
     Beverages: [
       "Soft Drinks","Fruit Juices","Packaged Water","Soda",
@@ -361,23 +358,42 @@ Grocery: [
       "Iced Tea","Syrups & Squash","Coconut Water"
     ],
 
-"Personal Care": [
-  "Shampoo",
-  "Soap",
-  "Facewash",
-  "Cream",
-  "Toothpaste",
-  "Perfume"
-],
+    "Personal Care": [
+      "Bath Soap","Body Wash","Shampoo","Conditioner","Hair Oil",
+      "Hair Gel","Hair Color","Face Wash","Face Cream","Sunscreen",
+      "Talcum Powder","Deodorant","Perfume","Toothpaste",
+      "Toothbrush","Mouthwash","Shaving Cream","Razor",
+      "Sanitary Pads","Tampons","Baby Care"
+    ],
 
-"Household": [
-  "Detergent",
-  "Floor Cleaner",
+    "Household": [
+  "Cleaning Supplies",
+  "Detergents",
   "Dishwash",
+  "Floor Cleaners",
+  "Toilet Cleaners",
+  "Glass Cleaners",
+  "Drain Cleaners",
   "Phenyl",
-  "Glass Cleaner",
-  "Toilet Cleaner"
-],
+  "Bleach",
+  "Room Fresheners",
+  "Air Freshener Spray",
+  "Garbage Bags",
+  "Aluminium Foil",
+  "Cling Wrap",
+  "Tissue Paper",
+  "Paper Towels",
+  "Mops & Brushes",
+  "Brooms",
+  "Buckets & Mugs",
+  "Handwash",
+  "Hand Sanitizer",
+  "Insect Repellent",
+  "Mosquito Coil / Liquid",
+  "Matchbox",
+  "Candles",
+  "Pooja Items"
+]
 
   };
 
