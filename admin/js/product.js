@@ -345,7 +345,7 @@ Grocery: [
   "Masala"
 ],
 
- "Dairy Products": [
+ "Dairy ": [
   "Milk",
   "Curd",
   "Bread",
