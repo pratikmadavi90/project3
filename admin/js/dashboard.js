@@ -1,9 +1,23 @@
+const token = localStorage.getItem("adminToken");
+
+if (!token) {
+    window.location.href = "/admin/pages/login.html";
+}
+
 const API = "https://api.harzo.in/api/dashboard";
+const headers = {
+  Authorization: `Bearer ${token}`,
+  "Content-Type": "application/json"
+};
 
 // 🔹 Load Stats (Top cards)
 async function loadStats() {
   try {
-    const res = await fetch(`${API}/stats`);
+
+
+ const res = await fetch(`${API}/stats`, {
+  headers: headers
+});
     const data = await res.json();
 
     document.getElementById("totalProducts").innerText = data.totalProducts || 0;
@@ -91,7 +105,10 @@ function loadChart() {
 
 // 🔹 Logout
 function logout() {
+  localStorage.removeItem("adminToken");
   localStorage.removeItem("isAdminLoggedIn");
+  localStorage.removeItem("isLoggedIn");
+
   window.location.href = "/admin/pages/login.html";
 }
 
