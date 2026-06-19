@@ -97,15 +97,25 @@ async function loadChart() {
 
     const data = await res.json();
 
-    const labels = [
-      "Mon",
-      "Tue",
-      "Wed",
-      "Thu",
-      "Fri",
-      "Sat",
-      "Sun"
-    ];
+const dayKeys = [
+  "Mon",
+  "Tue",
+  "Wed",
+  "Thu",
+  "Fri",
+  "Sat",
+  "Sun"
+];
+
+const labels =
+dayKeys.map(
+  day => data[day]?.label || day
+);
+
+const chartData =
+dayKeys.map(
+  day => data[day]?.total || 0
+);
 
     const chartData =
     labels.map(day =>
@@ -163,8 +173,7 @@ async function loadChart() {
       const index =
       points[0].index;
 
-      const day =
-      labels[index];
+      const day = dayKeys[index];
 
       const stats =
       data[day];
