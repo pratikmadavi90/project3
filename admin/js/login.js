@@ -68,14 +68,9 @@ async function verifyOTP() {
   showMessage("Login Successful 🚀", "success");
 
   // 🔥 IMPORTANT FIX
-  localStorage.setItem("isLoggedIn", "true");
-
-
-
-           // LOGIN SUCCESS
-
+localStorage.setItem("isLoggedIn", "true");
 localStorage.setItem("isAdminLoggedIn", "true");
-
+localStorage.setItem("adminToken", data.token);
 
            setTimeout(() => {
     window.location.href = "dashboard.html";
