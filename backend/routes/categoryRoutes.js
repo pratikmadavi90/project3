@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
+const authMiddleware = require("../middleware/authMiddleware");
+
 // Controllers import
 const {
   createOrder,
@@ -18,43 +20,51 @@ const {
 
 
 // 🧾 CREATE ORDER
-// POST /api/orders/create
-router.post("/create", createOrder);
+// User order place kar sake
+router.post(
+  "/create",
+  createOrder
+);
 
 
-// 📋 GET ALL ORDERS (Admin Panel)
-// GET /api/orders
-router.get("/", getOrders);
+// 📋 GET ALL ORDERS (Admin)
+router.get(
+  "/",
+  authMiddleware,
+  getOrders
+);
 
 
-// 🔍 GET SINGLE ORDER
-// GET /api/orders/:id
-router.get("/:id", getSingleOrder);
+// 🔍 GET SINGLE ORDER (Admin)
+router.get(
+  "/:id",
+  authMiddleware,
+  getSingleOrder
+);
 
 
-// 🔄 UPDATE ORDER STATUS
-// PUT /api/orders/:id/status
-router.put("/:id/status", updateStatus);
+// 🔄 UPDATE ORDER STATUS (Admin)
+router.put(
+  "/:id/status",
+  authMiddleware,
+  updateStatus
+);
 
 
-// 🚚 ASSIGN DELIVERY BOY
-// PUT /api/orders/:id/assign-delivery
-router.put("/:id/assign-delivery", assignDelivery);
+// 🚚 ASSIGN DELIVERY BOY (Admin)
+router.put(
+  "/:id/assign-delivery",
+  authMiddleware,
+  assignDelivery
+);
 
 
-// ❌ CANCEL ORDER
-// PUT /api/orders/:id/cancel
-router.put("/:id/cancel", cancelOrder);
+// ❌ CANCEL ORDER (Admin)
+router.put(
+  "/:id/cancel",
+  authMiddleware,
+  cancelOrder
+);
 
 
-// =============================
-// 🚀 FUTURE READY (OPTIONAL)
-// =============================
-
-// 📱 Delivery Boy ke liye (future)
-// GET assigned orders
-// router.get("/delivery/my-orders", getMyDeliveryOrders);
-
-
-// =============================
 module.exports = router;
