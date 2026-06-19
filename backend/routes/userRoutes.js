@@ -3,9 +3,10 @@ const router = express.Router();
 
 const userController = require("../controllers/userController");
 const User = require("../models/User");
+const authMiddleware = require("../middleware/authMiddleware");
 
 // ================= GET ALL USERS =================
-router.get("/", userController.getUsers);
+router.get("/", authMiddleware, userController.getUsers);
 
 // ================= ADD USER =================
 router.post("/", async (req, res) => {
@@ -158,12 +159,14 @@ router.put("/update", async (req, res) => {
 // ================= BLOCK / UNBLOCK =================
 router.put(
   "/block/:id",
+  authMiddleware,
   userController.toggleBlockUser
 );
 
 // ================= DELETE USER =================
 router.delete(
   "/:id",
+  authMiddleware,
   userController.deleteUser
 );
 

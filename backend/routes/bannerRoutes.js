@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Banner = require("../models/Banner");
+const authMiddleware = require("../middleware/authMiddleware");
 
 // ADD BANNER
-router.post("/add-banner", async (req, res) => {
+router.post("/add-banner", authMiddleware, async (req, res) => {
   try {
     const banner = new Banner(req.body);
     await banner.save();
@@ -24,7 +25,7 @@ router.get("/banners", async (req, res) => {
 });
 
 // DELETE BANNER
-router.delete("/delete-banner/:id", async (req, res) => {
+router.delete("/delete-banner/:id", authMiddleware, async (req, res) => {
   try {
     await Banner.findByIdAndDelete(req.params.id);
     res.json({ success: true });

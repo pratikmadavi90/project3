@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
+const authMiddleware = require("../middleware/authMiddleware");
 const {
   getStats,
   getLowStock,
@@ -8,9 +8,12 @@ const {
   getRecentUsers
 } = require("../controllers/dashboardController");
 
-router.get("/stats", getStats);
-router.get("/low-stock", getLowStock);
-router.get("/orders", getRecentOrders);
-router.get("/users", getRecentUsers);
+router.get("/stats", authMiddleware, getStats);
+
+router.get("/low-stock", authMiddleware, getLowStock);
+
+router.get("/orders", authMiddleware, getRecentOrders);
+
+router.get("/users", authMiddleware, getRecentUsers);
 
 module.exports = router;

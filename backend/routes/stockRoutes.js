@@ -1,16 +1,41 @@
 const express = require("express");
 const router = express.Router();
 
+const authMiddleware = require("../middleware/authMiddleware");
+
 const {
   updateStock,
   getLowStock,
   getOutOfStock,
-  getProducts
+  getProducts,
 } = require("../controllers/stockController");
 
-router.post("/update", updateStock);
-router.get("/low", getLowStock);
-router.get("/out", getOutOfStock);
-router.get("/all", getProducts);
+// Update Stock
+router.post(
+  "/update",
+  authMiddleware,
+  updateStock
+);
+
+// Low Stock Products
+router.get(
+  "/low",
+  authMiddleware,
+  getLowStock
+);
+
+// Out Of Stock Products
+router.get(
+  "/out",
+  authMiddleware,
+  getOutOfStock
+);
+
+// All Products Stock
+router.get(
+  "/all",
+  authMiddleware,
+  getProducts
+);
 
 module.exports = router;

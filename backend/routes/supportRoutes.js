@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
+const authMiddleware = require("../middleware/authMiddleware");
 const {
 createTicket,
 getTickets,
@@ -11,13 +11,24 @@ replyTicket
 router.post("/", createTicket);
 
 // Get all tickets
-router.get("/", getTickets);
+router.get(
+  "/",
+  authMiddleware,
+  getTickets
+);
 
 // Reply ticket
-router.put("/reply/:id", replyTicket);
+router.put(
+  "/reply/:id",
+  authMiddleware,
+  replyTicket
+);
 
-// Delete ticket  👇 ye naya add karo
-router.delete("/:id", async(req,res)=>{
+// Delete ticket
+router.delete(
+  "/:id",
+  authMiddleware,
+  async (req, res) => {
 
 try{
 

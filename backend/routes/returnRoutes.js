@@ -1,6 +1,7 @@
 const express=require("express");
 
 const router=express.Router();
+const authMiddleware = require("../middleware/authMiddleware");
 
 const {
 
@@ -23,13 +24,15 @@ getUserReturns
 );
 
 router.get(
-"/all",
-getAllReturns
+  "/all",
+  authMiddleware,
+  getAllReturns
 );
 
 router.put(
-"/status/:id",
-updateReturnStatus
+  "/status/:id",
+  authMiddleware,
+  updateReturnStatus
 );
 
 module.exports=router;

@@ -1,12 +1,23 @@
 const express = require("express");
 const router = express.Router();
 
+const authMiddleware = require("../middleware/authMiddleware");
+
 const {
   getSettings,
   updateSettings
 } = require("../controllers/settingsController");
 
-router.get("/", getSettings);
-router.post("/update", updateSettings);
+router.get(
+  "/",
+  authMiddleware,
+  getSettings
+);
+
+router.post(
+  "/update",
+  authMiddleware,
+  updateSettings
+);
 
 module.exports = router;

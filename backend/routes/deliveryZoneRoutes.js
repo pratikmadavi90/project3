@@ -8,16 +8,25 @@ const {
   checkDelivery
 } = require("../controllers/deliveryZoneController");
 
-// ✅ Add new delivery zone
-router.post("/add", addZone);
+const authMiddleware = require("../middleware/authMiddleware");
 
-// ✅ Get all zones
-router.get("/all", getZones);
+router.post("/add",
+  authMiddleware,
+  addZone
+);
 
-// ✅ Delete zone
-router.delete("/delete/:id", deleteZone);
+router.get("/all",
+  authMiddleware,
+  getZones
+);
 
-// ✅ Check delivery availability
-router.post("/check", checkDelivery);
+router.delete("/delete/:id",
+  authMiddleware,
+  deleteZone
+);
+
+router.post("/check",
+  checkDelivery
+);
 
 module.exports = router;
