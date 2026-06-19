@@ -13,9 +13,11 @@ async function addArea() {
 
   await fetch(`${API}/add`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+   headers: {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem("adminToken")
+},
+
     body: JSON.stringify({
       name,
       pincode,
@@ -36,7 +38,11 @@ async function addArea() {
 // 📋 Load Areas
 async function loadAreas() {
 
-const res = await fetch(`${API}/all`);
+const res = await fetch(`${API}/all`, {
+  headers: {
+    Authorization: "Bearer " + localStorage.getItem("adminToken")
+  }
+});
 
 if (!res.ok) {
 throw new Error("Failed to load delivery areas");
@@ -84,9 +90,12 @@ list.innerHTML += `
 async function deleteArea(id) {
   if (!confirm("Delete this area?")) return;
 
-  await fetch(`${API}/delete/${id}`, {
-    method: "DELETE"
-  });
+ await fetch(`${API}/delete/${id}`, {
+  method: "DELETE",
+  headers: {
+    Authorization: "Bearer " + localStorage.getItem("adminToken")
+  }
+});
 
   loadAreas();
 }

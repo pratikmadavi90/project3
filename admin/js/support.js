@@ -4,7 +4,11 @@ async function loadTickets() {
 
 try{
 
-const res = await fetch(API);
+const res = await fetch(API, {
+  headers: {
+    Authorization: "Bearer " + localStorage.getItem("adminToken")
+  }
+});
 
 const tickets = await res.json();
 
@@ -166,7 +170,8 @@ await fetch(
 method:"PUT",
 
 headers:{
-"Content-Type":"application/json"
+"Content-Type":"application/json",
+Authorization:"Bearer " + localStorage.getItem("adminToken")
 },
 
 body:JSON.stringify({
@@ -199,13 +204,15 @@ confirm(
 if(!ok) return;
 
 await fetch(
-
 `${API}/${id}`,
-
 {
-method:"DELETE"
+method:"DELETE",
+
+headers:{
+Authorization:"Bearer " + localStorage.getItem("adminToken")
 }
 
+}
 );
 
 loadTickets();

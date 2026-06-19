@@ -10,7 +10,11 @@ async function loadDeliveryBoys(){
 
 try{
 
-const res = await fetch(`${API}/all`);
+const res = await fetch(`${API}/all`, {
+  headers: {
+    Authorization: "Bearer " + localStorage.getItem("adminToken")
+  }
+});
 
 console.log("STATUS:",res.status);
 
@@ -125,7 +129,8 @@ const res = await fetch(`${API}/add`,{
 method:"POST",
 
 headers:{
-"Content-Type":"application/json"
+"Content-Type":"application/json",
+Authorization:"Bearer " + localStorage.getItem("adminToken")
 },
 
 body:JSON.stringify({
@@ -176,13 +181,15 @@ if(
 try{
 
 await fetch(
-
 `${API}/delete/${id}`,
-
 {
-method:"DELETE"
+method:"DELETE",
+
+headers:{
+Authorization:"Bearer " + localStorage.getItem("adminToken")
 }
 
+}
 );
 
 loadDeliveryBoys();
