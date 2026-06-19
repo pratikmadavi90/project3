@@ -276,12 +276,27 @@ app.post("/api/admin/verify-otp", (req, res) => {
   const data = otpStore[email];
 
   // Owner bypass 🔥
-  if (
-    email === process.env.OWNER_EMAIL &&
-    otp === process.env.OWNER_PASSWORD
-  ) {
-    return res.json({ message: "Login success (OWNER)" });
-  }
+ if (
+  email === process.env.OWNER_EMAIL &&
+  otp === process.env.OWNER_PASSWORD
+) {
+
+  const token = jwt.sign(
+    {
+      email: email,
+      role: "owner"
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "7d"
+    }
+  );
+
+  return res.json({
+    message: "Login success (OWNER)",
+    token
+  });
+}
 
   if (!data) {
     return res.status(400).json({ message: "OTP not found" });
