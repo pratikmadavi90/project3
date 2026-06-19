@@ -4,10 +4,12 @@
 <meta charset="UTF-8">
 <title>Users</title>
 <script>
-if (localStorage.getItem("isAdminLoggedIn") !== "true") {
-    window.location.href = "/pages/login.html";
+const token = localStorage.getItem("adminToken");
+
+if (!token) {
+    window.location.href = "login.html";
 }
-</script>
+</script>>
 
 <link rel="stylesheet" href="../css/users.css">
 </head>

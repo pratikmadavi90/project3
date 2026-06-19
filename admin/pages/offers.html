@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <title>Offers</title>
 
- <script>
-if (localStorage.getItem("isAdminLoggedIn") !== "true") {
-    window.location.href = "/pages/login.html";
+<script>
+const token = localStorage.getItem("adminToken");
+
+if (!token) {
+    window.location.href = "login.html";
 }
 </script>
 
