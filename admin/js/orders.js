@@ -2,7 +2,11 @@ const API = "https://api.harzo.in/api/orders";
 
 // 🔄 GET ORDERS
 async function getOrders() {
-  const res = await fetch(API);
+  const res = await fetch(API, {
+  headers: {
+    Authorization: "Bearer " + localStorage.getItem("adminToken")
+  }
+});
   const orders = await res.json();
 
   const table = document.getElementById("ordersTable");
@@ -85,8 +89,9 @@ async function updateStatus(id, status) {
     method: "PUT",
 
     headers: {
-      "Content-Type": "application/json",
-    },
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + localStorage.getItem("adminToken")
+},
 
     body: JSON.stringify({ status }),
   });
@@ -110,27 +115,25 @@ async function assignDelivery(id) {
 
   if (!name || !deliveryId) return;
 
-  await fetch(
-    `${API}/${id}/assign-delivery`,
-    {
-      method:"PUT",
+await fetch(
+  `${API}/${id}/assign-delivery`,
+  {
+    method:"PUT",
 
-      headers:{
-        "Content-Type":
-        "application/json",
-      },
+    headers:{
+      "Content-Type":"application/json",
+      Authorization:"Bearer " + localStorage.getItem("adminToken")
+    },
 
-      body:JSON.stringify({
-
-        deliveryBoy:{
-          name,
-          phone,
-          deliveryId
-        }
-
-      }),
-    }
-  );
+    body:JSON.stringify({
+      deliveryBoy:{
+        name,
+        phone,
+        deliveryId
+      }
+    }),
+  }
+);
 
   alert("Delivery Assigned");
 
@@ -140,7 +143,11 @@ async function assignDelivery(id) {
 // 🔍 VIEW ORDER
 async function viewOrder(id) {
 
-  const res = await fetch(`${API}/${id}`);
+  const res = await fetch(`${API}/${id}`, {
+  headers: {
+    Authorization: "Bearer " + localStorage.getItem("adminToken")
+  }
+});
 
   const order = await res.json();
 
