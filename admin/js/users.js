@@ -4,12 +4,21 @@ let allUsers = [];
 
 // 🔥 Load Users
 async function loadUsers() {
-  const res = await fetch(API);
+
+  const token = localStorage.getItem("adminToken");
+
+  const res = await fetch(API, {
+    headers: {
+      Authorization: "Bearer " + token
+    }
+  });
+
   const users = await res.json();
 
   allUsers = users;
   renderUsers(users);
 }
+ 
 
 // 🔥 Highlight function
 function highlight(text, search) {
