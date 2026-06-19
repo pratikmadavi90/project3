@@ -26,11 +26,15 @@ document.getElementById(
 "loading"
 ).style.display="block";
 
-const res=
-await fetch(
+const token = localStorage.getItem("adminToken");
 
-`${API}/all`
-
+const res = await fetch(
+  `${API}/all`,
+  {
+    headers: {
+      Authorization: "Bearer " + token
+    }
+  }
 );
 
 const data=
@@ -303,29 +307,20 @@ document.getElementById(
 try{
 
 await fetch(
+  `${API}/status/${id}`,
+  {
+    method:"PUT",
 
-`${API}/status/${id}`,
+    headers:{
+      "Content-Type":"application/json",
+      Authorization:"Bearer " + localStorage.getItem("adminToken")
+    },
 
-{
-
-method:"PUT",
-
-headers:{
-
-"Content-Type":
-"application/json"
-
-},
-
-body:JSON.stringify({
-
-status,
-adminNote:note
-
-})
-
-}
-
+    body:JSON.stringify({
+      status,
+      adminNote:note
+    })
+  }
 );
 
 loadReturns();
