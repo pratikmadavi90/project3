@@ -44,82 +44,159 @@ exports.getRecentUsers = async (req, res) => {
   res.json(data);
 };
 
-// 🔥 Weekly Stats For Graph
+// 🔥 Weekly Stats For Current Week Graph
 exports.getWeeklyStats = async (req, res) => {
+
   try {
 
-    const days = [
-      "Sun",
-      "Mon",
-      "Tue",
-      "Wed",
-      "Thu",
-      "Fri",
-      "Sat"
-    ];
+    const today = new Date();
+
+    const monday = new Date(today);
+    monday.setDate(
+      today.getDate() -
+      ((today.getDay() + 6) % 7)
+    );
+    monday.setHours(0,0,0,0);
+
+    const sunday = new Date(monday);
+    sunday.setDate(
+      monday.getDate() + 6
+    );
+    sunday.setHours(
+      23,59,59,999
+    );
+
+    const orders =
+    await Order.find({
+      createdAt:{
+        $gte:monday,
+        $lte:sunday
+      }
+    });
 
     const result = {};
 
-    days.forEach(day => {
-      result[day] = {
-        total: 0,
-        pending: 0,
-        processing: 0,
-        delivered: 0,
-        cancelled: 0,
-        revenue: 0
+    for(let i=0;i<7;i++){
+
+      const date =
+      new Date(monday);
+
+      date.setDate(
+        monday.getDate()+i
+      );
+
+      const dayName =
+      ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
+      [date.getDay()];
+
+      const dateLabel =
+      `${dayName} (${date.getDate()} ${
+        date.toLocaleString(
+          "en-US",
+          { month:"short" }
+        )
+      })`;
+
+      result[dayName] = {
+
+        label:dateLabel,
+
+        date:
+        date.toISOString(),
+
+        total:0,
+
+        pending:0,
+
+        processing:0,
+
+        delivered:0,
+
+        cancelled:0,
+
+        revenue:0
+
       };
-    });
 
-    const orders = await Order.find();
+    }
 
-    orders.forEach(order => {
+    orders.forEach(order=>{
 
-      const day =
-      days[new Date(order.createdAt).getDay()];
+      const dayName =
+      ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
+      [
+        new Date(
+          order.createdAt
+        ).getDay()
+      ];
 
-      result[day].total++;
+      if(!result[dayName])
+      return;
 
-      result[day].revenue +=
+      result[dayName].total++;
+
+      result[dayName].revenue +=
       order.totalAmount || 0;
 
-      if (order.status === "Pending") {
-        result[day].pending++;
+      if(
+        order.status ===
+        "Pending"
+      ){
+
+        result[dayName]
+        .pending++;
+
       }
 
-      else if (
+      else if(
+
         [
           "Accepted",
           "Packed",
           "Out for Delivery"
-        ].includes(order.status)
-      ) {
-        result[day].processing++;
+        ].includes(
+          order.status
+        )
+
+      ){
+
+        result[dayName]
+        .processing++;
+
       }
 
-      else if (
-        order.status === "Delivered"
-      ) {
-        result[day].delivered++;
+      else if(
+        order.status ===
+        "Delivered"
+      ){
+
+        result[dayName]
+        .delivered++;
+
       }
 
-      else if (
-        order.status === "Cancelled"
-      ) {
-        result[day].cancelled++;
+      else if(
+        order.status ===
+        "Cancelled"
+      ){
+
+        result[dayName]
+        .cancelled++;
+
       }
 
     });
 
     res.json(result);
 
-  } catch (err) {
+  } catch(err){
 
     res.status(500).json({
-      error: err.message
+      error:err.message
     });
 
   }
+
 };
 
 
