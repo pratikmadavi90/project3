@@ -21,11 +21,9 @@ const supportRoutes = require("./routes/supportRoutes");
 const returnRoutes=require("./routes/returnRoutes");
 const deliveryBoyRoutes =require("./routes/deliveryBoyRoutes");
 const deliveryAuthRoutes =require("./routes/deliveryAuthRoutes");
+const jwt = require("jsonwebtoken");
 
-
-
-
-const app = express(); // ✅ PEHLE APP BANAA
+const app = express(); 
 
 app.use(cors({
   origin: [
@@ -298,9 +296,23 @@ app.post("/api/admin/verify-otp", (req, res) => {
     return res.status(400).json({ message: "Wrong OTP" });
   }
 
-  delete otpStore[email];
+ delete otpStore[email];
 
-  res.json({ message: "Login success" });
+const token = jwt.sign(
+  {
+    email: email,
+    role: "admin"
+  },
+  process.env.JWT_SECRET,
+  {
+    expiresIn: "7d"
+  }
+);
+
+res.json({
+  message: "Login success",
+  token
+});
 });
 
 // ===== USER VERIFY OTP =====
