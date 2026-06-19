@@ -117,10 +117,7 @@ dayKeys.map(
   day => data[day]?.total || 0
 );
 
-    const chartData =
-    labels.map(day =>
-      data[day]?.total || 0
-    );
+  
 
     const ctx =
     document.getElementById("chart");
