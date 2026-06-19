@@ -4,9 +4,8 @@ const path = require("path");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
 const { S3Client } = require("@aws-sdk/client-s3");
-
-// ✅ Product model (IMPORTANT - top me hi)
 const Product = require("../models/Product");
+const authMiddleware = require("../middleware/authMiddleware");
 
 const s3 = new S3Client({
   region: "ap-south-1",
@@ -50,11 +49,13 @@ const {
 
 
 // ================= CRUD =================
-router.post("/add", upload.array("images", 5), addProduct);
-router.get("/", getProducts);
-router.delete("/:id", deleteProduct);
-router.put("/update/:id", upload.array("images", 5), updateProduct);
+router.post("/add", authMiddleware, upload.array("images", 5), addProduct);
 
+router.get("/", getProducts);
+
+router.delete("/:id", authMiddleware, deleteProduct);
+
+router.put("/update/:id", authMiddleware, upload.array("images", 5), updateProduct);
 
 // ================= 🔍 SEARCH =================
 router.get("/search", async (req, res) => {
