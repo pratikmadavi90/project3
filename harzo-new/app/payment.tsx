@@ -44,19 +44,39 @@ let totalKg = 0;
 
 cart.forEach((item) => {
 
-  let kg = parseFloat(
+  const weightText = (
     item.weight ||
     item.size ||
     item.unit ||
-    "1"
-  );
+    "0"
+  ).toString().toLowerCase().trim();
 
-  let qty =
+  let weightInKg = 0;
+
+  const value = parseFloat(weightText) || 0;
+
+  if (weightText.includes("kg")) {
+    weightInKg = value;
+  }
+  else if (weightText.includes("g")) {
+    weightInKg = value / 1000;
+  }
+else if (
+  weightText.includes("ltr") ||
+  weightText.includes("liter")
+) {
+  weightInKg = value;
+}
+  else if (weightText.includes("ml")) {
+    weightInKg = value / 1000;
+  }
+
+  const qty =
     item.quantity ||
     item.qty ||
     1;
 
-  totalKg += kg * qty;
+  totalKg += weightInKg * qty;
 
 });
 

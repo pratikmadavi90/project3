@@ -117,7 +117,7 @@ MH34
 </Text>
 
 <Text style={styles.place}>
-Sarswathi
+SHRIKE
 </Text>
 
 </View>

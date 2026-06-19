@@ -28,15 +28,31 @@ export default function ProductRow({ products }) {
           <TouchableOpacity
             key={category}
             style={styles.card}
-            onPress={() =>
-              router.push({
-                pathname: "/category",
-                params: {
-                  category: category,
-                  products: JSON.stringify(items),
-                },
-              })
-            }
+          onPress={() => {
+
+  console.log("🛍️ PRODUCTROW → CATEGORY", {
+    category: category,
+    productsCount: items.length,
+    firstSubCategory:
+      items?.[0]?.subCategory ||
+      items?.[0]?.subcategory,
+  });
+
+const firstSubCategory =
+  items?.[0]?.subCategory ||
+  items?.[0]?.subcategory ||
+  "";
+
+router.push({
+  pathname: "/category",
+  params: {
+    category: category,
+    subCategory: firstSubCategory,
+    products: JSON.stringify(items),
+  },
+});
+
+}}
           >
             {/* 🔥 IMAGE GRID */}
             <View style={styles.imageGrid}>

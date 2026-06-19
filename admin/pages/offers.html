@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Offers</title>
+    <meta charset="UTF-8">
+    <title>Offers</title>
 
-  <!-- ✅ CSS yaha hona chahiye -->
-  <link rel="stylesheet" href="../css/offers.css">
+    <script>
+    if (localStorage.getItem("isAdminLoggedIn") !== "true") {
+        window.location.replace("login.html");
+    }
+    </script>
+
+    <link rel="stylesheet" href="../css/offers.css">
 </head>
 
 <body>

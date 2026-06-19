@@ -8,6 +8,7 @@ import {
 } from "react-native";
 
 import { router } from "expo-router";
+import { Image } from "react-native";
 
 export default function Header() {
 
@@ -20,13 +21,19 @@ export default function Header() {
     <View style={styles.header}>
 
       {/* TOP ROW */}
-      <View style={styles.topRow}>
+     <View style={styles.topRow}>
+  <Text style={styles.time}>
+    ⚡ 20 Minute delivery
+  </Text>
 
-        <Text style={styles.time}>
-          ⚡ 20 Minute delivery
-        </Text>
-
-      </View>
+  <TouchableOpacity style={styles.profile}>
+    <Image
+      source={require("../assets/images/shrike-logo.png")}
+      style={styles.logo}
+      resizeMode="contain"
+    />
+  </TouchableOpacity>
+</View>
 
       {/* LOCATION */}
       <Text style={styles.location}>
@@ -105,21 +112,24 @@ const styles = StyleSheet.create({
     includeFontPadding: false,
   },
 
-  profile: {
-    backgroundColor: "#fff",
+profile: {
+  width: 70,
+  height: 70,
+  borderRadius: 40,
+  backgroundColor: "#fff",
+  justifyContent: "center",
+  alignItems: "center",
+  elevation: 3,
+},
 
-    width: 38,
-    height: 38,
-
-    borderRadius: 50,
-
-    justifyContent: "center",
-    alignItems: "center",
-  },
+logo: {
+  width: 50,
+  height: 50,
+},
 
   // ✅ LOCATION FIX
   location: {
-    marginTop: 10,
+    marginTop: 0,
 
     color: "#111111",
 

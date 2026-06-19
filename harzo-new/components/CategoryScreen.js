@@ -119,50 +119,28 @@ export default function CategoryScreen() {
   }, [finalProducts, category]);
 
   // FILTERED PRODUCTS
-const filteredProducts = useMemo(() => {
-  return finalProducts.filter((p) => {
-    const productCategory = (
-      p.category || ""
-    )
-      .toLowerCase()
-      .trim();
-
-    const currentCategory = (
-      category || ""
-    )
-      .toLowerCase()
-      .trim();
-
-    const productSubCategory = (
-      p.subCategory ||
-      p.subcategory ||
-      ""
-    )
-      .toLowerCase()
-      .trim();
-
-    const currentSubCategory = (
-      selectedSubCategory ||
-      ""
-    )
-      .toLowerCase()
-      .trim();
-
-    return (
-      productCategory ===
-        currentCategory &&
-      (
-        !currentSubCategory ||
-        productSubCategory ===
-          currentSubCategory
-      )
-    );
-  });
-}, [
-  finalProducts,
-  category,
-  selectedSubCategory,
-]);
+  const filteredProducts =
+    useMemo(() => {
+      return finalProducts.filter(
+        (p) =>
+          p.category
+            ?.toLowerCase()
+            .trim() ===
+            category
+              ?.toLowerCase()
+              .trim() &&
+          (!selectedSubCategory ||
+            (
+              p.subCategory ||
+              p.subcategory
+            )?.toLowerCase() ===
+              selectedSubCategory)
+      );
+    }, [
+      finalProducts,
+      category,
+      selectedSubCategory,
+    ]);
 
   // GET QTY
   const getQty = (id) => {
@@ -253,28 +231,24 @@ const filteredProducts = useMemo(() => {
                     styles.categoryCircle
                   }
                 >
-          <Image
-  source={{
-    uri:
-      finalProducts.find((p) => {
-        const subCat = (
-          p.subCategory ||
-          p.subcategory ||
-          ""
-        )
-          .toLowerCase()
-          .trim();
-
-        return (
-          subCat ===
-          item.toLowerCase().trim()
-        );
-      })?.images?.thumbnail ||
-      "https://dummyimage.com/100x100/cccccc/000000",
-  }}
-  style={styles.categoryImage}
-/>
-
+                  <Image
+                    source={{
+                      uri:
+                        finalProducts.find(
+                          (p) =>
+                            (
+                              p.subCategory ||
+                              p.subcategory
+                            )?.toLowerCase() ===
+                            item
+                        )?.images
+                          ?.thumbnail ||
+                        "https://dummyimage.com/100x100/cccccc/000000",
+                    }}
+                    style={
+                      styles.categoryImage
+                    }
+                  />
                 </View>
 
                 <Text

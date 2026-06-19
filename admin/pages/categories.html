@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Categories</title>
- <link rel="stylesheet" href="../css/dashboard.css">
+    <meta charset="UTF-8">
+    <title>Categories</title>
+
+    <script>
+    if (localStorage.getItem("isAdminLoggedIn") !== "true") {
+        window.location.replace("login.html");
+    }
+    </script>
+
+    <link rel="stylesheet" href="../css/dashboard.css">
 </head>
+
 <body>
 
 <h2>Categories</h2>

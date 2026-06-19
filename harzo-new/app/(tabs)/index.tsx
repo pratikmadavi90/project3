@@ -67,20 +67,9 @@ const getImage = (name) => {
     return "https://via.placeholder.com/100";
   }
 
- const product = products.find((p) => {
-  const subCat = (
-    p?.subCategory ||
-    p?.subcategory ||
-    ""
-  )
-    .toLowerCase()
-    .trim();
-
-  return (
-    subCat ===
-    name.toLowerCase().trim()
+  const product = products.find(
+    (p) => (p?.subCategory || p?.subcategory) === name
   );
-});
 
   return (
     product?.images?.thumbnail ||

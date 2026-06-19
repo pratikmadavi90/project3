@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Orders - HARZO</title>
+    <meta charset="UTF-8">
+    <title>Orders - HARZO</title>
 
-  <!-- CSS LINK -->
-  <link rel="stylesheet" href="../css/orders.css">
+    <script>
+    if (localStorage.getItem("isAdminLoggedIn") !== "true") {
+        window.location.replace("login.html");
+    }
+    </script>
+
+    <link rel="stylesheet" href="../css/orders.css">
 </head>
 
 <body>

@@ -5,6 +5,11 @@
 <meta charset="UTF-8">
 
 <title>Support Tickets</title>
+<script>
+    if (localStorage.getItem("isAdminLoggedIn") !== "true") {
+        window.location.replace("login.html");
+    }
+    </script>
 
 <link rel="stylesheet"
 href="../css/support.css">

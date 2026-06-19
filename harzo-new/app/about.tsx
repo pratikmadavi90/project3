@@ -94,7 +94,7 @@ export default function AboutScreen() {
 
         {"\n\n"}
 
-        Finally, I want to express my deepest gratitude to Sarswathi Bhoyar. I truly believe that without this support, I would never have reached this stage.
+        Finally, I want to express my deepest gratitude to Sarswathi . I truly believe that without this support, I would never have reached this stage.
 
         {"\n\n"}
 

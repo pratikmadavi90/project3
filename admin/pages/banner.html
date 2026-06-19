@@ -1,9 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Banner Manager</title>
-  <link rel="stylesheet" href="../css/banner.css">
+    <meta charset="UTF-8">
+    <title>Banner Manager</title>
+
+    <script>
+    if (localStorage.getItem("isAdminLoggedIn") !== "true") {
+        window.location.replace("login.html");
+    }
+    </script>
+
+    <link rel="stylesheet" href="../css/banner.css">
 </head>
 
 <body>
