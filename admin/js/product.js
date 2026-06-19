@@ -54,10 +54,16 @@ formData.append("description", descriptionInput.value);
     });
     editId = null;
   } else {
-    await fetch(`${BASE_URL}/api/products/add`, {
-      method: "POST",
-      body: formData
-    });
+    
+   const token = localStorage.getItem("adminToken");
+
+await fetch(`${BASE_URL}/api/products/add`, {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${token}`
+  },
+  body: formData
+});
   }
 
 clearForm();
