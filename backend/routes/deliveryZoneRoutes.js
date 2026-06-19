@@ -16,7 +16,6 @@ router.post("/add",
 );
 
 router.get("/all",
-  authMiddleware,
   getZones
 );
 
