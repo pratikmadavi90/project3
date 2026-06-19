@@ -4,11 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <title>Inventory</title>
-  <script>
-    if (localStorage.getItem("isAdminLoggedIn") !== "true") {
-        window.location.replace("login.html");
-    }
-    </script>
+<script>
+if (localStorage.getItem("isAdminLoggedIn") !== "true") {
+    window.location.href = "/pages/login.html";
+}
+</script>
   <link rel="stylesheet" href="../css/stock.css">
 </head>
 

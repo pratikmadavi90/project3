@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <title>Users</title>
 <script>
-    if (localStorage.getItem("isAdminLoggedIn") !== "true") {
-        window.location.replace("login.html");
-    }
-    </script>
-    
+if (localStorage.getItem("isAdminLoggedIn") !== "true") {
+    window.location.href = "/pages/login.html";
+}
+</script>
+
 <link rel="stylesheet" href="../css/users.css">
 </head>
 
