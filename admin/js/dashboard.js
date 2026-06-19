@@ -84,23 +84,112 @@ async function loadOrders() {
 }
 
 // 🔹 Dummy Graph (abhi simple, baad me real karenge)
-function loadChart() {
-  const ctx = document.getElementById("chart");
+async function loadChart() {
 
-  new Chart(ctx, {
-  type: "bar",
-  data: {
-    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    datasets: [{
-      label: "Orders",
-      data: [5, 10, 7, 14, 9, 18, 12],
-      backgroundColor: "#00ff88",
-      borderColor: "#00ff88",
-      borderWidth: 1,
-      borderRadius: 6
-    }]
+  try {
+
+    const res = await fetch(
+      `${API}/weekly-stats`,
+      {
+        headers
+      }
+    );
+
+    const data = await res.json();
+
+    const labels = [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
+      "Sun"
+    ];
+
+    const chartData =
+    labels.map(day =>
+      data[day]?.total || 0
+    );
+
+    const ctx =
+    document.getElementById("chart");
+
+    const myChart =
+    new Chart(ctx, {
+
+      type: "bar",
+
+      data: {
+
+        labels,
+
+        datasets: [{
+
+          label: "Orders",
+
+          data: chartData,
+
+          backgroundColor:
+          "#00ff88",
+
+          borderColor:
+          "#00ff88",
+
+          borderWidth: 1,
+
+          borderRadius: 6
+
+        }]
+
+      }
+
+    });
+
+    ctx.onclick =
+    async function(evt){
+
+      const points =
+      myChart.getElementsAtEventForMode(
+        evt,
+        "nearest",
+        { intersect:true },
+        true
+      );
+
+      if(!points.length)
+      return;
+
+      const index =
+      points[0].index;
+
+      const day =
+      labels[index];
+
+      const stats =
+      data[day];
+
+      alert(
+        `${day}\n\n` +
+        `Total: ${stats.total}\n` +
+        `Pending: ${stats.pending}\n` +
+        `Processing: ${stats.processing}\n` +
+        `Delivered: ${stats.delivered}\n` +
+        `Cancelled: ${stats.cancelled}\n` +
+        `Revenue: ₹${stats.revenue}`
+      );
+
+    };
+
+  } catch(err){
+
+    console.log(
+      "Chart Error",
+      err
+    );
+
   }
-});
+
 }
 
 // 🔹 Logout
