@@ -197,6 +197,16 @@ document.getElementById(
 ).style.display="block";
 
 document.getElementById(
+"closeOrderModal"
+).onclick = () => {
+
+document.getElementById(
+"orderModal"
+).style.display = "none";
+
+};
+
+document.getElementById(
 "orderModalTitle"
 ).innerText =
 `${day} Orders`;
@@ -281,24 +291,7 @@ loadUsers();
 loadOrders();
 loadChart();
 
-const closeBtn =
-document.getElementById(
-"closeOrderModal"
-);
 
-if(closeBtn){
-
-closeBtn.onclick = () => {
-
-document
-.getElementById(
-"orderModal"
-)
-.style.display = "none";
-
-};
-
-}
 window.onclick = (e) => {
 
 const modal =
