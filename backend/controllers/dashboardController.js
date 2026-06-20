@@ -120,82 +120,82 @@ exports.getWeeklyStats = async (req, res) => {
 
     }
 
-    orders.forEach(order=>{
+  orders.forEach(order => {
 
-      const dayName =
-      ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
-      [
-        new Date(
-          order.createdAt
-        ).getDay()
-      ];
+  const dayName =
+  ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
+  [
+    new Date(
+      order.createdAt
+    ).getDay()
+  ];
 
-      if(!result[dayName])
-      return;
+  if(!result[dayName])
+  return;
 
-      result[dayName].total++;
+  result[dayName].total++;
 
-      result[dayName].revenue +=
-      order.totalAmount || 0;
+  result[dayName].revenue +=
+  order.totalAmount || 0;
 
-      if(
-        order.status ===
-        "Pending"
-      ){
+  const status =
+  (order.status || "")
+  .trim()
+  .toLowerCase();
 
-        result[dayName]
-        .pending++;
+  if(status === "pending"){
 
-      }
-
-      else if(
-
-        [
-          "Accepted",
-          "Packed",
-          "Out for Delivery"
-        ].includes(
-          order.status
-        )
-
-      ){
-
-        result[dayName]
-        .processing++;
-
-      }
-
-      else if(
-        order.status ===
-        "Delivered"
-      ){
-
-        result[dayName]
-        .delivered++;
-
-      }
-
-      else if(
-        order.status ===
-        "Cancelled"
-      ){
-
-        result[dayName]
-        .cancelled++;
-
-      }
-
-    });
-
-    res.json(result);
-
-  } catch(err){
-
-    res.status(500).json({
-      error:err.message
-    });
+    result[dayName]
+    .pending++;
 
   }
+
+  else if(
+
+    [
+      "accepted",
+      "packed",
+      "out for delivery"
+    ].includes(status)
+
+  ){
+
+    result[dayName]
+    .processing++;
+
+  }
+
+  else if(
+    status ===
+    "delivered"
+  ){
+
+    result[dayName]
+    .delivered++;
+
+  }
+
+  else if(
+    status ===
+    "cancelled"
+  ){
+
+    result[dayName]
+    .cancelled++;
+
+  }
+
+});
+
+res.json(result);
+
+} catch(err){
+
+  res.status(500).json({
+    error:err.message
+  });
+
+}
 
 };
 
