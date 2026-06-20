@@ -217,10 +217,37 @@ exports.getDayOrders = async (req, res) => {
       "Sat"
     ];
 
-    const orders =
-    await Order.find().sort({
-      createdAt: -1
-    });
+   const today = new Date();
+
+const monday = new Date(today);
+
+monday.setDate(
+  today.getDate() -
+  ((today.getDay() + 6) % 7)
+);
+
+monday.setHours(0,0,0,0);
+
+const sunday = new Date(monday);
+
+sunday.setDate(
+  monday.getDate() + 6
+);
+
+sunday.setHours(
+  23,59,59,999
+);
+
+const orders =
+await Order.find({
+  createdAt:{
+    $gte:monday,
+    $lte:sunday
+  }
+}).sort({
+  createdAt:-1
+});
+
 
     let filtered =
     orders.filter(order => {

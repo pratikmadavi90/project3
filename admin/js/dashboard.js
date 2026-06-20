@@ -284,21 +284,24 @@ loadUsers();
 loadOrders();
 loadChart();
 
-document
-.getElementById(
+const closeBtn =
+document.getElementById(
 "closeOrderModal"
-)
-.onclick = () => {
+);
+
+if(closeBtn){
+
+closeBtn.onclick = () => {
 
 document
 .getElementById(
 "orderModal"
 )
-.style.display =
-"none";
+.style.display = "none";
 
 };
 
+}
 window.onclick = (e) => {
 
 const modal =
