@@ -216,10 +216,23 @@ document.getElementById(
 ).innerHTML=`
 
 <p>Total: ${stats.total}</p>
-<p>Pending: ${stats.pending}</p>
-<p>Processing: ${stats.processing}</p>
-<p>Delivered: ${stats.delivered}</p>
-<p>Cancelled: ${stats.cancelled}</p>
+
+<p class="pending-stat">
+Pending: ${stats.pending}
+</p>
+
+<p class="processing-stat">
+Processing: ${stats.processing}
+</p>
+
+<p class="delivered-stat">
+Delivered: ${stats.delivered}
+</p>
+
+<p class="cancelled-stat">
+Cancelled: ${stats.cancelled}
+</p>
+
 <p>Revenue: ₹${stats.revenue}</p>
 
 `;

@@ -218,3 +218,25 @@ color:white;
 z-index:10000;
 position:relative;
 }
+
+#orderModalStats p{
+  font-size:18px;
+  font-weight:700;
+  margin:10px 0;
+}
+
+.pending-stat{
+  color:#facc15; /* Yellow */
+}
+
+.processing-stat{
+  color:#3b82f6; /* Blue */
+}
+
+.delivered-stat{
+  color:#22c55e; /* Green */
+}
+
+.cancelled-stat{
+  color:#ef4444; /* Red */
+}
