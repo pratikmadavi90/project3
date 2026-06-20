@@ -112,15 +112,27 @@ document.getElementById("searchInput").addEventListener("input", function () {
 
 // 🔥 Block / Unblock
 async function toggleBlock(id) {
-  await fetch(`${API}/block/${id}`, { method: "PUT" });
+  const token = localStorage.getItem("adminToken");
+
+  await fetch(`${API}/block/${id}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
   loadUsers();
 }
 
-// 🔥 Delete
 async function deleteUser(id) {
-  await fetch(`${API}/${id}`, { method: "DELETE" });
+  const token = localStorage.getItem("adminToken");
+
+  await fetch(`${API}/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
   loadUsers();
 }
-
-// 🚀 Start
-loadUsers();
