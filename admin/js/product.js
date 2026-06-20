@@ -85,12 +85,17 @@ async function deleteProduct(id) {
 
   try {
 
-    const res = await fetch(
-      `${BASE_URL}/api/products/${id}`,
-      {
-        method: "DELETE"
-      }
-    );
+   const token = localStorage.getItem("adminToken");
+
+const res = await fetch(
+  `${BASE_URL}/api/products/${id}`,
+  {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  }
+);
 
     const data = await res.json();
 

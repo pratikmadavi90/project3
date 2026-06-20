@@ -22,8 +22,13 @@ async function addBanner() {
     const formData = new FormData();
     formData.append("image", file);
 
-    const uploadRes = await fetch(`${BASE_URL}/upload`, {
+const token = localStorage.getItem("adminToken");
+
+const uploadRes = await fetch(`${BASE_URL}/upload`, {
   method: "POST",
+  headers: {
+    Authorization: `Bearer ${token}`
+  },
   body: formData
 });
 
@@ -35,21 +40,22 @@ async function addBanner() {
     }
 
     // 📦 Save banner in DB
-    const saveRes = await fetch(`${BASE_URL}/add-banner`, {
+ const saveRes = await fetch(`${BASE_URL}/add-banner`, {
   method: "POST",
   headers: {
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`
   },
-      body: JSON.stringify({
-        title,
-        type,
-        image: uploadData.imageUrl,
-        position: Date.now(),
-        isActive: true,
-        redirectType,   // ✅ NEW
-        redirectValue   // ✅ NEW
-      })
-    });
+  body: JSON.stringify({
+    title,
+    type,
+    image: uploadData.imageUrl,
+    position: Date.now(),
+    isActive: true,
+    redirectType,
+    redirectValue
+  })
+});
 
     const saveData = await saveRes.json();
 
@@ -113,9 +119,18 @@ async function deleteBanner(id) {
   if (!confirm("Delete banner?")) return;
 
   try {
-    const res = await fetch(`${BASE_URL}/delete-banner/${id}`, {
-      method: "DELETE"
-    });
+
+    const token = localStorage.getItem("adminToken");
+
+    const res = await fetch(
+      `${BASE_URL}/delete-banner/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
 
     const data = await res.json();
 
