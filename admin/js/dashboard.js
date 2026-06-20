@@ -175,15 +175,7 @@ dayKeys.map(
       const stats =
       data[day];
 
-      alert(
-        `${day}\n\n` +
-        `Total: ${stats.total}\n` +
-        `Pending: ${stats.pending}\n` +
-        `Processing: ${stats.processing}\n` +
-        `Delivered: ${stats.delivered}\n` +
-        `Cancelled: ${stats.cancelled}\n` +
-        `Revenue: ₹${stats.revenue}`
-      );
+    showOrders(day, stats);
 
     };
 
@@ -198,6 +190,84 @@ dayKeys.map(
 
 }
 
+async function showOrders(day, stats){
+
+document.getElementById(
+"orderModal"
+).style.display="block";
+
+document.getElementById(
+"orderModalTitle"
+).innerText =
+`${day} Orders`;
+
+document.getElementById(
+"orderModalStats"
+).innerHTML=`
+
+<p>Total: ${stats.total}</p>
+<p>Pending: ${stats.pending}</p>
+<p>Processing: ${stats.processing}</p>
+<p>Delivered: ${stats.delivered}</p>
+<p>Cancelled: ${stats.cancelled}</p>
+<p>Revenue: ₹${stats.revenue}</p>
+
+`;
+
+const res =
+await fetch(
+`${API}/day-orders?day=${day}`,
+{
+headers
+}
+);
+
+const orders =
+await res.json();
+
+const container =
+document.getElementById(
+"orderModalOrders"
+);
+
+container.innerHTML="";
+
+orders.forEach(order=>{
+
+container.innerHTML += `
+
+<div class="order-item">
+
+<h3>Order #${order._id}</h3>
+
+<p>
+Customer:
+${order.user?.name || "N/A"}
+</p>
+
+<p>
+Phone:
+${order.user?.phone || ""}
+</p>
+
+<p>
+Amount:
+₹${order.totalAmount || 0}
+</p>
+
+<p>
+Status:
+${order.orderStatus || ""}
+</p>
+
+</div>
+
+`;
+
+});
+
+}
+
 // 🔹 Logout
 function logout() {
   localStorage.removeItem("adminToken");
@@ -207,9 +277,40 @@ function logout() {
   window.location.href = "/admin/pages/login.html";
 }
 
-// 🔹 Load All
+// Load All
 loadStats();
 loadLowStock();
 loadUsers();
 loadOrders();
 loadChart();
+
+document
+.getElementById(
+"closeOrderModal"
+)
+.onclick = () => {
+
+document
+.getElementById(
+"orderModal"
+)
+.style.display =
+"none";
+
+};
+
+window.onclick = (e) => {
+
+const modal =
+document.getElementById(
+"orderModal"
+);
+
+if(e.target === modal){
+
+modal.style.display =
+"none";
+
+}
+
+};

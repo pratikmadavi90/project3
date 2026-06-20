@@ -174,3 +174,38 @@ flex:1;
   height: 120px;
   object-fit: cover;
 }
+
+.order-modal{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.7);
+z-index:9999;
+overflow:auto;
+}
+
+.order-modal-content{
+background:#111827;
+width:90%;
+max-width:900px;
+margin:40px auto;
+padding:20px;
+border-radius:12px;
+color:#fff;
+}
+
+#closeOrderModal{
+float:right;
+font-size:30px;
+cursor:pointer;
+}
+
+.order-item{
+padding:12px;
+margin:10px 0;
+background:#1e293b;
+border-radius:8px;
+}
