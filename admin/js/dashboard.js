@@ -255,10 +255,7 @@ Amount:
 ₹${order.totalAmount || 0}
 </p>
 
-<p>
-Status:
-${order.orderStatus || ""}
-</p>
+<p>Status: ${order.status || "Pending"}</p>
 
 </div>
 
