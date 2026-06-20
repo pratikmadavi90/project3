@@ -136,3 +136,6 @@ async function deleteUser(id) {
 
   loadUsers();
 }
+
+// 🚀 Start
+loadUsers();
