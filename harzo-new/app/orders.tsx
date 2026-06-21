@@ -243,7 +243,22 @@ currentKey
 
         
 
-        <View style={styles.card}>
+        <TouchableOpacity
+  style={styles.card}
+  activeOpacity={0.9}
+  onPress={() =>
+    router.push({
+      pathname: "/order-details",
+     params: {
+  deliveryBoyName:
+    item?.deliveryBoy?.name || "",
+
+  deliveryBoyPhone:
+    item?.deliveryBoy?.phone || "",
+},
+    })
+  }
+>
 
           {/* HEADER */}
 
@@ -507,7 +522,7 @@ ${item?.address?.pincode || ""}`,
 )
 }
 
-        </View>
+        </TouchableOpacity>
       )}
     />
   );
