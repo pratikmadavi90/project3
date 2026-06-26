@@ -415,23 +415,16 @@ async (req, res) => {
 
   try {
 
- const order =
-await Order.findOne({
+    const order =
+    await Order.findOne({
 
-  deliveryBoyId:req.params.id,
+      deliveryBoyId:req.params.id,
 
-  status:{
-    $in:[
-      "Pending",
-      "Accepted",
-      "Packed",
-      "Out for Delivery"
-    ]
-  }
+      status:"Out for Delivery"
 
-}).sort({
-  createdAt:-1
-});
+    }).sort({
+      createdAt:-1
+    });
 
     res.json({
       success:true,

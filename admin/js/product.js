@@ -47,13 +47,28 @@ formData.append("description", descriptionInput.value);
 
 
   // 👉 API CALL
-  if (editId) {
-    await fetch(`${BASE_URL}/api/products/update/${editId}`, {
-      method: "PUT",
-      body: formData
-    });
-    editId = null;
-  } else {
+ if (editId) {
+  const token = localStorage.getItem("adminToken");
+
+  const res = await fetch(`${BASE_URL}/api/products/update/${editId}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    body: formData
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    alert(data.message || "Update failed ❌");
+    return;
+  }
+
+  alert("Product Updated ✅");
+  editId = null;
+}
+  else {
     
    const token = localStorage.getItem("adminToken");
 
