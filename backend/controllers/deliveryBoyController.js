@@ -1,6 +1,6 @@
 const DeliveryBoy=
 require("../models/DeliveryBoy");
-
+const jwt = require("jsonwebtoken");
 
 
 // Add
@@ -90,23 +90,30 @@ message:"Wrong Delivery ID or Password"
 
 
 // online status true
-boy.online=true;
+boy.online = true;
 
 await boy.save();
 
+const token = jwt.sign(
+  {
+    id: boy._id,
+    deliveryId: boy.deliveryId
+  },
+  process.env.JWT_SECRET,
+  { expiresIn: "7d" }
+);
+
 res.json({
-
-success:true,
-
-deliveryBoy:{
-_id:boy._id,
-name:boy.name,
-mobile:boy.mobile,
-deliveryId:boy.deliveryId,
-vehicle:boy.vehicle,
-online:boy.online
-}
-
+  success: true,
+  token,
+  deliveryBoy: {
+    _id: boy._id,
+    name: boy.name,
+    mobile: boy.mobile,
+    deliveryId: boy.deliveryId,
+    vehicle: boy.vehicle,
+    online: boy.online
+  }
 });
 
 }catch(err){
