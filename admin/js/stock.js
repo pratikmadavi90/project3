@@ -1,4 +1,15 @@
+const token = localStorage.getItem("adminToken");
+
+if (!token) {
+  window.location.href = "/admin/pages/login.html";
+}
+
 const API = "https://api.harzo.in/api/stock";
+
+const headers = {
+  Authorization: `Bearer ${token}`,
+  "Content-Type": "application/json"
+};
 
 // 🔹 Stock status class
 function getStockClass(p) {
@@ -28,7 +39,10 @@ async function loadProducts() {
 
   try {
     // ✅ FIXED FETCH (backticks correct)
-    const res = await fetch(`${API}/all?search=${search}`);
+    const res = await fetch(`${API}/all?search=${search}`, {
+  headers
+});
+
     const data = await res.json();
 
     const table = document.getElementById("stockTable");
@@ -63,14 +77,14 @@ async function updateStock(id) {
   try {
     const quantity = document.getElementById(`s-${id}`).value;
 
-    await fetch(`${API}/update`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        id,
-        quantity
-      })
-    });
+await fetch(`${API}/update`, {
+  method: "POST",
+  headers,
+  body: JSON.stringify({
+    id,
+    quantity
+  })
+});
 
     // 🔄 Reload after update
     loadProducts();
