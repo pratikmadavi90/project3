@@ -1,8 +1,4 @@
-const token = localStorage.getItem("adminToken");
 
-if (!token) {
-  window.location.href = "/admin/pages/login.html";
-}
 
 const API = "https://api.harzo.in/api/stock";
 
