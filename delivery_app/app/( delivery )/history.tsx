@@ -40,10 +40,15 @@ await AsyncStorage.getItem(
 
 const user =
 JSON.parse(savedUser);
+const token = await AsyncStorage.getItem("deliveryToken");
 
-const response =
-await fetch(
-`https://api.harzo.in/api/orders/delivery-history/${user.deliveryId || user.id}`
+const response = await fetch(
+  `https://api.harzo.in/api/orders/delivery-history/${user.deliveryId || user.id}`,
+  {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  }
 );
 
 const data =

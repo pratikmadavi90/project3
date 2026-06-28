@@ -115,14 +115,17 @@ await AsyncStorage.getItem(
 "deliveryBoy"
 );
 
-const user =
-JSON.parse(savedUser);
+const user = JSON.parse(savedUser);
 
-const data=
-await fetch(
+const token = await AsyncStorage.getItem("deliveryToken");
 
-`https://api.harzo.in/api/orders/delivery-dashboard?deliveryBoyId=${user.deliveryId || user.id}`
-
+const data = await fetch(
+  `https://api.harzo.in/api/orders/delivery-dashboard?deliveryBoyId=${user.deliveryId || user.id}`,
+  {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  }
 );
 
 const json=
@@ -181,17 +184,20 @@ const acceptOrder = async(order)=>{
 
 try{
 
+const token = await AsyncStorage.getItem("deliveryToken");
+
 await fetch(
-`https://api.harzo.in/api/orders/${order._id}/status`,
-{
-method:"PUT",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-status:"Accepted"
-})
-}
+  `https://api.harzo.in/api/orders/${order._id}/status`,
+  {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      status: "Accepted"
+    })
+  }
 );
 
 loadDashboard();
@@ -222,11 +228,16 @@ const rejectOrder=async()=>{
 
 try{
 
+const token = await AsyncStorage.getItem("deliveryToken");
+
 await fetch(
-`https://api.harzo.in/api/orders/reject/${dashboard?.liveOrder?._id}`,
-{
-method:"PUT"
-}
+  `https://api.harzo.in/api/orders/reject/${dashboard?.liveOrder?._id}`,
+  {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  }
 );
 
 setShowPopup(false);
@@ -534,10 +545,15 @@ onPress={async()=>{
 
 try{
 
+const token = await AsyncStorage.getItem("deliveryToken");
+
 await fetch(
 `https://api.harzo.in/api/orders/accept/${order._id}`,
 {
-method:"PUT"
+method:"PUT",
+headers:{
+Authorization: `Bearer ${token}`
+}
 }
 );
 

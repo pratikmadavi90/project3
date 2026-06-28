@@ -17,7 +17,7 @@ router
 } from "expo-router";
 
 import { SafeAreaView } from "react-native-safe-area-context";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function OrderDetails(){
 
 const {
@@ -45,13 +45,16 @@ const updateStatus=async(newStatus)=>{
 
 try{
 
-const response=
+const token = await AsyncStorage.getItem("deliveryToken");
+
+const response =
 await fetch(
 `https://api.harzo.in/api/orders/${id}/status`,
 {
 method:"PUT",
 headers:{
-"Content-Type":"application/json"
+"Content-Type":"application/json",
+Authorization:`Bearer ${token}`
 },
 body:JSON.stringify({
 status:newStatus

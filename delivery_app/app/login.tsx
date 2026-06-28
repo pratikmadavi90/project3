@@ -50,6 +50,11 @@ await AsyncStorage.setItem(
 JSON.stringify(data.deliveryBoy)
 );
 
+await AsyncStorage.setItem(
+  "deliveryToken",
+  data.token
+);
+
 router.replace("/home");
 
 }else{
