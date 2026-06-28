@@ -301,3 +301,48 @@ await Order.find({
   }
 
 };
+
+// 🔥 Top Products
+exports.getTopProducts = async (req, res) => {
+  try {
+
+    const orders = await Order.find();
+
+    const products = {};
+
+    orders.forEach(order => {
+
+      (order.items || []).forEach(item => {
+
+        const key = item.productId || item.name;
+
+        if (!products[key]) {
+          products[key] = {
+            name: item.name,
+            sold: 0,
+            revenue: 0
+          };
+        }
+
+        products[key].sold += item.quantity || 0;
+        products[key].revenue +=
+          (item.price || 0) * (item.quantity || 0);
+
+      });
+
+    });
+
+    const top = Object.values(products)
+      .sort((a, b) => b.sold - a.sold)
+      .slice(0, 5);
+
+    res.json(top);
+
+  } catch (err) {
+
+    res.status(500).json({
+      error: err.message
+    });
+
+  }
+};

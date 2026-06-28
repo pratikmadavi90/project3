@@ -32,7 +32,9 @@ async function loadStats() {
 // 🔹 Low Stock
 async function loadLowStock() {
   try {
-    const res = await fetch(`${API}/low-stock`);
+    const res = await fetch(`${API}/low-stock`, {
+  headers
+});
     const data = await res.json();
 
     const list = document.getElementById("lowStock");
@@ -50,7 +52,9 @@ async function loadLowStock() {
 // 🔹 Recent Users
 async function loadUsers() {
   try {
-    const res = await fetch(`${API}/users`);
+    const res = await fetch(`${API}/users`, {
+  headers
+});
     const data = await res.json();
 
     const list = document.getElementById("recentUsers");
@@ -68,7 +72,9 @@ async function loadUsers() {
 // 🔹 Recent Orders
 async function loadOrders() {
   try {
-    const res = await fetch(`${API}/orders`);
+    const res = await fetch(`${API}/orders`, {
+  headers
+});
     const data = await res.json();
 
     const list = document.getElementById("recentOrders");
@@ -80,6 +86,26 @@ async function loadOrders() {
 
   } catch (err) {
     console.error("Orders error:", err);
+  }
+}
+
+async function loadTopProducts() {
+  try {
+    const res = await fetch(`${API}/top-products`, {
+      headers
+    });
+
+    const data = await res.json();
+
+    const list = document.getElementById("topProducts");
+    list.innerHTML = "";
+
+    data.forEach(p => {
+      list.innerHTML += `<li>${p.name} (${p.sold})</li>`;
+    });
+
+  } catch (err) {
+    console.error("Top Products Error:", err);
   }
 }
 
@@ -303,6 +329,7 @@ loadLowStock();
 loadUsers();
 loadOrders();
 loadChart();
+loadTopProducts();
 
 
 window.onclick = (e) => {

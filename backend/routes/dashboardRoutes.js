@@ -2,13 +2,14 @@ const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middleware/authMiddleware");
 
-  const {
+const {
   getStats,
   getLowStock,
   getRecentOrders,
   getRecentUsers,
   getWeeklyStats,
-  getDayOrders
+  getDayOrders,
+  getTopProducts
 } = require("../controllers/dashboardController");
 
 router.get("/stats", authMiddleware, getStats);
@@ -29,6 +30,12 @@ router.get(
   "/day-orders",
   authMiddleware,
   getDayOrders
+);
+
+router.get(
+  "/top-products",
+  authMiddleware,
+  getTopProducts
 );
 
 module.exports = router;
