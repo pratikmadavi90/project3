@@ -41,7 +41,7 @@ async function loadLowStock() {
     list.innerHTML = "";
 
     data.forEach(p => {
-      list.innerHTML += `<li>${p.name} (${p.stock?.quantity || 0})</li>`;
+      list.innerHTML += `<li class="low-stock-item">${p.name} (${p.stock?.quantity || 0})</li>`;
     });
 
   } catch (err) {

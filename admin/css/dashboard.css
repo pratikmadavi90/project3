@@ -241,3 +241,13 @@ position:relative;
 .cancelled-stat{
   color:#ef4444; /* Red */
 }
+
+.low-stock-item{
+  color:#ef4444 !important;
+  font-weight:600;
+}
+
+.low-stock-item::before{
+  content:"\2022";
+  color:#ef4444 !important;
+}
