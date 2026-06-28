@@ -19,7 +19,11 @@ if (!token) {
 <h2>Inventory / Stock</h2>
 
 <div class="top-bar">
-  <input type="text" id="search" placeholder="Search product">
+  <input
+  type="text"
+  id="search"
+  placeholder="Search product"
+  oninput="loadProducts()">
   <button onclick="loadProducts()">Search</button>
 </div>
 
