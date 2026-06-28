@@ -90,3 +90,28 @@ input[type="number"] {
   color: #ef4444;
   font-weight: bold;
 }
+
+.table-container{
+    width:100%;
+    max-height:650px;
+    overflow-y:auto;
+    overflow-x:auto;
+    border-radius:10px;
+}
+
+table{
+    width:100%;
+    min-width:900px;
+    border-collapse:collapse;
+}
+
+th,
+td{
+    padding:15px;
+}
+
+th:first-child,
+td:first-child{
+    min-width:300px;
+    white-space:nowrap;
+}
