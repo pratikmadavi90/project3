@@ -328,7 +328,6 @@ endOfDay.setHours(23,59,59,999);
 const orders =
 await Order.find({
   deliveryBoyId:deliveryBoyId,
-  deliveryAccepted: true,
   createdAt:{
     $gte:startOfDay,
     $lte:endOfDay
@@ -344,7 +343,7 @@ const liveOrder =
 await Order.findOne({
 
 deliveryBoyId:deliveryBoyId,
-deliveryAccepted: true,
+
 status:{
 $in:[
 "Pending",
@@ -622,16 +621,18 @@ onlineBoys.length
 ];
 
 order.deliveryBoy = {
-  name: nextBoy.name,
-  phone: nextBoy.mobile
+name:nextBoy.name,
+phone:nextBoy.mobile
 };
 
-order.deliveryBoyId = nextBoy.deliveryId;
+order.deliveryBoyId =
+nextBoy.deliveryId;
 
-order.deliveryAssignedAt = new Date();
+order.deliveryAssignedAt =
+new Date();
 
-order.deliveryAccepted = false;
-order.status = "Pending";
+order.deliveryAccepted =
+false;
 
 await order.save();
 
