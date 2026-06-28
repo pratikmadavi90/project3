@@ -324,11 +324,9 @@ exports.getTopProducts = async (req, res) => {
           };
         }
 
-        products[key].sold += item.quantity || 0;
-        products[key].revenue +=
-          (item.price || 0) * (item.quantity || 0);
-
-      });
+    products[key].sold += item.qty || 0;
+    products[key].revenue += (item.price || 0) * (item.qty || 0);
+   });
 
     });
 
