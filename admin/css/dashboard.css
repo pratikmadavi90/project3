@@ -147,8 +147,9 @@ flex:1;
 }
 
 .box ul li::before {
-  content: "• ";
+  content: "\2022";
   color: #00ff88;
+  margin-right: 6px;
 }
 
 /* 🔥 LOW STOCK */
