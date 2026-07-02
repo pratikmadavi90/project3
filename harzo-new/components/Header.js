@@ -8,7 +8,6 @@ import {
 } from "react-native";
 
 import { router } from "expo-router";
-import { Image } from "react-native";
 
 export default function Header() {
 
@@ -21,19 +20,13 @@ export default function Header() {
     <View style={styles.header}>
 
       {/* TOP ROW */}
-     <View style={styles.topRow}>
-  <Text style={styles.time}>
-    ⚡ 20 Minute delivery
-  </Text>
+      <View style={styles.topRow}>
 
-  <TouchableOpacity style={styles.profile}>
-    <Image
-      source={require("../assets/images/shrike-logo.png")}
-      style={styles.logo}
-      resizeMode="contain"
-    />
-  </TouchableOpacity>
-</View>
+        <Text style={styles.time}>
+          ⚡ one day delivery
+        </Text>
+
+      </View>
 
       {/* LOCATION */}
       <Text style={styles.location}>
@@ -49,7 +42,7 @@ export default function Header() {
         activeOpacity={0.9}
         onPress={openSearch}
       >
- 
+
         <View style={styles.searchRow}>
 
           <TextInput
@@ -65,12 +58,11 @@ export default function Header() {
           </Text>
 
         </View>
+<Text style={styles.storeTiming}>
+  ⚠️ Demo Version – Testing Purpose Only
+</Text>
 
       </TouchableOpacity>
-
-       <Text style={styles.storeTime}>
-  ⏰ Store Timeng: 5:00 AM - 12:00 AM
-</Text>
 
     </View>
   );
@@ -78,19 +70,20 @@ export default function Header() {
 
 const styles = StyleSheet.create({
 
-  header: {
-    backgroundColor: "#facc15",
+ header: {
+  backgroundColor: "#facc15",
 
-    paddingVertical: 40,
-    paddingHorizontal: 20,
+  paddingTop: 70,
+  paddingBottom: 20,
+  paddingHorizontal: 18,
 
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
+  borderBottomLeftRadius: 30,
+  borderBottomRightRadius: 30,
 
-    marginBottom: 10,
+  marginBottom: 18,
 
-    minHeight: 260,
-  },
+  minHeight: 250,
+},
 
   topRow: {
     flexDirection: "row",
@@ -112,24 +105,21 @@ const styles = StyleSheet.create({
     includeFontPadding: false,
   },
 
-profile: {
-  width: 70,
-  height: 70,
-  borderRadius: 40,
-  backgroundColor: "#fff",
-  justifyContent: "center",
-  alignItems: "center",
-  elevation: 3,
-},
+  profile: {
+    backgroundColor: "#fff",
 
-logo: {
-  width: 50,
-  height: 50,
-},
+    width: 38,
+    height: 38,
+
+    borderRadius: 50,
+
+    justifyContent: "center",
+    alignItems: "center",
+  },
 
   // ✅ LOCATION FIX
   location: {
-    marginTop: 0,
+    marginTop: 10,
 
     color: "#111111",
 
@@ -138,20 +128,20 @@ logo: {
         ? "700"
         : "bold",
 
-    fontSize: 20,
+    fontSize: 15,
 
     includeFontPadding: false,
   },
 
   // ✅ SUBTEXT FIX
   subText: {
-    fontSize: 16,
+    fontSize: 15,
 
     color: "#111111",
 
-    marginTop: 3,
+    marginTop: 2,
 
-    fontWeight: "500",
+    fontWeight: "650",
 
     includeFontPadding: false,
   },
@@ -210,12 +200,11 @@ logo: {
     includeFontPadding: false,
   },
 
-  storeTime: {
-  fontSize: 13,
-  color: "#333",
-  marginTop: 25,
-  marginLeft: 5,
+storeTiming: {
+  marginTop: 15,     
+  fontSize: 15,
   fontWeight: "600",
+  color: "#111",
 },
 
 });

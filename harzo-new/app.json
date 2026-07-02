@@ -25,7 +25,7 @@
   ],
 
   "predictiveBackGestureEnabled": false,
-  "package": "com.anonymous.harzonew"
+  "package": "in.harzo.user"
 },
     "web": {
       "output": "static",
