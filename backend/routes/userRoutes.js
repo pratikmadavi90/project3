@@ -113,30 +113,27 @@ router.put("/update", async (req, res) => {
     }
 
     // ✅ CREATE OR UPDATE USER
-    const user =
-      await User.findOneAndUpdate(
+let user = await User.findOne({ email });
 
-        { email },
+if (!user) {
+  user = await User.create({
+    userId: "USR" + Date.now(),
+    name,
+    email,
+    phone,
+    address,
+    city: "Korpana",
+    pincode,
+  });
+} else {
+  user.name = name;
+  user.phone = phone;
+  user.address = address;
+  user.city = "Korpana";
+  user.pincode = pincode;
 
-        {
-          name,
-          email,
-          phone,
-
-          // ✅ ADDRESS
-          address,
-
-          // ✅ FIXED CITY
-          city: "Korpana",
-
-          pincode,
-        },
-
-        {
-          new: true,
-          upsert: true,
-        }
-      );
+  await user.save();
+}
 
     res.json({
       message: "Profile updated",

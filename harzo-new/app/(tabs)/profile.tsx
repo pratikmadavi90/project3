@@ -170,7 +170,9 @@ return;
 
     // CURRENT LOCATION
     const currentLocation =
-      await Location.getLastKnownPositionAsync();
+  await Location.getCurrentPositionAsync({
+    accuracy: Location.Accuracy.High,
+  });
 
     if (!currentLocation) {
 

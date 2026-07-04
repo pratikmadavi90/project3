@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "harzo-new",
+    "name": "Harzo",
     "slug": "harzo-new",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "harzonew",
@@ -31,21 +31,29 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": [
-      "expo-router",
-      [
-        "expo-splash-screen",
-        {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
-          "dark": {
-            "backgroundColor": "#000000"
-          }
-        }
-      ]
-    ],
+  "plugins": [
+  "expo-router",
+
+  [
+    "expo-location",
+    {
+      "locationWhenInUsePermission": "Harzo needs your location to deliver orders."
+    }
+  ],
+
+  [
+    "expo-splash-screen",
+    {
+      "image": "./assets/images/splash-icon.png",
+      "imageWidth": 200,
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff",
+      "dark": {
+        "backgroundColor": "#000000"
+      }
+    }
+  ]
+],
     "experiments": {
       "typedRoutes": true
       
