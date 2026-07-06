@@ -122,36 +122,27 @@ dayKeys.map(
     const ctx =
     document.getElementById("chart");
 
-    const myChart =
-    new Chart(ctx, {
+    const myChart = new Chart(ctx, {
+  type: "bar",
 
-      type: "bar",
+  data: {
+    labels,
+    datasets: [{
+      label: "Orders",
+      data: chartData,
+      backgroundColor: "#00ff88",
+      borderColor: "#00ff88",
+      borderWidth: 1,
+      borderRadius: 6
+    }]
+  },
 
-      data: {
+  options: {
+    responsive: true,
+    maintainAspectRatio: false
+  }
 
-        labels,
-
-        datasets: [{
-
-          label: "Orders",
-
-          data: chartData,
-
-          backgroundColor:
-          "#00ff88",
-
-          borderColor:
-          "#00ff88",
-
-          borderWidth: 1,
-
-          borderRadius: 6
-
-        }]
-
-      }
-
-    });
+});
 
     ctx.onclick =
     async function(evt){
