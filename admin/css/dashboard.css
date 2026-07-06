@@ -1,13 +1,16 @@
 /* 🔥 BASE */
-body {
-  margin: 0;
-  font-family: Arial;
-  background: #0f172a;
-  color: white;
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0f172a;
+  color:white;
+  overflow-x:hidden;
 }
 
-.container {
-  display: flex;
+.container{
+  display:flex;
+  min-height:100vh;
+  width:100%;
 }
 
 /* 🔥 PREMIUM SIDEBAR FINAL */
@@ -75,15 +78,19 @@ flex:1;
 }
 
 /* 🔥 MAIN */
-.main {
-  flex: 1;
-  padding: 20px;
+.main{
+  flex:1;
+  padding:20px;
+  min-width:0;
+  overflow-y:auto;
+  overflow-x:hidden;
 }
 
 /* 🔥 CARDS (TOP) */
-.cards {
-  display: flex;
-  gap: 20px;
+.cards{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
 }
 
 .card {
@@ -106,18 +113,21 @@ flex:1;
 }
 
 /* 🔥 GRAPH */
-.graph {
-  margin-top: 20px;
-  background: rgba(255,255,255,0.03);
-  padding: 20px;
-  border-radius: 12px;
+.graph{
+  margin-top:20px;
+  background:rgba(255,255,255,.03);
+  padding:20px;
+  border-radius:12px;
+  width:100%;
+  box-sizing:border-box;
 }
 
 /* 🔥 ROW SECTION */
-.row {
-  display: flex;
-  gap: 20px;
-  margin-top: 20px;
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  margin-top:20px;
 }
 
 .box {
@@ -239,4 +249,14 @@ position:relative;
 
 .cancelled-stat{
   color:#ef4444; /* Red */
+}
+
+.graph canvas{
+    width:100% !important;
+    max-height:320px;
+}
+
+.card,
+.box{
+    min-width:0;
 }
