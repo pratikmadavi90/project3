@@ -14,27 +14,19 @@ body {
 .sidebar{
 width:270px;
 min-width:270px;
+
 height:100vh;
+min-height:100vh;
+
 background:#020617;
-border-right:1px solid rgba(255,255,255,.05);
+border-right:1px solid rgba(255,255,255,0.05);
 
 padding:20px;
 box-sizing:border-box;
 
+overflow-y:auto;
 position:sticky;
 top:0;
-
-display:flex;
-flex-direction:column;
-overflow:hidden;
-}
-
-.sidebar ul{
-flex:1;
-overflow-y:auto;
-padding:0;
-margin:0;
-list-style:none;
 }
 
 /* LOGO */
@@ -83,19 +75,15 @@ flex:1;
 }
 
 /* 🔥 MAIN */
-.main{
-flex:1;
-padding:20px;
-overflow-x:hidden;
-min-width:0;
+.main {
+  flex: 1;
+  padding: 20px;
 }
 
 /* 🔥 CARDS (TOP) */
-.cards{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:20px;
-margin-bottom:20px;
+.cards {
+  display: flex;
+  gap: 20px;
 }
 
 .card {
@@ -118,29 +106,18 @@ margin-bottom:20px;
 }
 
 /* 🔥 GRAPH */
-.graph{
-margin-top:20px;
-background:rgba(255,255,255,.03);
-padding:20px;
-border-radius:12px;
-
-width:100%;
-box-sizing:border-box;
-overflow:hidden;
-}
-
-.graph canvas{
-width:100% !important;
-height:350px !important;
-display:block;
+.graph {
+  margin-top: 20px;
+  background: rgba(255,255,255,0.03);
+  padding: 20px;
+  border-radius: 12px;
 }
 
 /* 🔥 ROW SECTION */
-.row{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:20px;
-margin-top:20px;
+.row {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
 }
 
 .box {
@@ -170,9 +147,8 @@ margin-top:20px;
 }
 
 .box ul li::before {
-  content: "\2022";
+  content: "• ";
   color: #00ff88;
-  margin-right: 6px;
 }
 
 /* 🔥 LOW STOCK */
@@ -263,14 +239,4 @@ position:relative;
 
 .cancelled-stat{
   color:#ef4444; /* Red */
-}
-
-.low-stock-item{
-  color:#ef4444 !important;
-  font-weight:600;
-}
-
-.low-stock-item::before{
-  content:"\2022";
-  color:#ef4444 !important;
 }
