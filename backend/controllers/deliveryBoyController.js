@@ -305,6 +305,8 @@ exports.getAdminDashboard = async (req, res) => {
         }
       });
 
+
+
    const todayPending =
 await Order.countDocuments({
   status:{
@@ -551,6 +553,31 @@ exports.getDeliveryBoyDetails = async (req, res) => {
       }
     });
 
+   const todayPending = await Order.countDocuments({
+  deliveryBoyId,
+  status: {
+    $in: [
+      "Pending",
+      "Accepted",
+      "Packed",
+      "Out for Delivery"
+    ]
+  },
+  createdAt: {
+    $gte: startOfDay,
+    $lte: endOfDay
+  }
+});
+
+const todayCancelled = await Order.countDocuments({
+  deliveryBoyId,
+  status: "Cancelled",
+  updatedAt: {
+    $gte: startOfDay,
+    $lte: endOfDay
+  }
+}); 
+
     const weekDelivered = await Order.countDocuments({
       deliveryBoyId,
       status: "Delivered",
@@ -623,33 +650,37 @@ await Order.countDocuments({
 
       },
 
-      performance: {
+   performance: {
 
-        todayDelivered,
+  todayDelivered,
 
-        weekDelivered,
+  todayPending,
 
-        monthDelivered,
+  todayCancelled,
 
-        totalDelivered,
+  weekDelivered,
 
-        pendingOrders,
+  monthDelivered,
 
-        cancelledOrders,
+  totalDelivered,
 
-        todayEarning: todayDelivered * 20,
+  pendingOrders,
 
-        weekEarning: weekDelivered * 20,
+  cancelledOrders,
 
-        monthEarning: monthDelivered * 20,
+  todayEarning: todayDelivered * 20,
 
-        totalEarning: totalDelivered * 20,
+  weekEarning: weekDelivered * 20,
 
-        lastDeliveredAt: lastDelivered
-          ? lastDelivered.deliveredAt
-          : null
+  monthEarning: monthDelivered * 20,
 
-      }
+  totalEarning: totalDelivered * 20,
+
+  lastDeliveredAt: lastDelivered
+    ? lastDelivered.deliveredAt
+    : null
+
+}
 
     });
 

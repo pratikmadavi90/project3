@@ -236,10 +236,16 @@ ${p.monthDelivered}</p>
 <p><b>Total Delivered:</b>
 ${p.totalDelivered}</p>
 
-<p><b>Pending:</b>
+<p><b>Today Pending:</b>
+${p.todayPending}</p>
+
+<p><b>Total Pending:</b>
 ${p.pendingOrders}</p>
 
-<p><b>Cancelled:</b>
+<p><b>Today Cancelled:</b>
+${p.todayCancelled}</p>
+
+<p><b>Total Cancelled:</b>
 ${p.cancelledOrders}</p>
 
 <hr>
