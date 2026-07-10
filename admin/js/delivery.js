@@ -81,9 +81,15 @@ list.innerHTML += `
 <td>₹${area.minimumOrder || 0}</td>
 
 <td>
+
+<button onclick="editArea('${area._id}')">
+✏️ Edit
+</button>
+
 <button onclick="deleteArea('${area._id}')">
 ❌ Delete
 </button>
+
 </td>
 
 </tr>
@@ -106,6 +112,13 @@ async function deleteArea(id) {
 });
 
   loadAreas();
+}
+
+let editingId = null;
+
+function editArea(id) {
+  editingId = id;
+  alert("Edit button working. Ab update logic add karna hai.");
 }
 
 // 🔄 Auto load

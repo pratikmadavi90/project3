@@ -5,7 +5,8 @@ const {
   addZone,
   getZones,
   deleteZone,
-  checkDelivery
+  checkDelivery,
+  updateZone
 } = require("../controllers/deliveryZoneController");
 
 const authMiddleware = require("../middleware/authMiddleware");
@@ -26,6 +27,12 @@ router.delete("/delete/:id",
 
 router.post("/check",
   checkDelivery
+);
+
+router.put(
+  "/update/:id",
+  authMiddleware,
+  updateZone
 );
 
 module.exports = router;

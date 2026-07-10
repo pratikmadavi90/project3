@@ -116,3 +116,23 @@ exports.checkDelivery = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+
+// ✏️ Update Area
+exports.updateZone = async (req, res) => {
+  try {
+    const zone = await DeliveryZone.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+
+    res.json({
+      success: true,
+      data: zone
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
