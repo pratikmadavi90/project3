@@ -86,6 +86,8 @@ exports.checkDelivery = async (req, res) => {
       isActive: true
     });
 
+console.log("ZONE FROM DB:", zone);
+
     // 👉 Agar pincode nahi mila → name se check
     if (!zone && name) {
       zone = await DeliveryZone.findOne({
@@ -100,6 +102,9 @@ exports.checkDelivery = async (req, res) => {
         message: "Delivery not available in your area"
       });
     }
+
+ console.log("FREE DELIVERY DB:", zone.freeDeliveryAbove);
+console.log("MIN ORDER DB:", zone.minimumOrder);   
 
     res.json({
   available: true,

@@ -218,19 +218,36 @@ return;
       liveArea
     );
 
-    // GET ADMIN DELIVERY AREAS
-    const response =
-      await fetch(
-        "https://api.harzo.in/api/delivery/all"
-      );
+   // CHECK DELIVERY FROM ADMIN
 
-    const areasResponse =
-      await response.json();
+const response = await fetch(
+  "https://api.harzo.in/api/delivery/check",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      name: user.village,
+      pincode: user.pincode
+    })
+  }
+);
 
-    const areas =
-      areasResponse.data ||
-      areasResponse;
+const deliveryData = await response.json();
 
+if (!deliveryData.available) {
+  Alert.alert(
+    "Delivery Not Available",
+    deliveryData.message
+  );
+  return;
+}
+
+await AsyncStorage.setItem(
+  "deliverySettings",
+  JSON.stringify(deliveryData)
+);
     
 // MATCH LIVE AREA WITH SELECTED VILLAGE
 
@@ -250,33 +267,7 @@ return;
 
 }
 
-const matchedArea =
-areas.find((item:any)=>{
 
-const adminVillage =
-(
-item.area ||
-item.name ||
-""
-)
-.toLowerCase()
-.trim();
-
-return adminVillage === selectedVillage;
-
-});
-
-    // DELIVERY CHECK
-if (!matchedArea) {
-
-Alert.alert(
-"Delivery Not Available",
-`No delivery in ${selectedVillage}`
-);
-
-return;
-
-}
 
     // EMAIL CHECK
     if (!user.email) {

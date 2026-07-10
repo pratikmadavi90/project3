@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   View,
@@ -26,13 +26,35 @@ export default function Payment() {
 
   const [loading, setLoading] = useState(false);
 
+  const [deliverySettings, setDeliverySettings] = useState(null);
+
   const {
     cart,
     total,
     clearCart,
   } = useCart();
 
-  
+ useEffect(() => {
+
+  const loadDeliverySettings = async () => {
+
+    const data = await AsyncStorage.getItem("deliverySettings");
+
+if (data) {
+  const settings = JSON.parse(data);
+
+  console.log("Delivery Settings:", settings);
+  console.log("FREE ABOVE =", settings.freeDeliveryAbove);
+  console.log("TYPE =", typeof settings.freeDeliveryAbove);
+
+  setDeliverySettings(settings);
+}
+
+  };
+
+  loadDeliverySettings();
+
+}, []); 
 
 // ✅ CALCULATIONS
 
@@ -90,26 +112,31 @@ let heavyCharge = 0;
 let discount = 0;
 
 // FREE DELIVERY
-if (total >= 999) {
+if (
+  deliverySettings?.freeDeliveryAbove > 0 &&
+  total >= deliverySettings.freeDeliveryAbove
+) {
 
   deliveryCharge = 0;
 
 } else {
 
-  // Distance charge
-  if (distance <= 3) {
+  deliveryCharge =
+    deliverySettings?.deliveryCharge || 40;
 
-    deliveryCharge = 20;
+}
 
-  } else if (distance <= 6) {
 
-    deliveryCharge = 30;
 
-  } else {
-
-    deliveryCharge = 40;
-  }
-
+// ✅ Minimum Order Check
+if (
+  deliverySettings?.minimumOrder > 0 &&
+  total < deliverySettings.minimumOrder
+) {
+  Alert.alert(
+    "Minimum Order",
+    `Minimum order is ₹${deliverySettings.minimumOrder}`
+  );
 }
 
 // Heavy weight charge
@@ -148,6 +175,18 @@ discount;
   const placeOrder = async (method) => {
 
     try {
+
+      // ✅ Stop order if minimum order not reached
+if (
+  deliverySettings?.minimumOrder > 0 &&
+  total < deliverySettings.minimumOrder
+) {
+  Alert.alert(
+    "Minimum Order",
+    `Minimum order is ₹${deliverySettings.minimumOrder}`
+  );
+  return;
+}
 
       setLoading(true);
 
