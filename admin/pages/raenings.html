@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Delivery Boy Earnings</title>
+
+<script>
+const token = localStorage.getItem("adminToken");
+if (!token) {
+    window.location.href = "login.html";
+}
+</script>
+
+<link rel="stylesheet" href="../css/raenings.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="top-bar">
+
+<h2>Delivery Boy Earnings</h2>
+
+<div>
+
+<button onclick="location.href='delivery-boy.html'">
+← Back
+</button>
+
+<button onclick="location.reload()">
+Refresh
+</button>
+
+</div>
+
+</div>
+
+<div class="cards">
+
+<div class="card">
+<h3>Total Boys</h3>
+<h1 id="totalBoys">0</h1>
+</div>
+
+<div class="card">
+<h3>Online Boys</h3>
+<h1 id="onlineBoys">0</h1>
+</div>
+
+<div class="card">
+<h3>Today's Delivered</h3>
+<h1 id="todayDelivered">0</h1>
+</div>
+
+<div class="card">
+<h3>Today's Pending</h3>
+<h1 id="todayPending">0</h1>
+</div>
+
+<div class="card">
+<h3>Today's Cancelled</h3>
+<h1 id="todayCancelled">0</h1>
+</div>
+
+<div class="card">
+<h3>Today's Earnings</h3>
+<h1 id="todayEarnings">₹0</h1>
+</div>
+
+<div class="card">
+<h3>Week Earnings</h3>
+<h1 id="weekEarnings">₹0</h1>
+</div>
+
+<div class="card">
+<h3>Month Earnings</h3>
+<h1 id="monthEarnings">₹0</h1>
+</div>
+
+</div>
+
+<div class="table-card">
+
+<h3>Top Performers</h3>
+
+<input
+type="text"
+id="search"
+placeholder="Search Delivery Boy">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Rank</th>
+
+<th>Name</th>
+
+<th>Today</th>
+
+<th>Week</th>
+
+<th>Month</th>
+
+<th>Total</th>
+
+<th>Today ₹</th>
+
+<th>Month ₹</th>
+
+<th>Status</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody id="performerList">
+
+</tbody>
+
+</table>
+
+</div>
+
+<div class="graph-card">
+
+<h3>Weekly Delivery</h3>
+
+<canvas id="weeklyChart"></canvas>
+
+</div>
+
+<div class="graph-card">
+
+<h3>Monthly Earnings</h3>
+
+<canvas id="monthlyChart"></canvas>
+
+</div>
+
+<div
+class="modal"
+id="detailModal">
+
+<div class="modal-content">
+
+<span
+class="close"
+onclick="closeModal()">
+
+×
+
+</span>
+
+<h2>
+Delivery Boy Details
+</h2>
+
+<div id="details">
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="../js/raenings.js"></script>
+
+</body>
+</html>
