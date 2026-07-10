@@ -1,7 +1,11 @@
 const API = "https://api.harzo.in/api/delivery";
 
-// ➕ Add Area
+let editingId = null;
+window.allAreas = [];
+
+// ➕ Add / ✏️ Update Area
 async function addArea() {
+
   const name = document.getElementById("areaName").value;
   const pincode = document.getElementById("pincode").value;
   const charge = document.getElementById("charge").value;
@@ -13,24 +17,50 @@ async function addArea() {
     return alert("Area name aur charge required hai");
   }
 
-  await fetch(`${API}/add`, {
-    method: "POST",
-   headers: {
-  "Content-Type": "application/json",
-  Authorization: "Bearer " + localStorage.getItem("adminToken")
-},
+  const data = {
+    name,
+    pincode,
+    charge,
+    time,
+    freeDeliveryAbove,
+    minimumOrder
+  };
 
- body: JSON.stringify({
-  name,
-  pincode,
-  charge,
-  time,
-  freeDeliveryAbove,
-  minimumOrder
-})
-  });
+  // ✏️ UPDATE
+  if (editingId) {
 
-  // Clear form
+   const res = await fetch(`${API}/update/${editingId}`, {
+  method: "PUT",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: "Bearer " + localStorage.getItem("adminToken")
+  },
+  body: JSON.stringify(data)
+});
+
+if (!res.ok) {
+  return alert("Update failed");
+}
+
+editingId = null;
+
+document.getElementById("saveBtn").innerText = "➕ Add Area";
+
+  } else {
+
+    // ➕ ADD
+    await fetch(`${API}/add`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("adminToken")
+      },
+      body: JSON.stringify(data)
+    });
+
+  }
+
+  // Clear Form
   document.getElementById("areaName").value = "";
   document.getElementById("pincode").value = "";
   document.getElementById("charge").value = "";
@@ -39,6 +69,7 @@ async function addArea() {
   document.getElementById("minimumOrder").value = "";
 
   loadAreas();
+
 }
 
 // 📋 Load Areas
@@ -57,6 +88,8 @@ throw new Error("Failed to load delivery areas");
 const result = await res.json();
 
 const data = result.data || [];
+
+window.allAreas = data;
 
 const list = document.getElementById("areaList");
 
@@ -114,12 +147,28 @@ async function deleteArea(id) {
   loadAreas();
 }
 
-let editingId = null;
-
 function editArea(id) {
-  editingId = id;
-  alert("Edit button working. Ab update logic add karna hai.");
-}
 
+  const area = window.allAreas.find(a => a._id === id);
+
+  if (!area) return;
+
+  editingId = id;
+
+  document.getElementById("areaName").value = area.name || "";
+  document.getElementById("pincode").value = area.pincode || "";
+  document.getElementById("charge").value = area.charge || "";
+  document.getElementById("time").value = area.time || "";
+  document.getElementById("freeDeliveryAbove").value = area.freeDeliveryAbove || "";
+  document.getElementById("minimumOrder").value = area.minimumOrder || "";
+
+  document.getElementById("saveBtn").innerText = "💾 Update Area";
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+}
 // 🔄 Auto load
 loadAreas();
