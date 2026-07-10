@@ -51,21 +51,32 @@ let minOrders=999999;
 
 for(const boy of onlineBoys){
 
-  const activeOrders =
-  await Order.countDocuments({
+const startOfDay = new Date();
+startOfDay.setHours(0,0,0,0);
 
-    deliveryBoyId:boy.deliveryId,
+const endOfDay = new Date();
+endOfDay.setHours(23,59,59,999);
 
-    status:{
-      $in:[
-        "Pending",
-        "Accepted",
-        "Packed",
-        "Out for Delivery"
-      ]
-    }
+const activeOrders =
+await Order.countDocuments({
 
-  });
+  deliveryBoyId:boy.deliveryId,
+
+  status:{
+    $in:[
+      "Pending",
+      "Accepted",
+      "Packed",
+      "Out for Delivery"
+    ]
+  },
+
+  createdAt:{
+    $gte:startOfDay,
+    $lte:endOfDay
+  }
+
+});
 
   if(activeOrders < minOrders){
 
@@ -348,9 +359,14 @@ status:{
 $in:[
 "Pending",
 "Accepted",
-"Picked Up",
+"Packed",
 "Out for Delivery"
 ]
+},
+
+createdAt:{
+$gte:startOfDay,
+$lte:endOfDay
 }
 
 }).sort({
@@ -633,6 +649,8 @@ new Date();
 
 order.deliveryAccepted =
 false;
+
+order.status = "Pending";
 
 await order.save();
 

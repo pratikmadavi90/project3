@@ -305,17 +305,21 @@ exports.getAdminDashboard = async (req, res) => {
         }
       });
 
-    const todayPending =
-      await Order.countDocuments({
-        status: {
-          $in: [
-            "Pending",
-            "Accepted",
-            "Packed",
-            "Out for Delivery"
-          ]
-        }
-      });
+   const todayPending =
+await Order.countDocuments({
+  status:{
+    $in:[
+      "Pending",
+      "Accepted",
+      "Packed",
+      "Out for Delivery"
+    ]
+  },
+  createdAt:{
+    $gte:startOfDay,
+    $lte:endOfDay
+  }
+});
 
     const todayCancelled =
       await Order.countDocuments({
@@ -565,17 +569,22 @@ exports.getDeliveryBoyDetails = async (req, res) => {
       status: "Delivered"
     });
 
-    const pendingOrders = await Order.countDocuments({
-      deliveryBoyId,
-      status: {
-        $in: [
-          "Pending",
-          "Accepted",
-          "Packed",
-          "Out for Delivery"
-        ]
-      }
-    });
+   const pendingOrders =
+await Order.countDocuments({
+  deliveryBoyId,
+  status:{
+    $in:[
+      "Pending",
+      "Accepted",
+      "Packed",
+      "Out for Delivery"
+    ]
+  },
+  createdAt:{
+    $gte:startOfDay,
+    $lte:endOfDay
+  }
+});
 
     const cancelledOrders = await Order.countDocuments({
       deliveryBoyId,
