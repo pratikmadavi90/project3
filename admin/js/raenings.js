@@ -202,7 +202,9 @@ const p = result.performance;
 
 document.getElementById("details").innerHTML = `
 
-<h3>${d.name}</h3>
+<div style="grid-column:1/-1;text-align:center;">
+  <h2>${d.name}</h2>
+</div>
 
 <p><b>Delivery ID:</b> ${d.deliveryId}</p>
 
@@ -222,7 +224,7 @@ ${d.online
 
 </p>
 
-<hr>
+
 
 <p><b>Today Delivered:</b>
 ${p.todayDelivered}</p>
@@ -248,7 +250,6 @@ ${p.todayCancelled}</p>
 <p><b>Total Cancelled:</b>
 ${p.cancelledOrders}</p>
 
-<hr>
 
 <p><b>Today Earnings:</b>
 ₹${p.todayEarning}</p>
