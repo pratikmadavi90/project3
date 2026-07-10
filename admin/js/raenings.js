@@ -226,42 +226,23 @@ ${d.online
 
 
 
-<p><b>Today Delivered:</b>
-${p.todayDelivered}</p>
+<p><b>Today Delivered:</b> ${p.todayDelivered}</p>
+<p><b>Today Pending:</b> ${p.todayPending}</p>
 
-<p><b>Week Delivered:</b>
-${p.weekDelivered}</p>
+<p><b>Today Cancelled:</b> ${p.todayCancelled}</p>
+<p><b>Today Earnings:</b> ₹${p.todayEarning}</p>
 
-<p><b>Month Delivered:</b>
-${p.monthDelivered}</p>
+<p><b>Week Delivered:</b> ${p.weekDelivered}</p>
+<p><b>Week Earnings:</b> ₹${p.weekEarning}</p>
 
-<p><b>Total Delivered:</b>
-${p.totalDelivered}</p>
+<p><b>Month Delivered:</b> ${p.monthDelivered}</p>
+<p><b>Month Earnings:</b> ₹${p.monthEarning}</p>
 
-<p><b>Today Pending:</b>
-${p.todayPending}</p>
+<p><b>Total Delivered:</b> ${p.totalDelivered}</p>
+<p><b>Total Pending:</b> ${p.pendingOrders}</p>
 
-<p><b>Total Pending:</b>
-${p.pendingOrders}</p>
-
-<p><b>Today Cancelled:</b>
-${p.todayCancelled}</p>
-
-<p><b>Total Cancelled:</b>
-${p.cancelledOrders}</p>
-
-
-<p><b>Today Earnings:</b>
-₹${p.todayEarning}</p>
-
-<p><b>Week Earnings:</b>
-₹${p.weekEarning}</p>
-
-<p><b>Month Earnings:</b>
-₹${p.monthEarning}</p>
-
-<p><b>Total Earnings:</b>
-₹${p.totalEarning}</p>
+<p><b>Total Cancelled:</b> ${p.cancelledOrders}</p>
+<p><b>Total Earnings:</b> ₹${p.totalEarning}</p>
 
 `;
 
