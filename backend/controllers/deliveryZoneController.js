@@ -19,15 +19,17 @@ exports.addZone = async (req, res) => {
       return res.json({ success: false, message: "Area already exists" });
     }
 
-    const zone = new DeliveryZone({
-      name,         // Dhoptala
-      pincode,      // 442xxx
-      charge,       // ₹
-      time,         // 30 min
-      landmark,     // Temple ke paas
-      address,      // Full address
-      isActive: true
-    });
+const zone = new DeliveryZone({
+  name,
+  pincode,
+  charge,
+  time,
+  freeDeliveryAbove,
+  minimumOrder,
+  landmark,
+  address,
+  isActive: true
+});
 
     await zone.save();
 
