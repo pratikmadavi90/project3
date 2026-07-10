@@ -28,7 +28,11 @@ if (!token) {
   
   <input type="number" id="charge" placeholder="Delivery Charge ₹">
   
-  <input type="text" id="time" placeholder="Delivery Time (30-40 mins)">
+  <input type="number" id="time" placeholder="Delivery Time (Minutes)">
+
+  <input type="number" id="freeDeliveryAbove" placeholder="Free Delivery Above ₹ (e.g. 400)">
+
+  <input type="number" id="minimumOrder" placeholder="Minimum Order ₹ (e.g. 100)">
 
   <button onclick="addArea()">➕ Add Area</button>
 
@@ -41,13 +45,15 @@ if (!token) {
 
 <table width="100%" id="areaTable">
   <thead>
-    <tr>
-      <th>Area</th>
-      <th>Pincode</th>
-      <th>Charge ₹</th>
-      <th>Time</th>
-      <th>Action</th>
-    </tr>
+ <tr>
+  <th>Area</th>
+  <th>Pincode</th>
+  <th>Charge ₹</th>
+  <th>Time</th>
+  <th>Free Above ₹</th>
+  <th>Min Order ₹</th>
+  <th>Action</th>
+</tr>
   </thead>
 
   <tbody id="areaList"></tbody>

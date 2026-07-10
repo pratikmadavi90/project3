@@ -1,39 +1,51 @@
 const mongoose = require("mongoose");
 
 const deliveryZoneSchema = new mongoose.Schema({
-  name: { 
-    type: String, 
-    required: true 
+  name: {
+    type: String,
+    required: true
   },
 
-  pincode: { 
-    type: String 
+  pincode: {
+    type: String
   },
 
   // 💰 Delivery Charge
-  charge: { 
-    type: Number, 
-    required: true 
+  charge: {
+    type: Number,
+    required: true
   },
 
   // ⏱️ Delivery Time
-  time: { 
-    type: String 
+  time: {
+    type: String
+  },
+
+  // 🎁 Free Delivery Above
+  freeDeliveryAbove: {
+    type: Number,
+    default: 0
+  },
+
+  // 🛒 Minimum Order Value
+  minimumOrder: {
+    type: Number,
+    default: 0
   },
 
   // 📍 Landmark (optional)
-  landmark: { 
-    type: String 
+  landmark: {
+    type: String
   },
 
   // 🏠 Full Address (optional)
-  address: { 
-    type: String 
+  address: {
+    type: String
   },
 
-  isActive: { 
-    type: Boolean, 
-    default: true 
+  isActive: {
+    type: Boolean,
+    default: true
   }
 
 }, { timestamps: true });

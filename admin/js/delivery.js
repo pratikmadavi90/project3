@@ -6,6 +6,8 @@ async function addArea() {
   const pincode = document.getElementById("pincode").value;
   const charge = document.getElementById("charge").value;
   const time = document.getElementById("time").value;
+  const freeDeliveryAbove = document.getElementById("freeDeliveryAbove").value;
+  const minimumOrder = document.getElementById("minimumOrder").value;
 
   if (!name || !charge) {
     return alert("Area name aur charge required hai");
@@ -18,12 +20,14 @@ async function addArea() {
   Authorization: "Bearer " + localStorage.getItem("adminToken")
 },
 
-    body: JSON.stringify({
-      name,
-      pincode,
-      charge,
-      time
-    })
+ body: JSON.stringify({
+  name,
+  pincode,
+  charge,
+  time,
+  freeDeliveryAbove,
+  minimumOrder
+})
   });
 
   // Clear form
@@ -31,6 +35,8 @@ async function addArea() {
   document.getElementById("pincode").value = "";
   document.getElementById("charge").value = "";
   document.getElementById("time").value = "";
+  document.getElementById("freeDeliveryAbove").value = "";
+  document.getElementById("minimumOrder").value = "";
 
   loadAreas();
 }
@@ -70,12 +76,14 @@ list.innerHTML += `
 
 <td>${area.time || "-"}</td>
 
-<td>
+<td>₹${area.freeDeliveryAbove || 0}</td>
 
+<td>₹${area.minimumOrder || 0}</td>
+
+<td>
 <button onclick="deleteArea('${area._id}')">
 ❌ Delete
 </button>
-
 </td>
 
 </tr>

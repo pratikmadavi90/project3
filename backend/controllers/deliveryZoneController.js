@@ -3,7 +3,16 @@ const DeliveryZone = require("../models/DeliveryZone");
 // ➕ Add Area (with full details)
 exports.addZone = async (req, res) => {
   try {
-    const { name, pincode, charge, time, landmark, address } = req.body;
+    const {
+  name,
+  pincode,
+  charge,
+  time,
+  freeDeliveryAbove,
+  minimumOrder,
+  landmark,
+  address
+} = req.body;
 
     const existing = await DeliveryZone.findOne({ name });
     if (existing) {
@@ -91,13 +100,15 @@ exports.checkDelivery = async (req, res) => {
     }
 
     res.json({
-      available: true,
-      area: zone.name,
-      deliveryCharge: zone.charge,
-      deliveryTime: zone.time,
-      landmark: zone.landmark,
-      address: zone.address
-    });
+  available: true,
+  area: zone.name,
+  deliveryCharge: zone.charge,
+  deliveryTime: zone.time,
+  freeDeliveryAbove: zone.freeDeliveryAbove,
+  minimumOrder: zone.minimumOrder,
+  landmark: zone.landmark,
+  address: zone.address
+});
 
   } catch (err) {
     res.status(500).json({ error: err.message });
