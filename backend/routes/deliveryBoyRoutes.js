@@ -46,10 +46,43 @@ controller.deleteDeliveryBoy
 
 // Update
 router.put(
-"/update/:id",
-authMiddleware,
-controller.updateDeliveryBoy
+  "/update/:id",
+  authMiddleware,
+  controller.updateDeliveryBoy
 );
 
-module.exports=
-router;
+// =====================
+// Admin Analytics
+// =====================
+
+router.get(
+  "/admin-dashboard",
+  authMiddleware,
+  controller.getAdminDashboard
+);
+
+router.get(
+  "/top-performers",
+  authMiddleware,
+  controller.getTopPerformers
+);
+
+router.get(
+  "/details/:deliveryBoyId",
+  authMiddleware,
+  controller.getDeliveryBoyDetails
+);
+
+router.get(
+  "/weekly-chart",
+  authMiddleware,
+  controller.getWeeklyChart
+);
+
+router.get(
+  "/monthly-earnings",
+  authMiddleware,
+  controller.getMonthlyEarnings
+);
+
+module.exports = router;
