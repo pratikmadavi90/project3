@@ -117,7 +117,7 @@ app.use(express.json());
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/", bannerRoutes);
 app.use("/api/categories", require("./routes/categoryRoutes"));
-app.use("/api/orders", require("./routes/orderRoutes")); 
+
 app.use("/api/users", userRoutes);
 app.use("/api/offers", offerRoutes);
 app.use("/api/delivery", deliveryRoutes);

@@ -15,7 +15,7 @@ orderController.createOrder
 // Get All Orders
 router.get(
 "/",
-
+authMiddleware,
 orderController.getOrders
 );
 
