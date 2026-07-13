@@ -5,7 +5,6 @@ const User = require("../models/User");
 // 🧾 CREATE ORDER
 exports.createOrder = async (req, res) => {
   try {
-    
     const { cartTotal, offerId, userId } = req.body;
 
     let finalAmount = cartTotal;
@@ -32,59 +31,16 @@ if (!user) {
 const DeliveryBoy =
 require("../models/DeliveryBoy");
 
-const onlineBoys =
-await DeliveryBoy.find({
-  online:true,
-  status:"Active"
+const deliveryBoy =
+await DeliveryBoy.findOne({
+online:true
 });
 
-if(onlineBoys.length===0){
+if(!deliveryBoy){
 
-  return res.status(400).json({
-    message:"No Delivery Boy Online"
-  });
-
-}
-
-// sab delivery boys ke active orders count karo
-let selectedBoy=null;
-let minOrders=999999;
-
-for(const boy of onlineBoys){
-
-const startOfDay = new Date();
-startOfDay.setHours(0,0,0,0);
-
-const endOfDay = new Date();
-endOfDay.setHours(23,59,59,999);
-
-const activeOrders =
-await Order.countDocuments({
-
-  deliveryBoyId:boy.deliveryId,
-
-  status:{
-    $in:[
-      "Pending",
-      "Accepted",
-      "Packed",
-      "Out for Delivery"
-    ]
-  },
-
-  createdAt:{
-    $gte:startOfDay,
-    $lte:endOfDay
-  }
-
+return res.status(400).json({
+message:"No Delivery Boy Online"
 });
-
-  if(activeOrders < minOrders){
-
-    minOrders = activeOrders;
-    selectedBoy = boy;
-
-  }
 
 }
 
@@ -98,15 +54,13 @@ const order = new Order({
 
   orderId:"ORD"+Date.now(),
 
-deliveryBoy:{
-  name:selectedBoy.name,
-  phone:selectedBoy.mobile
-},
+  deliveryBoy:{
+    name:deliveryBoy.name,
+    phone:deliveryBoy.mobile
+  },
 
-deliveryBoyId:
-selectedBoy.deliveryId,
-
-deliveryAssignedAt:new Date()
+  deliveryBoyId:
+  deliveryBoy.deliveryId
 
 });
 
@@ -360,14 +314,9 @@ status:{
 $in:[
 "Pending",
 "Accepted",
-"Packed",
+"Picked Up",
 "Out for Delivery"
 ]
-},
-
-createdAt:{
-$gte:startOfDay,
-$lte:endOfDay
 }
 
 }).sort({
@@ -534,140 +483,5 @@ exports.deliveryHistory = async (req, res) => {
     });
 
   }
-
-};
-
-
-exports.acceptOrder = async (req,res)=>{
-
-try{
-
-const order =
-await Order.findByIdAndUpdate(
-
-req.params.id,
-
-{
-deliveryAccepted:true,
-status:"Accepted"
-},
-
-{new:true}
-
-);
-
-res.json({
-success:true,
-order
-});
-
-}catch(err){
-
-res.status(500).json({
-success:false,
-error:err.message
-});
-
-}
-
-};
-
-const DeliveryBoy =
-require("../models/DeliveryBoy");
-
-exports.rejectOrder = async (req,res)=>{
-
-try{
-
-const order =
-await Order.findById(req.params.id);
-
-if(!order){
-
-return res.status(404).json({
-message:"Order not found"
-});
-
-}
-
-const currentBoyId =
-order.deliveryBoyId;
-
-order.deliveryRejectedBy.push(
-currentBoyId
-);
-order.markModified(
-"deliveryRejectedBy"
-);
-
-const onlineBoys =
-await DeliveryBoy.find({
-
-online:true,
-status:"Active",
-
-deliveryId:{
-$nin:[
-currentBoyId,
-...order.deliveryRejectedBy
-]
-}
-
-});
-
-if(onlineBoys.length===0){
-
-order.status =
-"Delivery Rejected";
-
-await order.save();
-
-return res.json({
-success:false,
-message:"No other delivery boy available"
-});
-
-}
-
-const nextBoy =
-onlineBoys[
-Math.floor(
-Math.random() *
-onlineBoys.length
-)
-];
-
-order.deliveryBoy = {
-name:nextBoy.name,
-phone:nextBoy.mobile
-};
-
-order.deliveryBoyId =
-nextBoy.deliveryId;
-
-order.deliveryAssignedAt =
-new Date();
-
-order.deliveryAccepted =
-false;
-
-order.status = "Pending";
-
-await order.save();
-
-res.json({
-success:true,
-message:"Order reassigned",
-order
-});
-
-}catch(err){
-
-res.status(500).json({
-success:false,
-error:err.message
-});
-
-}
 
 };

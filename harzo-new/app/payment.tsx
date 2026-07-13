@@ -311,26 +311,29 @@ items: cart.map((item) => ({
 
       // ✅ API SAVE
 
-      try {
+try {
 
-        await fetch(
-          "https://api.harzo.in/api/orders/create",
-          {
-            method: "POST",
+  const response = await fetch(
+    "https://api.harzo.in/api/orders/create",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(orderData),
+    }
+  );
 
-            headers: {
-              "Content-Type":
-                "application/json",
-            },
+  const result = await response.json();
 
-            body: JSON.stringify(orderData),
-          }
-        );
+  console.log("ORDER API STATUS:", response.status);
+  console.log("ORDER API RESPONSE:", result);
 
-      } catch (e) {
+} catch (e) {
 
-        console.log("API ERROR:", e);
-      }
+  console.log("API ERROR:", e);
+
+}
 
       // ✅ CLEAR CART
       // TESTING KE LIYE OFF HAI
