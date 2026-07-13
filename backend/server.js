@@ -27,6 +27,7 @@ const app = express();
 
 app.use(cors({
   origin: [
+    "http://localhost:8082",
     "http://localhost:8081",
     "https://admin.harzo.in",
     "https://harzo.in"
