@@ -65,19 +65,7 @@ authMiddleware,
 orderController.assignDelivery
 );
 
-// Accept Order
-router.put(
-"/accept/:id",
-authMiddleware,
-orderController.acceptOrder
-);
 
-// Reject Order
-router.put(
-"/reject/:id",
-authMiddleware,
-orderController.rejectOrder
-);
 
 // Cancel Order
 router.put(
