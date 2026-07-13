@@ -5,10 +5,6 @@ const User = require("../models/User");
 // 🧾 CREATE ORDER
 exports.createOrder = async (req, res) => {
   try {
-
-   console.log("===== NEW ORDER =====");
-console.log(req.body);
-console.log("EMAIL:", req.body.userEmail);
     
     const { cartTotal, offerId, userId } = req.body;
 
