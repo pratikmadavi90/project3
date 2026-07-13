@@ -36,13 +36,7 @@ await DeliveryBoy.findOne({
 online:true
 });
 
-if(!deliveryBoy){
 
-return res.status(400).json({
-message:"No Delivery Boy Online"
-});
-
-}
 
 const order = new Order({
 
@@ -54,13 +48,16 @@ const order = new Order({
 
   orderId:"ORD"+Date.now(),
 
-  deliveryBoy:{
-    name:deliveryBoy.name,
-    phone:deliveryBoy.mobile
-  },
+deliveryBoy: deliveryBoy
+  ? {
+      name: deliveryBoy.name,
+      phone: deliveryBoy.mobile
+    }
+  : {},
 
-  deliveryBoyId:
-  deliveryBoy.deliveryId
+deliveryBoyId: deliveryBoy
+  ? deliveryBoy.deliveryId
+  : ""
 
 });
 
