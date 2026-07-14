@@ -1,11 +1,31 @@
 const Order = require("../models/Order");
 const { applyOffer } = require("../utils/offerHelper");
 const User = require("../models/User");
+const Product = require("../models/Product");
 
 // 🧾 CREATE ORDER
 exports.createOrder = async (req, res) => {
   try {
     const { cartTotal, offerId, userId } = req.body;
+
+// ✅ Stock Check
+for (const item of req.body.items) {
+
+  const product = await Product.findById(item.productId);
+
+  if (!product) {
+    return res.status(404).json({
+      message: `${item.name} not found`
+    });
+  }
+
+  if (product.stock.quantity < item.qty) {
+    return res.status(400).json({
+      message: `Only ${product.stock.quantity} ${item.name} available`
+    });
+  }
+
+}
 
     let finalAmount = cartTotal;
 
@@ -134,6 +154,28 @@ exports.updateStatus = async (req, res) => {
       { new: true }
     );
 
+if (status === "Delivered") {
+
+  for (const item of order.items) {
+
+    const product = await Product.findById(item.productId);
+
+    if (!product) continue;
+
+    product.stock.quantity -= item.qty;
+
+    if (product.stock.quantity < 0) {
+      product.stock.quantity = 0;
+    }
+
+    product.stock.inStock = product.stock.quantity > 0;
+
+    await product.save();
+
+  }
+
+}
+    
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
