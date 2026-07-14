@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-
+const jwt = require("jsonwebtoken");
 let otpStore = {};
 
 // ✅ SES transporter
@@ -69,8 +69,20 @@ exports.verifyOtp = async (req, res) => {
     return res.json({ success: false, message: "Invalid OTP" });
   }
 
+  
   // OTP correct → delete
-  delete otpStore[email];
+delete otpStore[email];
 
-  res.json({ success: true, message: "Login successful" });
+const token = jwt.sign(
+  { email },
+  process.env.JWT_SECRET,
+  { expiresIn: "7d" }
+);
+
+res.json({
+  success: true,
+  message: "Login successful",
+  token
+});
+
 };
