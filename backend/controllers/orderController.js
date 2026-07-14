@@ -305,20 +305,35 @@ orders
 const liveOrder =
 await Order.findOne({
 
-deliveryBoyId:deliveryBoyId,
+createdAt:{
+  $gte:startOfDay,
+  $lte:endOfDay
+},
 
-status:{
-$in:[
-"Pending",
-"Accepted",
-"Picked Up",
-"Out for Delivery"
+status:"Pending",
+
+$or:[
+  { deliveryBoyId: deliveryBoyId },
+  { deliveryBoyId: "" },
+  { deliveryBoyId: null }
 ]
-}
 
 }).sort({
-createdAt:-1
+createdAt:1
 });
+
+if(
+  liveOrder &&
+  (!liveOrder.deliveryBoyId ||
+   liveOrder.deliveryBoyId === "")
+){
+
+  liveOrder.deliveryBoyId =
+  deliveryBoyId;
+
+  await liveOrder.save();
+
+}
 
 console.log(
 "LIVE ORDER =",
