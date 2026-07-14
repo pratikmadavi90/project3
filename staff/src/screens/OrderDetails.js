@@ -247,11 +247,11 @@ marginBottom:100
 {/* Accept Button */}
 
 <TouchableOpacity
-onPress={()=>updateStatus("Accepted")}
-disabled={order?.status !== "Pending"}
+onPress={() => updateStatus("Staff Accepted")}
+disabled={order?.status !== "Delivery Accepted"}
 style={{
 backgroundColor:
-order?.status==="Pending"
+order?.status==="Delivery Accepted"
 ? "#00C853"
 : "#ccc",
 
@@ -287,7 +287,7 @@ borderRadius:12,
 marginBottom:12,
 
 opacity:
-order?.status==="Accepted"
+order?.status==="Staff Accepted"
 ? 1
 : 0.7
 }}

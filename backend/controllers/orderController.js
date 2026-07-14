@@ -116,7 +116,13 @@ exports.updateStatus = async (req, res) => {
     let update = { status };
 
     // timestamps auto update
-    if (status === "Accepted") update["timestamps.acceptedAt"] = new Date();
+    if (
+  status === "Delivery Accepted" ||
+  status === "Staff Accepted"
+) {
+  update["timestamps.acceptedAt"] = new Date();
+}
+
     if (status === "Packed") update["timestamps.packedAt"] = new Date();
     if (status === "Out for Delivery") update["timestamps.outForDeliveryAt"] = new Date();
     if (status === "Delivered")update["deliveredAt"] = new Date();
@@ -360,8 +366,9 @@ orders.filter(
 o=>
 [
 "Pending",
-"Accepted",
-"Picked Up",
+"Delivery Accepted",
+"Staff Accepted",
+"Packed",
 "Out for Delivery"
 ].includes(o.status)
 ).length,

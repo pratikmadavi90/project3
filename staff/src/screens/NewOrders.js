@@ -39,7 +39,12 @@ const response=await fetch(API);
 
 const data=await response.json();
 
-setOrders(data);
+setOrders(
+  data.filter(order =>
+    order.deliveryAccepted === true &&
+    order.status === "Accepted"
+  )
+);
 
 }
 catch(err){
