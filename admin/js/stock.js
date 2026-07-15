@@ -29,6 +29,20 @@ function getStockText(p) {
   return "In Stock ✅";
 }
 
+function getExpiryStatus(expiryDate) {
+  if (!expiryDate) return "N/A";
+
+  const today = new Date();
+  const expiry = new Date(expiryDate);
+
+  const diffDays = Math.ceil((expiry - today) / (1000 * 60 * 60 * 24));
+
+  if (diffDays < 0) return "🔴 Expired";
+  if (diffDays <= 30) return "🟡 Near Expiry";
+
+  return "🟢 Good";
+}
+
 // 🔹 Load products
 async function loadProducts() {
   const search = document.getElementById("search").value;
@@ -49,11 +63,19 @@ async function loadProducts() {
         <tr>
           <td>${p.name}</td>
 
-          <td class="${getStockClass(p)}">
-            ${p.stock.quantity}
-            <br>
-            <small>${getStockText(p)}</small>
-          </td>
+        <td class="${getStockClass(p)}">
+        ${p.stock.quantity}
+        <br>
+       <small>${getStockText(p)}</small>
+        </td>
+
+<td>
+  ${p.expiryDate
+    ? new Date(p.expiryDate).toLocaleDateString("en-IN")
+    : "N/A"}
+  <br>
+  <small>${getExpiryStatus(p.expiryDate)}</small>
+</td>
 
           <td>
             <input type="number" id="s-${p._id}" value="${p.stock.quantity}">
