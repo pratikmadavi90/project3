@@ -310,7 +310,10 @@ async function getProducts() {
 
     console.log("PRODUCT DATA:", data);
 
-    displayProducts(data);
+    allProducts = data;
+    displayProducts(allProducts);
+
+
   } catch (err) {
     console.error("Error loading products:", err);
   }
@@ -436,6 +439,24 @@ Household: [
       subCategoryInput.value = this.value;
     });
   }
+
+
+  function searchProduct() {
+  const search = document.getElementById("search").value.toLowerCase().trim();
+
+  const filtered = allProducts.filter(p => {
+    return (
+      (p.name || "").toLowerCase().includes(search) ||
+      (p.category || "").toLowerCase().includes(search) ||
+      (p.subCategory || "").toLowerCase().includes(search) ||
+      (p.brand || "").toLowerCase().includes(search)
+    );
+  });
+
+  displayProducts(filtered);
+}
+
+window.searchProduct = searchProduct;
 
   // 🔥 PRODUCTS LOAD
   getProducts();
