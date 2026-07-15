@@ -120,7 +120,7 @@ button:hover {
 /* 🔥 IMAGE */
 .slider img {
   width: 100%;
-  height: 140px;
+  height: 180px;
   object-fit: contain;   /* 🔥 full image dikhegi */
   background: #fff;
   border-radius: 10px;
