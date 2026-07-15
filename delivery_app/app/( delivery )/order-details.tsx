@@ -33,9 +33,8 @@ status:initialStatus
 
 const [status,setStatus]=
 useState(
-initialStatus || "Accepted"
+initialStatus || "Delivery Accepted"
 );
-
 
 
 const [showOptions,setShowOptions]=
@@ -179,21 +178,6 @@ Update Status
 {showOptions && (
 
 <View style={styles.optionBox}>
-
-
-
-
-<TouchableOpacity
-onPress={()=>
-updateStatus("Picked Up")
-}
->
-
-<Text style={styles.optionText}>
-📦 Picked Up
-</Text>
-
-</TouchableOpacity>
 
 
 <TouchableOpacity

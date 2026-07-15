@@ -212,7 +212,7 @@ distance:order?.address?.city,
 amount:order?.finalAmount,
 landmark:order?.address?.fullAddress,
 phone:order?.user?.phone,
-status:"Accepted"
+status: "Delivery Accepted"
 }
 });
 
@@ -502,7 +502,14 @@ Current Order
 dashboard.orders
 .filter(
 order =>
-["Pending","Accepted","Picked Up","Out for Delivery"]
+[
+  "Pending",
+  "Delivery Accepted",
+  "Staff Accepted",
+  "Packed",
+  "Out for Delivery"
+]
+
 .includes(order.status)
 )
 .map((order,index)=>(
@@ -572,7 +579,7 @@ distance:order?.address?.city,
 amount:order?.totalAmount,
 landmark:order?.address?.fullAddress,
 phone:order?.user?.phone,
-status:"Accepted"
+status: "Delivery Accepted"
 }
 });
 

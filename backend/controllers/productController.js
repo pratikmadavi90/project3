@@ -19,8 +19,9 @@ const normalizeText = (text) => {
 const addProduct = async (req, res) => {
   try {
 
-    console.log("BODY 👉", req.body);
-    console.log("FILES:", req.files);
+ console.log("BODY 👉", req.body);
+console.log("Expiry 👉", req.body.expiryDate);
+console.log("FILES:", req.files);
 
     // ✅ S3 image URLs (IMPORTANT FIX)
     const imageUrls = req.files && req.files.length > 0
@@ -32,8 +33,7 @@ const addProduct = async (req, res) => {
 category: normalizeText(req.body.category),
 brand: normalizeText(req.body.brand),
 subCategory: normalizeText(req.body.subCategory),
-      weight: req.body.weight,
-      description: req.body.description,
+weight: req.body.weight,expiryDate: req.body.expiryDate,
 
       // 🔥 IMAGE FIX
       images: {
@@ -94,9 +94,7 @@ const updateProduct = async (req, res) => {
   category: normalizeText(req.body.category),
   brand: normalizeText(req.body.brand),
   subCategory: normalizeText(req.body.subCategory),
-
-  weight: req.body.weight,
-  description: req.body.description,
+  weight: req.body.weight,expiryDate: req.body.expiryDate,
 
       pricing: {
         mrp: Number(req.body.mrp) || 0,

@@ -6,6 +6,7 @@ TouchableOpacity,
 FlatList,
 ActivityIndicator
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const API = "https://api.harzo.in/api/orders";
 
@@ -35,7 +36,13 @@ const loadOrders=async()=>{
 
 try{
 
-const response=await fetch(API);
+const token = await AsyncStorage.getItem("staffToken");
+
+const response = await fetch(API, {
+  headers: {
+    Authorization: `Bearer ${token}`
+  }
+});
 
 const data=await response.json();
 

@@ -7,6 +7,8 @@ TouchableOpacity,
 StyleSheet,
 Alert
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 const API="https://api.harzo.in/api/login";
 
@@ -45,13 +47,21 @@ password
 
 const data=await response.json();
 
-if(
-data.message==="Login successful"
-){
+if (data.message === "Login successful") {
 
-goDashboard();
+    await AsyncStorage.setItem(
+      "staffToken",
+      data.token
+    );
 
-}else{
+    await AsyncStorage.setItem(
+      "staff",
+      JSON.stringify(data.staff || data.user)
+    );
+
+    goDashboard();
+
+} else {
 
 Alert.alert(
 "Error",

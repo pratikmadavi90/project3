@@ -293,21 +293,7 @@ items: cart.map((item) => ({
   createdAt: new Date(),
 };
 
-      // ✅ SAVE LOCAL
 
-      const ordersData =
-        await AsyncStorage.getItem("orders");
-
-      const existingOrders = ordersData
-        ? JSON.parse(ordersData)
-        : [];
-
-      existingOrders.unshift(orderData);
-
-      await AsyncStorage.setItem(
-        "orders",
-        JSON.stringify(existingOrders)
-      );
 
       // ✅ API SAVE
 
@@ -325,6 +311,28 @@ try {
   );
 
   const result = await response.json();
+
+if (!response.ok) {
+  setLoading(false);
+  Alert.alert("Order Failed", result.message);
+  return;
+}
+
+        // ✅ SAVE LOCAL
+
+      const ordersData =
+        await AsyncStorage.getItem("orders");
+
+      const existingOrders = ordersData
+        ? JSON.parse(ordersData)
+        : [];
+
+      existingOrders.unshift(orderData);
+
+      await AsyncStorage.setItem(
+        "orders",
+        JSON.stringify(existingOrders)
+      );
 
   console.log("ORDER API STATUS:", response.status);
   console.log("ORDER API RESPONSE:", result);

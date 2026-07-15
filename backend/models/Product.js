@@ -25,6 +25,11 @@ const productSchema = new mongoose.Schema({
     default: ""
   },
 
+  expiryDate: {
+  type: Date,
+  default: null
+  },
+
   sku: String,
   barcode: String,
 
