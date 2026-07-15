@@ -107,15 +107,19 @@ const updateProduct = async (req, res) => {
       }
     };
 
-    // 🔥 IMAGE UPDATE FIX
-    if (req.files && req.files.length > 0) {
-      const imageUrls = req.files.map(file => file.location);
+    // 🔥 Image sirf tab update hogi jab new image upload hogi
+const existingProduct = await Product.findById(req.params.id);
 
-      updateData.images = {
-        thumbnail: imageUrls[0],
-        gallery: imageUrls
-      };
-    }
+if (req.files && req.files.length > 0) {
+  const imageUrls = req.files.map(file => file.location);
+
+  updateData.images = {
+    thumbnail: imageUrls[0],
+    gallery: imageUrls
+  };
+} else {
+  updateData.images = existingProduct.images;
+}
 
     const updated = await Product.findByIdAndUpdate(
       req.params.id,
