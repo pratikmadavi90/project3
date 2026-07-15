@@ -19,7 +19,7 @@ const mrpInput = document.getElementById("mrp");
 const priceInput = document.getElementById("price");
 const stockInput = document.getElementById("stock");
 const weightInput = document.getElementById("weight");
-const descriptionInput = document.getElementById("description");
+const expiryDateInput = document.getElementById("expiryDate");
 
   const files = document.getElementById("images").files;
 
@@ -33,7 +33,7 @@ formData.append("mrp", mrpInput.value);
 formData.append("price", priceInput.value);
 formData.append("stock", stockInput.value);
 formData.append("weight", weightInput.value);
-formData.append("description", descriptionInput.value);
+formData.append("expiryDate", expiryDateInput.value);
 
   // 🔥 IMAGE FIX (DIRECT S3 UPLOAD)
   if (files.length > 6) {
@@ -153,7 +153,7 @@ console.log(product);
   document.getElementById("stock").value = product.stock?.quantity || "";
 
   document.getElementById("weight").value = product.weight || "";
-  document.getElementById("description").value = product.description || "";
+  document.getElementById("expiryDate").value =product.expiryDate? product.expiryDate.split("T")[0]: "";
 
   document.getElementById("saveBtn").innerText = "Update Product";
 }
@@ -174,7 +174,7 @@ function cancelEdit() {
   document.getElementById("price").value = "";
   document.getElementById("stock").value = "";
   document.getElementById("weight").value = "";
-  document.getElementById("description").value = "";
+  document.getElementById("expiryDate").value = "";
 }
 
 // 👉 LOAD PRODUCTS
@@ -264,10 +264,13 @@ console.log("WEIGHT VALUE:", p.weight);
 
         <del>₹${p.pricing?.mrp || 0}</del> ₹${p.pricing?.sellingPrice || 0}<br>
 
-        Weight: ${weight || "N/A"}<br>
-        Stock: ${stock || 0}<br>
+       Weight: ${weight || "N/A"}<br>
+      Stock: ${stock || 0}<br>
+       Expiry: ${p.expiryDate ? new Date(p.expiryDate).toLocaleDateString("en-IN") : "N/A"}<br>
 
-        <div class="btns">
+       <div class="btns">
+
+
           <button onclick="editProduct('${p._id}')">Edit</button>
           <button onclick="deleteProduct('${p._id}')">Delete</button>
         </div>
@@ -300,7 +303,7 @@ function clearForm() {
   document.getElementById("price").value = "";
   document.getElementById("stock").value = "";
   document.getElementById("weight").value = "";
-  document.getElementById("description").value = "";
+  document.getElementById("expiryDate").value = "";
 }
 
 async function getProducts() {
