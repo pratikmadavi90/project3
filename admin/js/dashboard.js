@@ -261,7 +261,7 @@ container.innerHTML += `
 
 <div class="order-item">
 
-<h3>Order #${order._id}</h3>
+<h3>Order #${order.orderId || order._id}</h3>
 
 <p>
 Customer:
