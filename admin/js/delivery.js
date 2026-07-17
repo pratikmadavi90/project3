@@ -114,9 +114,11 @@ list.innerHTML += `
 
 <td>₹${area.freeDeliveryAbove || 0}</td>
 
+<td>${area.storeTiming || "24×7"}</td>
+
 <td>₹${area.minimumOrder || 0}</td>
 
-<td>${area.storeTiming || "24×7"}</td>
+
 
 <td>
 
