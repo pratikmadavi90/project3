@@ -236,6 +236,11 @@ const response = await fetch(
 
 const deliveryData = await response.json();
 
+console.log(
+  "DELIVERY API =",
+  JSON.stringify(deliveryData, null, 2)
+);
+
 if (!deliveryData.available) {
   Alert.alert(
     "Delivery Not Available",

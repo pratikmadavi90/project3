@@ -105,6 +105,9 @@ console.log("ZONE FROM DB:", zone);
 
  console.log("FREE DELIVERY DB:", zone.freeDeliveryAbove);
 console.log("MIN ORDER DB:", zone.minimumOrder);   
+console.log("REQUEST BODY:", req.body);
+console.log("MATCHED ZONE ID:", zone._id);
+console.log("MATCHED ZONE:", JSON.stringify(zone, null, 2));
 
     res.json({
   available: true,

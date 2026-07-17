@@ -142,9 +142,7 @@ livePincode
 
       // GET ADMIN DELIVERY AREAS
       const response =
-      await fetch(
-        "https://api.harzo.in/api/delivery"
-      );
+   await fetch("https://api.harzo.in/api/delivery/all")
 
      const areasResponse =
 await response.json();
@@ -153,33 +151,21 @@ const areas =
 areasResponse.data || areasResponse;
 
 
-      // MATCH AREA + PINCODE
-const matchedArea =
-areas.find((item)=>{
-
-const area =
-(item.name || "")
-.toLowerCase()
-.trim();
-
-const pin =
-(item.pincode || "")
-.toString()
-.trim();
-
-return (
-
-liveArea
-.toLowerCase()
-.includes(area)
-
-||
-
-pin === livePincode
-
+ // MATCH AREA (pehle name se)
+let matchedArea = areas.find((item) =>
+  liveArea
+    .toLowerCase()
+    .includes((item.name || "").toLowerCase().trim())
 );
 
-});
+// Agar name se nahi mila to pincode se
+if (!matchedArea) {
+  matchedArea = areas.find(
+    (item) =>
+      (item.pincode || "").toString().trim() ===
+      livePincode.toString().trim()
+  );
+}
 
 
       // DELIVERY NOT AVAILABLE
@@ -199,6 +185,21 @@ pin === livePincode
         "user",
         JSON.stringify(user)
       );
+
+      
+
+      // SAVE DELIVERY SETTINGS
+await AsyncStorage.setItem(
+  "deliverySettings",
+  JSON.stringify({
+    deliveryCharge: matchedArea.charge,
+    deliveryTime: matchedArea.time,
+    freeDeliveryAbove: matchedArea.freeDeliveryAbove,
+    minimumOrder: matchedArea.minimumOrder,
+    landmark: matchedArea.landmark,
+    address: matchedArea.address,
+  })
+);
 
 
       // GO PAYMENT

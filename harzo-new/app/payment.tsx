@@ -111,19 +111,22 @@ let heavyCharge = 0;
 // Discount
 let discount = 0;
 
+console.log("TOTAL =", total);
+console.log("FREE ABOVE =", deliverySettings?.freeDeliveryAbove);
+console.log(
+  "FREE CONDITION =",
+  Number(total) >= Number(deliverySettings?.freeDeliveryAbove)
+);
+
 // FREE DELIVERY
 if (
-  deliverySettings?.freeDeliveryAbove > 0 &&
-  total >= deliverySettings.freeDeliveryAbove
+  Number(deliverySettings?.freeDeliveryAbove) > 0 &&
+  Number(total) >= Number(deliverySettings?.freeDeliveryAbove)
 ) {
-
   deliveryCharge = 0;
-
 } else {
-
   deliveryCharge =
-    deliverySettings?.deliveryCharge || 40;
-
+    Number(deliverySettings?.deliveryCharge || 40);
 }
 
 

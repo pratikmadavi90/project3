@@ -130,9 +130,9 @@ export default function CartScreen() {
 
 try {
 
-  const response = await fetch(
-    "https://api.harzo.in/api/delivery"
-  );
+const response = await fetch(
+  "https://api.harzo.in/api/delivery/all"
+);
 
   const text = await response.text();
 
@@ -160,12 +160,12 @@ try {
 
   // ✅ MATCH AREA
 
-  const matchedArea =
-    areas.find((item) =>
-      fullAddress.includes(
-        item.area.toLowerCase()
-      )
-    );
+const matchedArea =
+  areas.data.find((item) =>
+    fullAddress.includes(
+      item.name.toLowerCase()
+    )
+  );
 
   // ❌ AREA NOT AVAILABLE
 
