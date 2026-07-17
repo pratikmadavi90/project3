@@ -33,6 +33,11 @@ const deliveryZoneSchema = new mongoose.Schema({
     default: 0
   },
 
+ storeTiming: {
+  type: String,
+  default: "",
+}, 
+
   // 📍 Landmark (optional)
   landmark: {
     type: String

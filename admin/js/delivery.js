@@ -12,6 +12,7 @@ async function addArea() {
   const time = document.getElementById("time").value;
   const freeDeliveryAbove = document.getElementById("freeDeliveryAbove").value;
   const minimumOrder = document.getElementById("minimumOrder").value;
+  const storeTiming = document.getElementById("storeTiming").value;
 
   if (!name || !charge) {
     return alert("Area name aur charge required hai");
@@ -23,7 +24,8 @@ async function addArea() {
     charge,
     time,
     freeDeliveryAbove,
-    minimumOrder
+    minimumOrder,
+    storeTiming
   };
 
   // ✏️ UPDATE
@@ -67,6 +69,7 @@ document.getElementById("saveBtn").innerText = "➕ Add Area";
   document.getElementById("time").value = "";
   document.getElementById("freeDeliveryAbove").value = "";
   document.getElementById("minimumOrder").value = "";
+  document.getElementById("storeTiming").value = "";
 
   loadAreas();
 
@@ -112,6 +115,8 @@ list.innerHTML += `
 <td>₹${area.freeDeliveryAbove || 0}</td>
 
 <td>₹${area.minimumOrder || 0}</td>
+
+<td>${area.storeTiming || "24×7"}</td>
 
 <td>
 
@@ -161,7 +166,7 @@ function editArea(id) {
   document.getElementById("time").value = area.time || "";
   document.getElementById("freeDeliveryAbove").value = area.freeDeliveryAbove || "";
   document.getElementById("minimumOrder").value = area.minimumOrder || "";
-
+  document.getElementById("storeTiming").value = area.storeTiming || "";
   document.getElementById("saveBtn").innerText = "💾 Update Area";
 
   window.scrollTo({

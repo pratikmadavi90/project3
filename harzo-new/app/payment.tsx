@@ -38,23 +38,42 @@ export default function Payment() {
 
   const loadDeliverySettings = async () => {
 
-    const data = await AsyncStorage.getItem("deliverySettings");
+    try {
 
-if (data) {
-  const settings = JSON.parse(data);
+      const userData = await AsyncStorage.getItem("user");
+      if (!userData) return;
 
-  console.log("Delivery Settings:", settings);
-  console.log("FREE ABOVE =", settings.freeDeliveryAbove);
-  console.log("TYPE =", typeof settings.freeDeliveryAbove);
+      const user = JSON.parse(userData);
 
-  setDeliverySettings(settings);
-}
+      const response = await fetch(
+        "https://api.harzo.in/api/delivery/check",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: user.city,
+            pincode: user.pincode,
+          }),
+        }
+      );
+
+      const result = await response.json();
+
+      if (result.available) {
+        setDeliverySettings(result);
+      }
+
+    } catch (err) {
+      console.log(err);
+    }
 
   };
 
   loadDeliverySettings();
 
-}, []); 
+}, []);
 
 // ✅ CALCULATIONS
 

@@ -3,13 +3,14 @@ const DeliveryZone = require("../models/DeliveryZone");
 // ➕ Add Area (with full details)
 exports.addZone = async (req, res) => {
   try {
-    const {
+const {
   name,
   pincode,
   charge,
   time,
   freeDeliveryAbove,
   minimumOrder,
+  storeTiming,
   landmark,
   address
 } = req.body;
@@ -26,6 +27,7 @@ const zone = new DeliveryZone({
   time,
   freeDeliveryAbove,
   minimumOrder,
+  storeTiming,
   landmark,
   address,
   isActive: true
@@ -114,13 +116,14 @@ console.log("MATCHED ZONE ID:", zone._id);
 console.log("MATCHED ZONE:", JSON.stringify(zone, null, 2));
 
 
-    res.json({
+res.json({
   available: true,
   area: zone.name,
   deliveryCharge: zone.charge,
   deliveryTime: zone.time,
   freeDeliveryAbove: zone.freeDeliveryAbove,
   minimumOrder: zone.minimumOrder,
+  storeTiming: zone.storeTiming,
   landmark: zone.landmark,
   address: zone.address
 });

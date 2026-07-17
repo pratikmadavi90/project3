@@ -151,14 +151,23 @@ const areas =
 areasResponse.data || areasResponse;
 
 
- // MATCH AREA (pehle name se)
-let matchedArea = areas.find((item) =>
-  liveArea
-    .toLowerCase()
-    .includes((item.name || "").toLowerCase().trim())
+// ✅ Pehle user ke village/city se exact match
+let matchedArea = areas.find(
+  (item) =>
+    (item.name || "").trim().toLowerCase() ===
+    (user.city || "").trim().toLowerCase()
 );
 
-// Agar name se nahi mila to pincode se
+// ✅ Agar city se nahi mila to GPS area se
+if (!matchedArea) {
+  matchedArea = areas.find(
+    (item) =>
+      (item.name || "").trim().toLowerCase() ===
+      liveArea.trim().toLowerCase()
+  );
+}
+
+// ✅ Last option: pincode
 if (!matchedArea) {
   matchedArea = areas.find(
     (item) =>

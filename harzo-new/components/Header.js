@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+
 import {
   View,
   Text,
@@ -7,9 +9,30 @@ import {
   Platform,
 } from "react-native";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { router } from "expo-router";
 
 export default function Header() {
+
+  const [deliveryTime, setDeliveryTime] = useState("One Day Delivery");
+
+  useEffect(() => {
+
+    const loadDeliveryTime = async () => {
+
+      const data = await AsyncStorage.getItem("deliverySettings");
+
+      if (data) {
+        const settings = JSON.parse(data);
+        setDeliveryTime(settings.deliveryTime || "One Day Delivery");
+      }
+
+    };
+
+    loadDeliveryTime();
+
+  }, []);
 
   // 🔍 SEARCH OPEN
   const openSearch = () => {
@@ -22,10 +45,9 @@ export default function Header() {
       {/* TOP ROW */}
       <View style={styles.topRow}>
 
-        <Text style={styles.time}>
-          ⚡ one day delivery
-        </Text>
-
+<Text style={styles.time}>
+  ⚡ {deliveryTime} Minute Delivery
+</Text>
       </View>
 
       {/* LOCATION */}

@@ -67,7 +67,32 @@ console.log(
 setUser({
   ...parsedUser
 });
-        }
+
+const response = await fetch(
+  "https://api.harzo.in/api/delivery/check",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: parsedUser.village,
+      pincode: parsedUser.pincode,
+    }),
+  }
+);
+
+const deliveryData = await response.json();
+
+if (deliveryData.available) {
+  await AsyncStorage.setItem(
+    "deliverySettings",
+    JSON.stringify(deliveryData)
+  );
+}
+ }
+
+
 
       } catch (err) {
 

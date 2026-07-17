@@ -18,6 +18,7 @@ import {
 } from "react-native";
 import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -25,6 +26,47 @@ export default function HomeScreen() {
   // ✅ FIRST products state
   const [products, setProducts] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+
+ const refreshDeliverySettings = async () => {
+
+  try {
+
+    const userData = await AsyncStorage.getItem("user");
+
+    if (!userData) return;
+
+    const user = JSON.parse(userData);
+
+    if (!user.village || !user.pincode) return;
+
+    const response = await fetch(
+      "https://api.harzo.in/api/delivery/check",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: user.village,
+          pincode: user.pincode,
+        }),
+      }
+    );
+
+    const deliveryData = await response.json();
+
+    if (deliveryData.available) {
+      await AsyncStorage.setItem(
+        "deliverySettings",
+        JSON.stringify(deliveryData)
+      );
+    }
+
+  } catch (err) {
+    console.log(err);
+  }
+
+}; 
 
  const fetchProducts = () => {
 
@@ -49,7 +91,7 @@ export default function HomeScreen() {
 };
 
 useEffect(() => {
-
+refreshDeliverySettings();
   fetchProducts();
 
 }, []);
