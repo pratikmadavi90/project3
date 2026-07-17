@@ -80,6 +80,10 @@ exports.checkDelivery = async (req, res) => {
   try {
     const { pincode, name } = req.body;
 
+console.log("REQUEST BODY:", req.body);
+console.log("NAME:", name);
+console.log("PINCODE:", pincode);
+
 // 👉 Exact village + pincode match
 let zone = await DeliveryZone.findOne({
   name: { $regex: new RegExp(`^${name}$`, "i") },
@@ -108,6 +112,7 @@ console.log("MIN ORDER DB:", zone.minimumOrder);
 console.log("REQUEST BODY:", req.body);
 console.log("MATCHED ZONE ID:", zone._id);
 console.log("MATCHED ZONE:", JSON.stringify(zone, null, 2));
+
 
     res.json({
   available: true,
