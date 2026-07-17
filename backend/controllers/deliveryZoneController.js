@@ -80,21 +80,21 @@ exports.checkDelivery = async (req, res) => {
   try {
     const { pincode, name } = req.body;
 
-    // 👉 Pincode priority
-    let zone = await DeliveryZone.findOne({
-      pincode,
-      isActive: true
-    });
+// 👉 Exact village + pincode match
+let zone = await DeliveryZone.findOne({
+  name: { $regex: new RegExp(`^${name}$`, "i") },
+  pincode,
+  isActive: true
+});
 
 console.log("ZONE FROM DB:", zone);
 
-    // 👉 Agar pincode nahi mila → name se check
-    if (!zone && name) {
-      zone = await DeliveryZone.findOne({
-        name: { $regex: new RegExp(name, "i") },
-        isActive: true
-      });
-    }
+if (!zone) {
+  return res.json({
+    available: false,
+    message: "Delivery not available in your area"
+  });
+}
 
     if (!zone) {
       return res.json({
