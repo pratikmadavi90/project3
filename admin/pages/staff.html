@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harzo | Staff Management</title>
+
+    <link rel="stylesheet" href="../css/staff.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="page-header">
+        <h2>
+            <i class="fa-solid fa-users"></i>
+            Staff Management
+        </h2>
+
+        <button id="refreshBtn">
+            <i class="fa-solid fa-rotate"></i>
+            Refresh
+        </button>
+    </div>
+
+    <div class="card">
+
+        <h3>Add Staff</h3>
+
+        <div class="form-grid">
+
+            <div class="input-box">
+                <label>Name</label>
+                <input type="text" id="name" placeholder="Enter Staff Name">
+            </div>
+
+            <div class="input-box">
+                <label>Phone Number</label>
+                <input type="text" id="phone" maxlength="10" placeholder="9876543210">
+            </div>
+
+            <div class="input-box">
+                <label>Password</label>
+                <input type="password" id="password">
+            </div>
+
+            <div class="input-box">
+                <label>Status</label>
+
+                <select id="status">
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
+
+            </div>
+
+        </div>
+
+        <button id="saveBtn">
+            <i class="fa-solid fa-floppy-disk"></i>
+            Save Staff
+        </button>
+
+    </div>
+
+    <div class="card">
+
+        <div class="table-header">
+
+            <h3>All Staff</h3>
+
+            <input
+                type="text"
+                id="search"
+                placeholder="Search Staff..."
+            >
+
+        </div>
+
+        <table>
+
+            <thead>
+
+            <tr>
+
+                <th>#</th>
+                <th>Name</th>
+                <th>Staff ID</th>
+                <th>Phone</th>
+                <th>Status</th>
+                <th>Online</th>
+                <th>Today's Packing</th>
+                <th>Actions</th>
+
+            </tr>
+
+            </thead>
+
+            <tbody id="staffTable">
+
+                <!-- staff.js -->
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<script src="../js/staff.js"></script>
+
+</body>
+</html>
