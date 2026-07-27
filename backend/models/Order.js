@@ -41,15 +41,18 @@ const orderSchema = new mongoose.Schema({
 
   status: {
     type: String,
-    enum: [
-      "Pending",
-      "Accepted",
-      "Packed",
-      "Out for Delivery",
-      "Delivered",
-      "Cancelled",
-      "Delivery Rejected"
-    ],
+  enum: [
+  "Pending",
+  "Accepted",
+  "Packing",
+  "Packed",
+  "Handed Over",
+  "Out for Delivery",
+  "Delivered",
+  "Cancelled",
+  "Delivery Rejected"
+],
+
     default: "Pending"
   },
 
@@ -79,6 +82,32 @@ deliveryRejectedBy:[
 deliveredAt:{
   type:Date,
   default:null
+},
+
+packedBy: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Staff",
+  default: null
+},
+
+staffId: {
+  type: String,
+  default: null
+},
+
+packingStartedAt: {
+  type: Date,
+  default: null
+},
+
+packedAt: {
+  type: Date,
+  default: null
+},
+
+handoverAt: {
+  type: Date,
+  default: null
 }
 
 }, { timestamps: true });

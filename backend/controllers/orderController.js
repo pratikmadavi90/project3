@@ -127,13 +127,17 @@ exports.getSingleOrder = async (req, res) => {
 // 🔄 UPDATE ORDER STATUS
 exports.updateStatus = async (req, res) => {
   try {
-    const { status } = req.body;
+    const { status, staffId } = req.body;
 
     if (!status) {
       return res.status(400).json({ message: "Status required" });
     }
 
     let update = { status };
+
+    if (staffId) {
+  update.staffId = staffId;
+}
 
     // timestamps auto update
     if (
@@ -143,10 +147,26 @@ exports.updateStatus = async (req, res) => {
   update["timestamps.acceptedAt"] = new Date();
 }
 
-    if (status === "Packed") update["timestamps.packedAt"] = new Date();
-    if (status === "Out for Delivery") update["timestamps.outForDeliveryAt"] = new Date();
-    if (status === "Delivered")update["deliveredAt"] = new Date();
-    if (status === "Delivered") update["timestamps.deliveredAt"] = new Date();
+if (status === "Packing") {
+  update["packingStartedAt"] = new Date();
+}
+
+if (status === "Packed") {
+  update["packedAt"] = new Date();
+}
+
+if (status === "Handed Over") {
+  update["handoverAt"] = new Date();
+}
+
+if (status === "Out for Delivery")
+  update["timestamps.outForDeliveryAt"] = new Date();
+
+if (status === "Delivered")
+  update["deliveredAt"] = new Date();
+
+if (status === "Delivered")
+  update["timestamps.deliveredAt"] = new Date();
 
     const order = await Order.findByIdAndUpdate(
       req.params.id,
