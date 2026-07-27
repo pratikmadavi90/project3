@@ -1,6 +1,6 @@
 const API = "https://api.harzo.in/api/staff";
 
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("adminToken");
 
 const table = document.getElementById("staffTable");
 
