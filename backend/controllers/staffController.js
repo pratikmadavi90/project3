@@ -63,7 +63,8 @@ exports.addStaff = async (req, res) => {
 
 exports.loginStaff = async (req, res) => {
 
-  console.log("===== STAFF LOGIN API HIT =====");
+ console.log("===== STAFF LOGIN API HIT =====");
+console.log(req.body);
 
   try {
 
