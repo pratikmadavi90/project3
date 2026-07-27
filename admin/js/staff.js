@@ -1,5 +1,7 @@
 const API = "https://api.harzo.in/api/staff";
 
+console.log("staff.js loaded");
+
 const token = localStorage.getItem("adminToken");
 
 const table = document.getElementById("staffTable");
@@ -99,6 +101,8 @@ async function loadStaff() {
 let editId = null;
 
 async function addStaff() {
+
+    console.log("Save clicked");
 
     const name = document.getElementById("name").value.trim();
     const phone = document.getElementById("phone").value.trim();
