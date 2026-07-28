@@ -106,6 +106,26 @@ exports.getOrders = async (req, res) => {
   }
 };
 
+// 👤 GET CUSTOMER ORDERS
+exports.getUserOrders = async (req, res) => {
+  try {
+    const orders = await Order.find({
+      userEmail: req.params.email,
+    }).sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      data: orders,
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: err.message,
+    });
+  }
+};
+
 
 // 🔍 GET SINGLE ORDER
 exports.getSingleOrder = async (req, res) => {

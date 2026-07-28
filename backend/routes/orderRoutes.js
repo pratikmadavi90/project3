@@ -41,6 +41,12 @@ authMiddleware,
 orderController.getDeliveryOrder
 );
 
+// Customer Orders
+router.get(
+  "/user/:email",
+  orderController.getUserOrders
+);
+
 
 // Get Single Order
 router.get(
