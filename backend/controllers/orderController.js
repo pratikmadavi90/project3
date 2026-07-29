@@ -428,14 +428,26 @@ $or:[
 createdAt:1
 });
 
-if(
+if (
   liveOrder &&
   (!liveOrder.deliveryBoyId ||
    liveOrder.deliveryBoyId === "")
 ){
 
-  liveOrder.deliveryBoyId =
-  deliveryBoyId;
+  const boy = await DeliveryBoy.findOne({
+    deliveryId: deliveryBoyId
+  });
+
+  if (boy) {
+    liveOrder.deliveryBoy = {
+      name: boy.name,
+      phone: boy.mobile,
+      deliveryId: boy.deliveryId,
+    };
+
+    liveOrder.deliveryBoyId = boy.deliveryId;
+    liveOrder.deliveryAssignedAt = new Date();
+  }
 
   await liveOrder.save();
 
