@@ -47,6 +47,11 @@ router.get(
   orderController.getUserOrders
 );
 
+router.get(
+  "/user/:email/:id",
+  orderController.getUserOrderDetails
+);
+
 
 // Get Single Order
 router.get(
