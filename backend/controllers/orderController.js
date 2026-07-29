@@ -131,7 +131,7 @@ exports.getUserOrderDetails = async (req, res) => {
   try {
 
     const order = await Order.findOne({
-      _id: req.params.id,
+      orderId: req.params.id,
       userEmail: req.params.email,
     });
 
