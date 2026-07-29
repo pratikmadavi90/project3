@@ -68,9 +68,16 @@ const order = new Order({
 
   orderId:"ORD"+Date.now(),
 
-deliveryBoy: {},
+deliveryBoy: deliveryBoy
+  ? {
+      name: deliveryBoy.name,
+      phone: deliveryBoy.mobile
+    }
+  : {},
 
-deliveryBoyId: ""
+deliveryBoyId: deliveryBoy
+  ? deliveryBoy.deliveryId
+  : ""
 
 });
 
