@@ -126,6 +126,30 @@ exports.getUserOrders = async (req, res) => {
   }
 };
 
+// 👤 GET SINGLE CUSTOMER ORDER
+exports.getUserOrderDetails = async (req, res) => {
+  try {
+
+    const order = await Order.findOne({
+      _id: req.params.id,
+      userEmail: req.params.email,
+    });
+
+    if (!order) {
+      return res.status(404).json({
+        message: "Order not found",
+      });
+    }
+
+    res.json(order);
+
+  } catch (err) {
+    res.status(500).json({
+      error: err.message,
+    });
+  }
+};
+
 
 // 🔍 GET SINGLE ORDER
 exports.getSingleOrder = async (req, res) => {
