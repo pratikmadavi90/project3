@@ -266,6 +266,7 @@ exports.assignDelivery = async (req, res) => {
           deliveryBoy.deliveryId
         ),
 
+        deliveryAssignedAt: new Date(),
         status:"Pending"
 
       },
