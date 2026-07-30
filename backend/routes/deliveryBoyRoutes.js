@@ -85,4 +85,10 @@ router.get(
   controller.getMonthlyEarnings
 );
 
+router.put(
+  "/online-status",
+  deliveryBoyAuth,
+  deliveryBoyController.updateOnlineStatus
+);
+
 module.exports = router;

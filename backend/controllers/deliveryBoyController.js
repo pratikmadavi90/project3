@@ -815,3 +815,39 @@ exports.getMonthlyEarnings = async (req, res) => {
   }
 
 };
+
+
+exports.updateOnlineStatus = async (req, res) => {
+
+  try {
+
+    const { online } = req.body;
+
+    const deliveryBoy = await DeliveryBoy.findById(req.deliveryBoy._id);
+
+    if (!deliveryBoy) {
+      return res.status(404).json({
+        success: false,
+        message: "Delivery Boy not found"
+      });
+    }
+
+    deliveryBoy.online = online;
+
+    await deliveryBoy.save();
+
+    res.json({
+      success: true,
+      online: deliveryBoy.online
+    });
+
+  } catch (err) {
+
+    res.status(500).json({
+      success: false,
+      message: err.message
+    });
+
+  }
+
+};
