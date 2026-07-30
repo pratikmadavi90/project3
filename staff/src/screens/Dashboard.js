@@ -7,6 +7,7 @@ StyleSheet,
 ScrollView,
 ActivityIndicator
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const API="https://api.harzo.in/api/orders";
 
@@ -32,72 +33,69 @@ loadOrders();
 },[]);
 
 
-const loadOrders=async()=>{
+const loadOrders = async () => {
 
-try{
+  try {
 
-const response=await fetch(API);
+    const token = await AsyncStorage.getItem("staffToken");
 
-const data=await response.json();
+    const response = await fetch(API, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
 
-const temp=[];
+    const data = await response.json();
 
-for(let i=0;i<7;i++){
+    if (!Array.isArray(data)) {
+      console.log(data);
+      setLoading(false);
+      return;
+    }
 
-const date=new Date();
+    const temp = [];
 
-date.setDate(date.getDate()-i);
+    for (let i = 0; i < 7; i++) {
 
-date.setHours(0,0,0,0);
+      const date = new Date();
 
-const count=data.filter(order=>{
+      date.setDate(date.getDate() - i);
+      date.setHours(0,0,0,0);
 
-const orderDate=new Date(
-order.createdAt
-);
+      const count = data.filter(order => {
 
-orderDate.setHours(
-0,0,0,0
-);
+        const orderDate = new Date(order.createdAt);
 
-const diff=Math.floor(
-(date-orderDate)
-/(1000*60*60*24)
-);
+        orderDate.setHours(0,0,0,0);
 
-return diff===0;
+        const diff = Math.floor(
+          (date - orderDate) / (1000 * 60 * 60 * 24)
+        );
 
-}).length;
+        return diff === 0;
 
+      }).length;
 
-temp.push({
+      temp.push({
+        title: labels[i],
+        orders: count,
+        date: date.toLocaleDateString("en-IN", {
+          day: "numeric",
+          month: "short"
+        })
+      });
 
-title:labels[i],
+    }
 
-orders:count,
+    setDays(temp);
 
-date:date.toLocaleDateString(
-"en-IN",
-{
-day:"numeric",
-month:"short"
-}
-)
+  } catch (err) {
 
-});
+    console.log(err);
 
-}
+  }
 
-setDays(temp);
-
-}
-catch(err){
-
-console.log(err);
-
-}
-
-setLoading(false);
+  setLoading(false);
 
 };
 

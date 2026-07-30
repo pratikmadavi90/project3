@@ -1,14 +1,20 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
+
+import { router } from "expo-router";
 
 const categories = [
-  "All",
-  "Fruits",
-  "Vegetables",
-  "Dairy",
-  "Staples",
-  "Snacks",
-  "Beverages",
-  "Cleaning",
+  { title: "Grocery", category: "Grocery", subCategory: "" },
+  { title: "Snacks", category: "Snacks", subCategory: "" },
+  { title: "Beverages", category: "Beverages", subCategory: "" },
+  { title: "Dairy", category: "Dairy", subCategory: "" },
+  { title: "Personal Care", category: "Personal Care", subCategory: "" },
+  { title: "Household", category: "Household", subCategory: "" },
 ];
 
 export default function CategoryList() {
@@ -19,9 +25,22 @@ export default function CategoryList() {
       contentContainerStyle={styles.container}
     >
       {categories.map((item, index) => (
-        <View key={index} style={styles.box}>
-          <Text style={styles.text}>{item}</Text>
-        </View>
+   <TouchableOpacity
+  key={index}
+  style={styles.box}
+  onPress={() => {
+    router.push({
+      pathname: "/category",
+      params: {
+        category: item.category,
+        subCategory: item.subCategory,
+      },
+    });
+  }}
+>
+  <Text style={styles.text}>{item.title}</Text>
+</TouchableOpacity>
+
       ))}
     </ScrollView>
   );

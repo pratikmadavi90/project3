@@ -19,9 +19,13 @@ import {
 import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useCart } from "../../context/CartContext";
+import ViewCartBar from "../../components/ViewCartBar";
 
 export default function HomeScreen() {
   const router = useRouter();
+
+useCart();
 
   // ✅ FIRST products state
   const [products, setProducts] = useState([]);
@@ -190,16 +194,18 @@ const getImage = (name) => {
     }
   ];
 
-  return (
-  <ScrollView
-  contentContainerStyle={{ paddingBottom: 100 }}
-  refreshControl={
-    <RefreshControl
-      refreshing={refreshing}
-      onRefresh={onRefresh}
-    />
-  }
->  
+return (
+  <View style={{ flex: 1 }}>
+
+    <ScrollView
+      contentContainerStyle={{ paddingBottom: 100 }}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }
+    > 
       <Header />
       <CategoryList />
       <BannerSlider />
@@ -273,8 +279,12 @@ const getImage = (name) => {
         ))}
       </View>
 
-    </ScrollView>
-  );
+  </ScrollView>
+
+ <ViewCartBar />
+
+</View>
+);
 }
 
 const styles = StyleSheet.create({});

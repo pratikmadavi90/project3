@@ -29,6 +29,8 @@ import { useFocusEffect } from "@react-navigation/native";
 
 import { useCart } from "../context/CartContext";
 import { Ionicons } from "@expo/vector-icons";
+import ViewCartBar from "../components/ViewCartBar";
+
 const { width } = Dimensions.get("window");
 
 export default function ProductDetail() {
@@ -595,38 +597,7 @@ activeIndex===index
           />
         </View>
       </Modal>
-
-      {/* CART BAR */}
-      <View style={styles.bottom}>
-        <Text
-          style={{
-            fontWeight: "bold",
-          }}
-        >
-          Cart:{" "}
-          {cart.reduce(
-            (a, b) =>
-              a + b.quantity,
-            0
-          )}
-        </Text>
-
-        <TouchableOpacity
-          style={styles.cartBtn}
-          onPress={() =>
-            addToCart(product)
-          }
-        >
-          <Text
-            style={{
-              color: "#fff",
-              fontWeight: "bold",
-            }}
-          >
-            Add to cart
-          </Text>
-        </TouchableOpacity>
-      </View>
+    <ViewCartBar />
     </View>
   );
 }

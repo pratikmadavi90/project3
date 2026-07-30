@@ -22,6 +22,7 @@ import {
 } from "expo-router";
 
 import { useCart } from "../context/CartContext";
+import ViewCartBar from "../components/ViewCartBar";
 
 export default function CategoryScreen() {
   const router = useRouter();
@@ -200,6 +201,11 @@ export default function CategoryScreen() {
             showsVerticalScrollIndicator={
               false
             }
+
+            contentContainerStyle={{
+            paddingBottom: 180,
+            }}
+
             data={subCategories}
             keyExtractor={(
               item,
@@ -273,7 +279,7 @@ export default function CategoryScreen() {
             data={filteredProducts}
             numColumns={2}
             contentContainerStyle={{
-  paddingBottom: 120
+  paddingBottom: 180
 }}
             key={`products-${selectedSubCategory}`}
             ListEmptyComponent={() => (
@@ -482,6 +488,8 @@ export default function CategoryScreen() {
           />
         </View>
       </View>
+      <ViewCartBar />
+
     </View>
   );
 }
@@ -500,11 +508,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 
-  // LEFT MENU
-  leftMenu: {
-    width: 90,
-    backgroundColor: "#f9f9f9",
-  },
+ leftMenu: {
+  width: 90,
+  backgroundColor: "#f9f9f9",
+  paddingBottom: 180,
+},
 
   categoryItem: {
     alignItems: "center",
@@ -542,6 +550,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 10,
     borderRadius: 12,
+      justifyContent: "space-between",
+  
+
   },
 
   image: {
@@ -550,10 +561,11 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
 
-  name: {
-    fontSize: 14,
-    fontWeight: "600",
-  },
+name: {
+  fontSize: 14,
+  fontWeight: "600",
+  minHeight: 40,
+},
 
   weight: {
     fontSize: 13,

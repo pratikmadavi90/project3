@@ -9,6 +9,8 @@ import {
   ActivityIndicator,
   ScrollView,
   TouchableOpacity,
+  Dimensions,
+  RefreshControl,
 } from "react-native";
 
 import { router } from "expo-router";
@@ -18,12 +20,15 @@ import { getMyReturns } from "../services/returnService";
 
 const API = "https://api.harzo.in/api/orders";
 
+const { width } = Dimensions.get("window");
+
 export default function OrdersScreen() {
 
-  const [orders, setOrders] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+const [orders, setOrders] = useState<any[]>([]);
+const [loading, setLoading] = useState(true);
+const [refreshing, setRefreshing] = useState(false);
 const [returns, setReturns] = useState([]);
-
+const [productIndex, setProductIndex] = useState({});
 
 
 useEffect(() => {
@@ -102,20 +107,15 @@ JSON.stringify(returnRes,null,2)
 
       try {
 
-        const response = await fetch(API);
+const response = await fetch(
+  `https://api.harzo.in/api/orders/user/${encodeURIComponent(user.email)}`
+);
 
-        const data = await response.json();
+const data = await response.json();
 
-        const allOrders =
-          Array.isArray(data)
-            ? data
-            : data?.orders || [];
+console.log("USER ORDERS:", data);
 
-        apiOrders = allOrders.filter(
-          (item: any) =>
-            item?.userEmail === user?.email ||
-            item?.email === user?.email
-        );
+apiOrders = data?.data || []; 
 
       } catch (e) {
 
@@ -172,11 +172,18 @@ currentKey
         error
       );
 
-    } finally {
+ } finally {
+  setLoading(false);
+}
+};
 
-      setLoading(false);
-    }
-  };
+const onRefresh = async () => {
+  setRefreshing(true);
+
+  await fetchOrders();
+
+  setRefreshing(false);
+};
 
   // ✅ LOADING
   if (loading) {
@@ -219,45 +226,35 @@ currentKey
 
   return (
 
-    <FlatList
-      data={orders}
+<FlatList
+  data={orders}
+  keyExtractor={(item, index) =>
+    (item?._id || item?.id || index).toString()
+  }
+  contentContainerStyle={styles.container}
+  showsVerticalScrollIndicator={false}
 
-      keyExtractor={(
-        item: any,
-        index: number
-      ) =>
-        (
-          item?._id ||
-          item?.id ||
-          index
-        ).toString()
-      }
+  refreshing={refreshing}
+  onRefresh={onRefresh}
 
-      contentContainerStyle={
-        styles.container
-      }
+  renderItem={({ item }) => {
 
-      showsVerticalScrollIndicator={false}
+ const key = item?.orderId || item?._id;
 
-      renderItem={({ item }: any) => (
+const currentIndex =
+  (productIndex as any)[key] || 0;
+
+  const currentProduct =
+    item?.items?.[currentIndex];
+
+  return (
 
         
 
         <TouchableOpacity
   style={styles.card}
   activeOpacity={0.9}
-  onPress={() =>
-    router.push({
-      pathname: "/order-details",
-     params: {
-  deliveryBoyName:
-    item?.deliveryBoy?.name || "",
 
-  deliveryBoyPhone:
-    item?.deliveryBoy?.phone || "",
-},
-    })
-  }
 >
 
           {/* HEADER */}
@@ -310,7 +307,11 @@ currentKey
       },
     ]}
   >
-    {item?.status || "Pending"}
+    {
+  item?.status === "Out for Delivery"
+    ? "On the Way"
+    : item?.status || "Pending"
+}
   </Text>
 
 </View>           
@@ -343,91 +344,77 @@ currentKey
             }
           </Text>
 
-          {/* PRODUCTS */}
+{/* PRODUCTS */}
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={{ marginTop: 14 }}
-          >
+<View style={styles.productCard}>
 
-            {
-              item?.items?.map(
-                (
-                  product: any,
-                  index: number
-                ) => (
+  <Image
+    source={{
+      uri:
+        currentProduct?.image ||
+        currentProduct?.images?.thumbnail ||
+        "https://dummyimage.com/100x100/cccccc/000000.png",
+    }}
+    style={styles.image}
+  />
 
-                  <View
-                    key={index}
-                    style={
-                      styles.productCard
-                    }
-                  >
+  <View style={styles.details}>
 
-                    <Image
-                      source={{
-                        uri:
-                          product?.image ||
-                          product?.images
-                            ?.thumbnail ||
-                          "https://dummyimage.com/100x100/cccccc/000000.png",
-                      }}
+    <Text numberOfLines={1} style={styles.title}>
+      {currentProduct?.name}
+    </Text>
 
-                      style={styles.image}
-                    />
+    <Text style={styles.price}>
+      ₹{currentProduct?.price || currentProduct?.pricing?.sellingPrice || 0}
+    </Text>
 
-                    <View
-                      style={
-                        styles.details
-                      }
-                    >
+    <Text style={styles.qty}>
+      Qty: {currentProduct?.quantity || currentProduct?.qty || 1}
+    </Text>
 
-                      <Text
-                        numberOfLines={1}
-                        style={
-                          styles.title
-                        }
-                      >
-                        {
-                          product?.name ||
-                          "Product"
-                        }
-                      </Text>
+    {(item?.items?.length || 0) > 1 && (
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          width: 90,
+          marginTop: 8,
+        }}
+      >
 
-                      <Text
-                        style={
-                          styles.price
-                        }
-                      >
-                        ₹
-                        {
-                          product?.price ||
-                          product?.pricing
-                            ?.sellingPrice ||
-                          0
-                        }
-                      </Text>
+<TouchableOpacity
+  onPress={() => {
+    if (currentIndex > 0) {
+      setProductIndex((prev: any) => ({
+        ...prev,
+        [key]: currentIndex - 1,
+      }));
+    }
+  }}
+>
+  <Text style={{ fontSize: 22 }}>◀</Text>
+</TouchableOpacity>
 
-                      <Text
-                        style={styles.qty}
-                      >
-                        Qty:{" "}
-                        {
-                          product?.quantity ||
-                          product?.qty ||
-                          1
-                        }
-                      </Text>
+ <TouchableOpacity
+  onPress={() => {
+    if (currentIndex < item.items.length - 1) {
+      setProductIndex((prev: any) => ({
+        ...prev,
+        [key]: currentIndex + 1,
+      }));
+    }
+  }}
+>
+  <Text style={{ fontSize: 22 }}>▶</Text>
+</TouchableOpacity>
 
-                    </View>
+      </View>
+    )}
 
-                  </View>
-                )
-              )
-            }
+  </View>
 
-          </ScrollView>
+</View>
 
           {/* INFO */}
 
@@ -477,14 +464,14 @@ returns.some(
   style={styles.returnBtn}
   onPress={() =>
     router.push({
-      pathname: "/return-request",
+      pathname: "/order-details",
       params: {
         orderId: item?.orderId || item?._id,
 
 
 
-        userId:
-item?.userId || "",
+       userId:
+       item?.userId || "",
 
 
 
@@ -514,16 +501,17 @@ ${item?.address?.pincode || ""}`,
     })
   }
 >
-  <Text style={styles.returnBtnText}>
-    ↩ Return Product
-  </Text>
+<Text style={styles.returnBtnText}>
+  📄 Order Details
+</Text>
 </TouchableOpacity>
 
 )
 }
 
-        </TouchableOpacity>
-      )}
+     </TouchableOpacity>
+    );
+     }}
     />
   );
 }
@@ -567,10 +555,11 @@ topRow: {
 },
 
 orderId: {
+  flex: 1,
   fontSize: 11,
   fontWeight: "800",
   color: "#111827",
-  width: "72%",
+  marginRight: 8,
 },
 
 statusBox: {
@@ -578,13 +567,15 @@ statusBox: {
   paddingHorizontal: 10,
   paddingVertical: 5,
   borderRadius: 30,
+
+  marginLeft: -13,  
 },
 
-  statusText: {
-    color: "#16a34a",
-    fontWeight: "700",
-    fontSize: 13,
-  },
+ statusText: {
+  color: "#16a34a",
+  fontWeight: "700",
+  fontSize: 12,
+},
 
   date: {
     marginTop: 10,
@@ -598,19 +589,14 @@ statusBox: {
     fontSize: 13,
   },
 
-  productCard: {
-    flexDirection: "row",
-
-    backgroundColor: "#f8fafc",
-
-    borderRadius: 18,
-
-    padding: 10,
-
-    marginRight: 14,
-
-    width: 260,
-  },
+productCard: {
+  flexDirection: "row",
+  alignItems: "center",
+  backgroundColor: "#f8fafc",
+  borderRadius: 18,
+  padding: 10,
+  marginRight: 14,
+},
 
   image: {
     width: 88,

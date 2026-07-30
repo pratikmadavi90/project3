@@ -28,6 +28,8 @@ export default function Payment() {
 
   const [deliverySettings, setDeliverySettings] = useState(null);
 
+  const [storeClosed, setStoreClosed] = useState(false);
+
   const {
     cart,
     total,
@@ -61,9 +63,53 @@ export default function Payment() {
 
       const result = await response.json();
 
-      if (result.available) {
-        setDeliverySettings(result);
-      }
+     if (result.available) {
+  setDeliverySettings(result);
+
+  await AsyncStorage.setItem(
+  "deliverySettings",
+  JSON.stringify(result)
+);
+
+  if (!result.storeTiming) {
+    setStoreClosed(false);
+  }
+
+ if (result.storeTiming) {
+
+const match = result.storeTiming.match(
+  /(\d+)(?::(\d+))?\s*AM\s*to\s*(\d+)(?::(\d+))?\s*PM/i
+);
+
+  if (match) {
+
+    const now = new Date();
+
+  const currentMinutes =
+  now.getHours() * 60 + now.getMinutes();
+
+const openMinutes =
+  parseInt(match[1]) * 60 +
+  (parseInt(match[2] || "0"));
+
+const closeMinutes =
+  (parseInt(match[3]) + 12) * 60 +
+  (parseInt(match[4] || "0"));
+
+if (
+  currentMinutes < openMinutes ||
+  currentMinutes >= closeMinutes
+) {
+      setStoreClosed(true);
+    } else {
+      setStoreClosed(false);
+    }
+
+  }
+
+} 
+
+}
 
     } catch (err) {
       console.log(err);
@@ -185,6 +231,11 @@ if (total >= 1500) {
 
 }
 
+const remaining = Math.max(
+  0,
+  Number(deliverySettings?.freeDeliveryAbove || 0) - total
+);
+
 // Final total
 const finalTotal =
 total +
@@ -197,6 +248,14 @@ discount;
   const placeOrder = async (method) => {
 
     try {
+      
+      if (storeClosed) {
+  Alert.alert(
+    "Store Closed",
+    "Store is currently closed. Please order during store timing."
+  );
+  return;
+}
 
       // ✅ Stop order if minimum order not reached
 if (
@@ -393,10 +452,11 @@ if (!response.ok) {
 
   return (
 
-    <ScrollView
-      style={styles.container}
-      showsVerticalScrollIndicator={false}
-    >
+<ScrollView
+  style={styles.container}
+  showsVerticalScrollIndicator={false}
+  contentContainerStyle={{ paddingBottom: 80 }}
+>
 
       {/* HEADER */}
 
@@ -404,19 +464,44 @@ if (!response.ok) {
         Checkout
       </Text>
 
-      {/* ADDRESS */}
+{/* FREE DELIVERY */}
 
-      <View style={styles.addressBox}>
+<View style={styles.addressBox}>
 
-        <Text style={styles.sectionTitle}>
-          Delivery Address
-        </Text>
+  <Text style={styles.sectionTitle}>
+    🚚 FREE Delivery Offer
+  </Text>
 
-        <Text style={styles.addressText}>
-          Home Delivery
-        </Text>
+  <Text style={styles.addressText}>
+    Free Delivery Above ₹
+    {deliverySettings?.freeDeliveryAbove || 0}
+  </Text>
 
-      </View>
+  {remaining > 0 ? (
+    <Text
+      style={{
+        marginTop: 8,
+        color: "#16a34a",
+        fontWeight: "700",
+        fontSize: 14,
+      }}
+    >
+      Add ₹{remaining} more to get FREE Delivery 🚚
+    </Text>
+  ) : (
+    <Text
+      style={{
+        marginTop: 8,
+        color: "#16a34a",
+        fontWeight: "700",
+        fontSize: 14,
+      }}
+    >
+      🎉 Congratulations! You got FREE Delivery 🚚
+    </Text>
+  )}
+
+</View>
 
       {/* PRICE DETAILS */}
 
@@ -533,17 +618,48 @@ Heavy Charge
         Select Payment Method
       </Text>
 
+{storeClosed && (
+  <View
+    style={{
+      backgroundColor: "#FEE2E2",
+      padding: 12,
+      borderRadius: 10,
+      marginBottom: 15,
+    }}
+  >
+    <Text
+      style={{
+        color: "#B91C1C",
+        fontWeight: "bold",
+      }}
+    >
+      🔴 Store Closed
+    </Text>
+
+    <Text
+      style={{
+        color: "#B91C1C",
+        marginTop: 5,
+      }}
+    >
+      Store Open: {deliverySettings?.storeTiming}
+    </Text>
+  </View>
+)}      
+
       {/* COD */}
 
-      <TouchableOpacity
-        style={[
-          styles.paymentCard,
-          styles.codCard,
-        ]}
-        onPress={() =>
-          placeOrder("Cash On Delivery")
-        }
-      >
+<TouchableOpacity
+  disabled={storeClosed}
+  style={[
+    styles.paymentCard,
+    styles.codCard,
+    storeClosed && { opacity: 0.5 },
+  ]}
+  onPress={() =>
+    placeOrder("Cash On Delivery")
+  }
+>
 
         <View style={styles.iconCircle}>
 
@@ -573,12 +689,14 @@ Heavy Charge
 
       {/* ONLINE */}
 
-      <TouchableOpacity
-        style={[
-          styles.paymentCard,
-          styles.onlineCard,
-        ]}
-        onPress={() => {
+<TouchableOpacity
+  disabled={storeClosed}
+  style={[
+    styles.paymentCard,
+    styles.onlineCard,
+    storeClosed && { opacity: 0.5 },
+  ]}
+  onPress={() => {
 
           try {
 

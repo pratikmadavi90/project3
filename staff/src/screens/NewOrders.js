@@ -44,14 +44,13 @@ const response = await fetch(API, {
   }
 });
 
-const data=await response.json();
+console.log("STATUS:", response.status);
 
-setOrders(
-  data.filter(order =>
-    order.deliveryAccepted === true &&
-    order.status === "Accepted"
-  )
-);
+const data = await response.json();
+
+console.log("DATA:", data);
+
+setOrders(data);
 
 }
 catch(err){

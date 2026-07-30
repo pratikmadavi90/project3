@@ -25,19 +25,19 @@ export default function OrderDetails() {
 
   const loadOrder = async () => {
     try {
-    const token =
-await AsyncStorage.getItem("token");
+
+      const userData =
+  await AsyncStorage.getItem("user");
+
+const user = JSON.parse(userData || "{}");
 
 const res = await fetch(
- `${API_URL}/orders/${orderId}`,
-  {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  }
+  `${API_URL}/orders/user/${user.email}/${orderId}`
 );
 
-      const data = await res.json();
+ const data = await res.json();
+
+ console.log("ORDER DETAILS API:", JSON.stringify(data, null, 2));
 
       setOrder(data);
     } catch (err) {

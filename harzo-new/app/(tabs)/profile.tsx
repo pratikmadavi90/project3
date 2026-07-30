@@ -413,6 +413,8 @@ user?.userId ||
                   "user"
                 );
 
+                await AsyncStorage.removeItem("deliverySettings");
+
 setUser({
 userId: "",
 name: "",
@@ -541,6 +543,18 @@ pincode: "",
 </Text>
 </TouchableOpacity>
 
+<Text
+  style={{
+    fontSize: 11,
+    color: "#6b7280",
+    marginTop: -8,
+    marginBottom: 12,
+    marginLeft: 4,
+  }}
+>
+  ⚠️ Select only a village available in Harzo. Your live GPS location must match the selected village to save your profile.
+</Text>
+
 <Modal
   visible={showVillage}
   transparent
@@ -604,6 +618,17 @@ landmark:text
 style={styles.addressInput}
 />
 
+<Text
+  style={{
+    fontSize: 11,
+    color: "#6b7280",
+    marginTop: -8,
+    marginBottom: 12,
+    marginLeft: 4,
+  }}
+>
+  🏠 Enter your exact House No. or nearest landmark for accurate delivery.
+</Text>
 
 
       {/* PINCODE */}

@@ -500,17 +500,16 @@ Current Order
 {dashboard?.orders?.length > 0 ? (
 
 dashboard.orders
-.filter(
-order =>
+.filter(order =>
 [
   "Pending",
+  "Accepted",
   "Delivery Accepted",
   "Staff Accepted",
+  "Packing",
   "Packed",
   "Out for Delivery"
-]
-
-.includes(order.status)
+].includes(order.status)
 )
 .map((order,index)=>(
 

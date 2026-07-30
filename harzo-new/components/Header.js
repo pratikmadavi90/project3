@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useCallback } from "react";
 
 import {
   View,
@@ -13,26 +13,47 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { router } from "expo-router";
 
+import { useFocusEffect } from "expo-router";
+
 export default function Header() {
 
-  const [deliveryTime, setDeliveryTime] = useState("One Day Delivery");
+  const [deliveryTime, setDeliveryTime] = useState("");
 
-  useEffect(() => {
+  const [storeTiming, setStoreTiming] = useState("");
+  
+
+useFocusEffect(
+  useCallback(() => {
 
     const loadDeliveryTime = async () => {
+
+      const user = await AsyncStorage.getItem("user");
+
+      if (!user) {
+        setDeliveryTime("");
+        setStoreTiming("");
+        return;
+      }
 
       const data = await AsyncStorage.getItem("deliverySettings");
 
       if (data) {
         const settings = JSON.parse(data);
-        setDeliveryTime(settings.deliveryTime || "One Day Delivery");
-      }
 
+        setDeliveryTime(
+          settings.deliveryTime || "One Day Delivery"
+        );
+
+        setStoreTiming(
+          settings.storeTiming || ""
+        );
+      }
     };
 
     loadDeliveryTime();
 
-  }, []);
+  }, [])
+);
 
   // 🔍 SEARCH OPEN
   const openSearch = () => {
@@ -46,8 +67,10 @@ export default function Header() {
       <View style={styles.topRow}>
 
 <Text style={styles.time}>
-  ⚡ {deliveryTime} Minute Delivery
+  ⚡ {deliveryTime ? `${deliveryTime} Minute Delivery` : "Welcome to Harzo"}
 </Text>
+
+
       </View>
 
       {/* LOCATION */}
@@ -80,9 +103,12 @@ export default function Header() {
           </Text>
 
         </View>
-<Text style={styles.storeTiming}>
-  ⚠️ Demo Version – Testing Purpose Only
-</Text>
+
+{storeTiming ? (
+  <Text style={styles.storeTiming}>
+    🟢 Store Open: {storeTiming}
+  </Text>
+) : null}
 
       </TouchableOpacity>
 

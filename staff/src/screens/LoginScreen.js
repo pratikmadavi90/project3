@@ -10,16 +10,16 @@ Alert
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
-const API="https://api.harzo.in/api/login";
+const API = "https://api.harzo.in/api/staff/login";
 
 export default function LoginScreen({goDashboard}){
 
-const [email,setEmail]=useState("");
+const [staffId, setStaffId] = useState("");
 const [password,setPassword]=useState("");
 
 const login=async()=>{
 
-if(!email || !password){
+if (!staffId || !password){
 
 Alert.alert(
 "Error",
@@ -38,16 +38,16 @@ method:"POST",
 headers:{
 "Content-Type":"application/json"
 },
-body:JSON.stringify({
-email,
-password
+body: JSON.stringify({
+    staffId,
+    password
 })
 }
 );
 
 const data=await response.json();
 
-if (data.message === "Login successful") {
+if (data.success) {
 
     await AsyncStorage.setItem(
       "staffToken",
@@ -96,9 +96,10 @@ HARZO STAFF
 </Text>
 
 <TextInput
-placeholder="Enter Email"
-value={email}
-onChangeText={setEmail}
+placeholder="Enter Staff ID"
+value={staffId}
+onChangeText={setStaffId}
+autoCapitalize="none"
 autoCapitalize="none"
 style={styles.input}
 />
@@ -116,8 +117,16 @@ style={styles.button}
 onPress={login}
 >
 
-<Text style={styles.text}>
-Login
+<Text style={styles.logo}>
+HARZO STAFF
+</Text>
+
+<Text style={{
+    textAlign:"center",
+    marginBottom:25,
+    color:"#666"
+}}>
+Staff Login
 </Text>
 
 </TouchableOpacity>
