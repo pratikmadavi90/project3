@@ -93,4 +93,10 @@ authMiddleware,
 orderController.deleteOrder
 );
 
+router.get(
+  "/staff-dashboard",
+  authMiddleware,
+  orderController.staffDashboard
+);
+
 module.exports = router;
