@@ -48,6 +48,12 @@ router.get(
 );
 
 router.get(
+  "/staff-dashboard",
+  authMiddleware,
+  orderController.staffDashboard
+);
+
+router.get(
   "/user/:email/:id",
   orderController.getUserOrderDetails
 );
@@ -93,10 +99,6 @@ authMiddleware,
 orderController.deleteOrder
 );
 
-router.get(
-  "/staff-dashboard",
-  authMiddleware,
-  orderController.staffDashboard
-);
+
 
 module.exports = router;
