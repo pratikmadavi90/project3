@@ -611,3 +611,55 @@ exports.deliveryHistory = async (req, res) => {
   }
 
 };
+
+
+// 📊 STAFF DASHBOARD (Last 7 Days)
+exports.staffDashboard = async (req, res) => {
+  try {
+
+    const labels = [
+      "Today",
+      "Yesterday",
+      "Day Before",
+      "3 Days",
+      "4 Days",
+      "5 Days",
+      "6 Days"
+    ];
+
+    const result = [];
+
+    for (let i = 0; i < 7; i++) {
+
+      const start = new Date();
+      start.setDate(start.getDate() - i);
+      start.setHours(0, 0, 0, 0);
+
+      const end = new Date(start);
+      end.setHours(23, 59, 59, 999);
+
+      const count = await Order.countDocuments({
+        createdAt: {
+          $gte: start,
+          $lte: end
+        }
+      });
+
+      result.push({
+        title: labels[i],
+        orders: count,
+        date: start.toLocaleDateString("en-IN", {
+          day: "numeric",
+          month: "short"
+        })
+      });
+    }
+
+    res.json(result);
+
+  } catch (err) {
+    res.status(500).json({
+      error: err.message
+    });
+  }
+};
