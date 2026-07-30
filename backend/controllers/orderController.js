@@ -401,14 +401,7 @@ startOfDay.setHours(0,0,0,0);
 const endOfDay = new Date();
 endOfDay.setHours(23,59,59,999);
 
-const orders =
-await Order.find({
-  deliveryBoyId:deliveryBoyId,
-  createdAt:{
-    $gte:startOfDay,
-    $lte:endOfDay
-  }
-});
+
 
 console.log(
 "FOUND ORDERS =",
@@ -447,6 +440,15 @@ if(
   await liveOrder.save();
 
 }
+
+const orders =
+await Order.find({
+  deliveryBoyId:deliveryBoyId,
+  createdAt:{
+    $gte:startOfDay,
+    $lte:endOfDay
+  }
+});
 
 console.log(
 "LIVE ORDER =",
