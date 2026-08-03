@@ -98,6 +98,8 @@ if (fcmToken) {
 
 await boy.save();
 
+console.log("Saved FCM Token:", boy.fcmToken);
+
 const token = jwt.sign(
   {
     id: boy._id,
