@@ -98,9 +98,11 @@ await admin.messaging().send({
   android: {
     priority: "high",
     notification: {
-      sound: "default",
       channelId: "default",
+      sound: "default",
       priority: "high",
+      defaultSound: true,
+      defaultVibrateTimings: true,
     },
   },
 
