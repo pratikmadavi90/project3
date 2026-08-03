@@ -2,6 +2,9 @@ const Order = require("../models/Order");
 const { applyOffer } = require("../utils/offerHelper");
 const User = require("../models/User");
 const Product = require("../models/Product");
+const DeliveryBoy = require("../models/DeliveryBoy");
+const admin = require("firebase-admin");
+
 
 // 🧾 CREATE ORDER
 exports.createOrder = async (req, res) => {
@@ -48,8 +51,7 @@ if (!user) {
   });
 }
 
-const DeliveryBoy =
-require("../models/DeliveryBoy");
+
 
 const deliveryBoy =
 await DeliveryBoy.findOne({
@@ -82,6 +84,25 @@ deliveryBoyId: deliveryBoy
 });
 
     await order.save();
+
+ if (deliveryBoy?.fcmToken) {
+  try {
+    await admin.messaging().send({
+      token: deliveryBoy.fcmToken,
+      notification: {
+        title: "📦 New Order",
+        body: `Order ${order.orderId} received`,
+      },
+      data: {
+        orderId: order.orderId,
+      },
+    });
+
+    console.log("Notification sent");
+  } catch (err) {
+    console.log("FCM Error:", err.message);
+  }
+}   
 
     res.status(201).json({
       message: "Order Created",
