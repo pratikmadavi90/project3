@@ -87,16 +87,27 @@ deliveryBoyId: deliveryBoy
 
  if (deliveryBoy?.fcmToken) {
   try {
-    await admin.messaging().send({
-      token: deliveryBoy.fcmToken,
-      notification: {
-        title: "📦 New Order",
-        body: `Order ${order.orderId} received`,
-      },
-      data: {
-        orderId: order.orderId,
-      },
-    });
+await admin.messaging().send({
+  token: deliveryBoy.fcmToken,
+
+  notification: {
+    title: "📦 New Order",
+    body: `Order ${order.orderId} received`,
+  },
+
+  android: {
+    priority: "high",
+    notification: {
+      sound: "default",
+      channelId: "default",
+      priority: "high",
+    },
+  },
+
+  data: {
+    orderId: order.orderId,
+  },
+});
 
     console.log("Notification sent");
   } catch (err) {
