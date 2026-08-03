@@ -64,9 +64,10 @@ async(req,res)=>{
 try{
 
 const {
-deliveryId,
-password
-}=req.body;
+  deliveryId,
+  password,
+  fcmToken
+} = req.body;
 
 const boy=
 await DeliveryBoy.findOne({
@@ -91,6 +92,9 @@ message:"Wrong Delivery ID or Password"
 
 // online status true
 boy.online = true;
+if (fcmToken) {
+  boy.fcmToken = fcmToken;
+}
 
 await boy.save();
 

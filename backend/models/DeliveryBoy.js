@@ -45,8 +45,13 @@ default:null
 },
 
 token:{
-type:String,
-default:""
+  type:String,
+  default:""
+},
+
+fcmToken:{
+  type:String,
+  default:""
 }
 
 },
