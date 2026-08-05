@@ -336,15 +336,15 @@ exports.staffDashboard = async (req, res) => {
     const todayEnd = new Date();
     todayEnd.setHours(23,59,59,999);
 
-    const pendingOrders = await Order.find({
-      deliveryAccepted: true,
-      status: {
-        $in: [
-          "Accepted",
-          "Packing"
-        ]
-      }
-    }).sort({ createdAt: 1 });
+const pendingOrders = await Order.find({
+  staffId: req.staff.staffId,
+  status: {
+    $in: [
+      "Accepted",
+      "Packing"
+    ]
+  }
+}).sort({ createdAt: 1 });
 
     const packedToday = await Order.countDocuments({
       staffId,
