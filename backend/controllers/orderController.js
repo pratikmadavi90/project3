@@ -4,7 +4,7 @@ const User = require("../models/User");
 const Product = require("../models/Product");
 const DeliveryBoy = require("../models/DeliveryBoy");
 const admin = require("firebase-admin");
-
+const Staff = require("../models/Staff");
 
 // 🧾 CREATE ORDER
 exports.createOrder = async (req, res) => {
@@ -58,6 +58,44 @@ await DeliveryBoy.findOne({
 online:true
 });
 
+const onlineStaff = await Staff.find({
+  isOnline: true,
+  status: "Active"
+});
+
+let assignedStaff = null;
+
+if (onlineStaff.length > 0) {
+
+  let minOrders = Number.MAX_SAFE_INTEGER;
+
+  for (const staff of onlineStaff) {
+
+const startOfDay = new Date();
+startOfDay.setHours(0, 0, 0, 0);
+
+const activeOrders = await Order.countDocuments({
+  staffId: staff.staffId,
+  createdAt: {
+    $gte: startOfDay
+  },
+  status: {
+    $in: [
+      "Pending",
+      "Delivery Accepted",
+      "Staff Accepted",
+      "Packing"
+    ]
+  }
+});
+
+    if (activeOrders < minOrders) {
+      minOrders = activeOrders;
+      assignedStaff = staff;
+    }
+  }
+}
+
 
 
 const order = new Order({
@@ -79,7 +117,11 @@ deliveryBoy: deliveryBoy
 
 deliveryBoyId: deliveryBoy
   ? deliveryBoy.deliveryId
-  : ""
+  : "",
+
+staffId: assignedStaff
+  ? assignedStaff.staffId
+  : null,
 
 });
 
