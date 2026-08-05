@@ -60,6 +60,7 @@ online:true
 
 const onlineStaff = await Staff.find({
   isOnline: true,
+  available: true,
   status: "Active"
 });
 

@@ -43,6 +43,11 @@ const staffSchema = new mongoose.Schema(
       default: false,
     },
 
+ available: {
+  type: Boolean,
+  default: true,
+},   
+
     totalPacking: {
       type: Number,
       default: 0,

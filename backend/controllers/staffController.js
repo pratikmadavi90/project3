@@ -524,3 +524,39 @@ exports.packingHistory = async (req, res) => {
   }
 
 };
+
+
+exports.toggleAvailability = async (req, res) => {
+  try {
+
+    const staff = await Staff.findById(req.params.id);
+
+    if (!staff) {
+      return res.json({
+        success: false,
+        message: "Staff not found"
+      });
+    }
+
+    staff.available = !staff.available;
+
+    await staff.save();
+
+    res.json({
+      success: true,
+      message: staff.available
+        ? "Staff Available"
+        : "Staff Unavailable"
+    });
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      success: false,
+      message: "Server Error"
+    });
+
+  }
+};

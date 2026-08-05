@@ -92,6 +92,16 @@ router.get(
   staffController.packingHistory
 );
 
+// =======================
+// TOGGLE AVAILABILITY
+// =======================
+
+router.put(
+  "/availability/:id",
+  authMiddleware,
+  staffController.toggleAvailability
+);
+
 
 // =======================
 // GET SINGLE STAFF
