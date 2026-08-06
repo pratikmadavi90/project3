@@ -751,9 +751,7 @@ exports.getStaffOrders = async (req, res) => {
 
     const staff = await Staff.findById(req.staff._id);
 
-    if (!staff || !staff.available) {
-      return res.json([]);
-    }
+    console.log("STAFF =", staff.staffId);
 
     const orders = await Order.find({
       staffId: staff.staffId
@@ -761,9 +759,13 @@ exports.getStaffOrders = async (req, res) => {
       createdAt: -1
     });
 
+    console.log("ORDERS =", orders);
+
     res.json(orders);
 
   } catch (err) {
+
+    console.log(err);
 
     res.status(500).json({
       error: err.message
