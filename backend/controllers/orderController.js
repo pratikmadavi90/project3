@@ -742,3 +742,33 @@ exports.staffDashboard = async (req, res) => {
     });
   }
 };
+
+
+
+exports.getStaffOrders = async (req, res) => {
+
+  try {
+
+    const staff = await Staff.findById(req.staff._id);
+
+    if (!staff || !staff.available) {
+      return res.json([]);
+    }
+
+    const orders = await Order.find({
+      staffId: staff.staffId
+    }).sort({
+      createdAt: -1
+    });
+
+    res.json(orders);
+
+  } catch (err) {
+
+    res.status(500).json({
+      error: err.message
+    });
+
+  }
+
+};

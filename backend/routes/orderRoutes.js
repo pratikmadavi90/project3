@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middleware/authMiddleware");
-const orderController =
-require("../controllers/orderController");
+const staffAuth = require("../middleware/staffAuth");
+const orderController = require("../controllers/orderController");
 
 
 // Create Order
@@ -51,6 +51,12 @@ router.get(
   "/staff-dashboard",
   authMiddleware,
   orderController.staffDashboard
+);
+
+router.get(
+  "/staff-orders",
+  staffAuth,
+  orderController.getStaffOrders
 );
 
 router.get(
