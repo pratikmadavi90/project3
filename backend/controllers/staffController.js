@@ -551,9 +551,65 @@ exports.toggleAvailability = async (req, res) => {
       });
     }
 
+    const wasAvailable = staff.available;
+
     staff.available = !staff.available;
 
     await staff.save();
+
+if (!wasAvailable && staff.available) {
+
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+
+  const availableStaff = await Staff.find({
+    available: true,
+    isOnline: true,
+    status: "Active"
+  });
+
+  const pendingOrders = await Order.find({
+    staffId: null,
+    status: "Pending",
+    createdAt: {
+      $gte: startOfDay
+    }
+  }).sort({ createdAt: 1 });
+
+  for (const order of pendingOrders) {
+
+    let selectedStaff = null;
+    let minOrders = Number.MAX_SAFE_INTEGER;
+
+    for (const s of availableStaff) {
+
+      const count = await Order.countDocuments({
+        staffId: s.staffId,
+        status: {
+          $in: [
+            "Pending",
+            "Delivery Accepted",
+            "Staff Accepted",
+            "Packing"
+          ]
+        }
+      });
+
+      if (count < minOrders) {
+        minOrders = count;
+        selectedStaff = s;
+      }
+
+    }
+
+    if (selectedStaff) {
+      order.staffId = selectedStaff.staffId;
+      await order.save();
+    }
+
+  }
+
+}    
 
     res.json({
       success: true,

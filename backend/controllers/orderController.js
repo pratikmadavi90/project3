@@ -751,43 +751,22 @@ exports.getStaffOrders = async (req, res) => {
 
     const staff = await Staff.findById(req.staff._id);
 
-if (!staff) {
-  return res.json([]);
-}
+    if (!staff) {
+      return res.json([]);
+    }
 
-    // Staff ke assigned orders
-    let orders = await Order.find({
+    if (!staff.available) {
+
+      const orders = await Order.find({
+        staffId: staff.staffId
+      }).sort({ createdAt: -1 });
+
+      return res.json(orders);
+    }
+
+    const orders = await Order.find({
       staffId: staff.staffId
     }).sort({ createdAt: -1 });
-
-    // Agar koi assigned order nahi hai
-    if (orders.length === 0) {
-
-      const startOfDay = new Date();
-      startOfDay.setHours(0, 0, 0, 0);
-
-      const endOfDay = new Date();
-      endOfDay.setHours(23, 59, 59, 999);
-
-      // Aaj ka sabse purana unassigned pending order
-      const pendingOrder = await Order.findOne({
-        staffId: null,
-        status: "Pending",
-        createdAt: {
-          $gte: startOfDay,
-          $lte: endOfDay
-        }
-      }).sort({ createdAt: 1 });
-
-      if (pendingOrder) {
-
-        pendingOrder.staffId = staff.staffId;
-        await pendingOrder.save();
-
-        orders = [pendingOrder];
-      }
-
-    }
 
     res.json(orders);
 
