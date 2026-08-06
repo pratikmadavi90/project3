@@ -751,9 +751,9 @@ exports.getStaffOrders = async (req, res) => {
 
     const staff = await Staff.findById(req.staff._id);
 
-    if (!staff || !staff.available) {
-      return res.json([]);
-    }
+if (!staff) {
+  return res.json([]);
+}
 
     // Staff ke assigned orders
     let orders = await Order.find({
