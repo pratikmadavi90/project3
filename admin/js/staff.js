@@ -24,7 +24,7 @@ async function loadStaff() {
 
             table.innerHTML = `
                 <tr>
-                    <td colspan="8" style="text-align:center;">
+                    <td colspan="9" style="text-align:center;">
                         No Staff Found
                     </td>
                 </tr>
@@ -47,17 +47,29 @@ async function loadStaff() {
 
                 <td>${item.phone}</td>
 
-                <td>
-                    <span class="${item.status === "Active" ? "active" : "inactive"}">
-                        ${item.status}
-                    </span>
-                </td>
+ <td>
+    <span class="${item.status === "Active" ? "active" : "inactive"}">
+        ${item.status}
+    </span>
+</td>
 
-                <td>
-                    <span class="${item.online ? "online" : "offline"}">
-                        ${item.online ? "Online" : "Offline"}
-                    </span>
-                </td>
+<td>
+    <span class="${item.isOnline ? "online" : "offline"}">
+        ${item.isOnline ? "Online" : "Offline"}
+    </span>
+</td>
+
+ <td>
+
+<button
+    class="${item.available ? "editBtn" : "deleteBtn"}"
+    onclick="toggleAvailability('${item._id}')">
+
+    ${item.available ? "Available" : "Unavailable"}
+
+</button>
+
+</td>               
 
                 <td>${item.todayPacking || 0}</td>
 
@@ -236,6 +248,35 @@ async function deleteStaff(id) {
         console.log(err);
 
         alert("Delete Failed");
+
+    }
+
+}
+
+async function toggleAvailability(id) {
+
+    try {
+
+        const res = await fetch(`${API}/availability/${id}`, {
+            method: "PUT",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        const data = await res.json();
+
+        alert(data.message);
+
+        if (data.success) {
+            loadStaff();
+        }
+
+    } catch (err) {
+
+        console.log(err);
+
+        alert("Failed to update availability");
 
     }
 
