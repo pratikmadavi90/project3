@@ -330,6 +330,19 @@ exports.staffDashboard = async (req, res) => {
 
     const staffId = req.staff.staffId;
 
+const staff = await Staff.findOne({
+  staffId: req.staff.staffId
+});
+
+if (!staff.available) {
+  return res.json({
+    success: true,
+    pendingOrders: [],
+    todayPacking: 0,
+    totalPacking: 0
+  });
+}    
+
     const todayStart = new Date();
     todayStart.setHours(0,0,0,0);
 
