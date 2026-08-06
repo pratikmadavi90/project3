@@ -90,6 +90,8 @@ const activeOrders = await Order.countDocuments({
   }
 });
 
+console.log("ONLINE STAFF =", onlineStaff);
+
     if (activeOrders < minOrders) {
       minOrders = activeOrders;
       assignedStaff = staff;
