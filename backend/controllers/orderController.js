@@ -717,13 +717,12 @@ exports.staffDashboard = async (req, res) => {
       const end = new Date(start);
       end.setHours(23, 59, 59, 999);
 
-const count = await Order.countDocuments({
-  staffId: req.staff.staffId,
-  createdAt: {
-    $gte: start,
-    $lte: end
-  }
-});
+      const count = await Order.countDocuments({
+        createdAt: {
+          $gte: start,
+          $lte: end
+        }
+      });
 
       result.push({
         title: labels[i],
