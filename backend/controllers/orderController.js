@@ -53,10 +53,43 @@ if (!user) {
 
 
 
-const deliveryBoy =
-await DeliveryBoy.findOne({
-online:true
+const onlineDeliveryBoys =
+await DeliveryBoy.find({
+  online: true,
+  status: "Active"
 });
+
+let assignedDeliveryBoy = null;
+
+if (onlineDeliveryBoys.length > 0) {
+
+  let minOrders = Number.MAX_SAFE_INTEGER;
+
+  for (const boy of onlineDeliveryBoys) {
+
+    const activeOrders =
+    await Order.countDocuments({
+
+      deliveryBoyId: boy.deliveryId,
+
+      status: {
+        $in: [
+          "Pending",
+          "Accepted",
+          "Packing",
+          "Packed",
+          "Out for Delivery"
+        ]
+      }
+
+    });
+
+    if (activeOrders < minOrders) {
+      minOrders = activeOrders;
+      assignedDeliveryBoy = boy;
+    }
+  }
+}
 
 const onlineStaff = await Staff.find({
   isOnline: true,
@@ -111,15 +144,15 @@ const order = new Order({
 
   orderId:"ORD"+Date.now(),
 
-deliveryBoy: deliveryBoy
+deliveryBoy: assignedDeliveryBoy
   ? {
-      name: deliveryBoy.name,
-      phone: deliveryBoy.mobile
+      name: assignedDeliveryBoy.name,
+      phone: assignedDeliveryBoy.mobile
     }
   : {},
 
-deliveryBoyId: deliveryBoy
-  ? deliveryBoy.deliveryId
+deliveryBoyId: assignedDeliveryBoy
+  ? assignedDeliveryBoy.deliveryId
   : "",
 
 staffId: assignedStaff
@@ -130,10 +163,10 @@ staffId: assignedStaff
 
     await order.save();
 
- if (deliveryBoy?.fcmToken) {
+ if (assignedDeliveryBoy?.fcmToken) {
   try {
 await admin.messaging().send({
-  token: deliveryBoy.fcmToken,
+  token: assignedDeliveryBoy.fcmToken,
 
   notification: {
     title: "📦 New Order",
