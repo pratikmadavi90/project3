@@ -835,6 +835,14 @@ exports.rejectOrder = async (req, res) => {
       });
     }
 
+    if (!order.deliveryRejectedBy) {
+  order.deliveryRejectedBy = [];
+}
+
+order.deliveryRejectedBy.push(
+  order.deliveryBoyId
+);
+
     const onlineBoys =
     await DeliveryBoy.find({
       online: true,
@@ -859,15 +867,35 @@ exports.rejectOrder = async (req, res) => {
 
     }
 
-    const nextBoy = onlineBoys[0];
+ const nextBoy = onlineBoys.find(
+  boy =>
+    !order.deliveryRejectedBy.includes(
+      boy.deliveryId
+    )
+);
 
-    order.deliveryBoyId =
-    nextBoy.deliveryId;
+if (!nextBoy) {
 
-    order.deliveryBoy = {
-      name: nextBoy.name,
-      phone: nextBoy.mobile
-    };
+  order.deliveryBoyId = "";
+  order.deliveryBoy = {};
+  order.status = "Pending";
+
+  await order.save();
+
+  return res.json({
+    success: true,
+    message: "All delivery boys rejected"
+  });
+
+}
+
+order.deliveryBoyId =
+nextBoy.deliveryId;
+
+order.deliveryBoy = {
+  name: nextBoy.name,
+  phone: nextBoy.mobile
+};
 
     order.status = "Pending";
 
