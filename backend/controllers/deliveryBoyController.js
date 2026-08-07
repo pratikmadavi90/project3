@@ -58,35 +58,84 @@ message:err.message
 
 // Login
 
-exports.loginDeliveryBoy=
-async(req,res)=>{
+exports.loginDeliveryBoy = async (req, res) => {
+  try {
 
-try{
+    console.log("========== LOGIN REQUEST ==========");
+    console.log("BODY:", req.body);
 
-const {
-  deliveryId,
-  password,
-  fcmToken
-} = req.body;
+    const {
+      deliveryId,
+      password,
+      fcmToken
+    } = req.body;
 
-const boy=
-await DeliveryBoy.findOne({
+    console.log("Delivery ID:", deliveryId);
+    console.log("Password:", password);
 
-deliveryId,
-password
+    const allBoys = await DeliveryBoy.find();
 
-});
+    console.log("DATABASE USERS:");
+    console.log(allBoys);
 
-if(!boy){
+    const boy = await DeliveryBoy.findOne({
+      deliveryId,
+      password
+    });
 
-return res.json({
+    console.log("FOUND USER:");
+    console.log(boy);
 
-success:false,
-message:"Wrong Delivery ID or Password"
+    if (!boy) {
 
-});
+      console.log("LOGIN FAILED");
 
-}
+      return res.json({
+        success: false,
+        message: "Wrong Delivery ID or Password"
+      });
+
+    }
+
+    console.log("LOGIN SUCCESS");
+
+    boy.online = true;
+
+    if (fcmToken) {
+      boy.fcmToken = fcmToken;
+    }
+
+    await boy.save();
+
+    const token = jwt.sign(
+      {
+        id: boy._id,
+        deliveryId: boy.deliveryId
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d"
+      }
+    );
+
+    res.json({
+      success: true,
+      token,
+      deliveryBoy: boy
+    });
+
+  } catch (err) {
+
+    console.log("LOGIN ERROR:");
+    console.log(err);
+
+    res.status(500).json({
+      success: false,
+      message: err.message
+    });
+
+  }
+};
 
 
 
