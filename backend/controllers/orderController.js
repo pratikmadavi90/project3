@@ -696,9 +696,9 @@ exports.deliveryHistory = async (req, res) => {
 exports.staffDashboard = async (req, res) => {
   try {
 
-    console.log("REQ STAFF =", req.staff);
+    
 
-    const staff = await Staff.findById(req.staff._id);
+    const staff = req.staff;
 
     const labels = [
       "Today",

@@ -49,7 +49,7 @@ router.get(
 
 router.get(
   "/staff-dashboard",
-  authMiddleware,
+  staffAuth,
   orderController.staffDashboard
 );
 
