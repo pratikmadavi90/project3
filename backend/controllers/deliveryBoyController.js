@@ -10,13 +10,56 @@ async(req,res)=>{
 
 try{
 
-const count=
-await DeliveryBoy.countDocuments();
+const existingBoy =
+await DeliveryBoy.findOne({
+  mobile:req.body.mobile
+});
 
-const deliveryId=
-`DLV${String(
-count+1
-).padStart(3,"0")}`;
+if(existingBoy){
+
+  existingBoy.name =
+  req.body.name;
+
+  existingBoy.password =
+  req.body.password;
+
+  existingBoy.vehicle =
+  req.body.vehicle;
+
+  existingBoy.status =
+  "Active";
+
+  existingBoy.online =
+  false;
+
+  existingBoy.isDeleted =
+  false;
+
+  await existingBoy.save();
+
+  return res.json({
+    success:true,
+    message:"Delivery Boy Restored",
+    deliveryBoy:existingBoy
+  });
+
+}  
+
+const lastBoy =
+await DeliveryBoy.findOne()
+.sort({ createdAt: -1 });
+
+let deliveryId = "DLV001";
+
+if (lastBoy) {
+
+  const num = parseInt(
+    lastBoy.deliveryId.replace("DLV", "")
+  );
+
+deliveryId =
+`DLV${String(num + 1).padStart(3,"0")}`;
+}
 
 const boy=
 await DeliveryBoy.create({
@@ -186,7 +229,9 @@ async(req,res)=>{
 try{
 
 const data=
-await DeliveryBoy.find()
+await DeliveryBoy.find({
+  isDeleted:false
+})
 .sort({
 createdAt:-1
 });
@@ -212,27 +257,31 @@ success:false
 
 // Delete
 
-exports.deleteDeliveryBoy=
-async(req,res)=>{
+exports.deleteDeliveryBoy =
+async (req, res) => {
 
-try{
+  try {
 
-await DeliveryBoy.findByIdAndDelete(
-req.params.id
-);
+    await DeliveryBoy.findByIdAndUpdate(
+      req.params.id,
+      {
+        isDeleted: true,
+        online: false,
+        status: "Inactive"
+      }
+    );
 
-res.json({
-success:true
-});
+    res.json({
+      success: true
+    });
 
-}catch(err){
+  } catch (err) {
 
-res.status(500)
-.json({
-success:false
-});
+    res.status(500).json({
+      success: false
+    });
 
-}
+  }
 
 };
 

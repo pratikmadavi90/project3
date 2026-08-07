@@ -10,7 +10,8 @@ required:true
 
 mobile:{
 type:String,
-required:true
+required:true,
+unique:true
 },
 
 deliveryId:{
@@ -52,7 +53,12 @@ token:{
 fcmToken:{
   type:String,
   default:""
-}
+},
+
+isDeleted:{
+  type:Boolean,
+  default:false
+},
 
 },
 {
