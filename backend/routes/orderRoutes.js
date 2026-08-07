@@ -88,6 +88,12 @@ authMiddleware,
 orderController.assignDelivery
 );
 
+router.put(
+"/reject/:id",
+authMiddleware,
+orderController.rejectOrder
+);
+
 
 
 // Cancel Order
