@@ -696,6 +696,8 @@ exports.deliveryHistory = async (req, res) => {
 exports.staffDashboard = async (req, res) => {
   try {
 
+    const staff = await Staff.findById(req.staff._id);
+
     const labels = [
       "Today",
       "Yesterday",
@@ -718,6 +720,7 @@ exports.staffDashboard = async (req, res) => {
       end.setHours(23, 59, 59, 999);
 
       const count = await Order.countDocuments({
+        staffId: staff.staffId,
         createdAt: {
           $gte: start,
           $lte: end
