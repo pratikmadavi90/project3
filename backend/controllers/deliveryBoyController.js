@@ -45,21 +45,12 @@ if(existingBoy){
 
 }  
 
-const lastBoy =
-await DeliveryBoy.findOne()
-.sort({ createdAt: -1 });
+const firstName = req.body.name
+  .trim()
+  .split(" ")[0];
 
-let deliveryId = "DLV001";
-
-if (lastBoy) {
-
-  const num = parseInt(
-    lastBoy.deliveryId.replace("DLV", "")
-  );
-
-deliveryId =
-`DLV${String(num + 1).padStart(3,"0")}`;
-}
+const deliveryId =
+`${firstName}@${req.body.mobile}`;
 
 const boy=
 await DeliveryBoy.create({
