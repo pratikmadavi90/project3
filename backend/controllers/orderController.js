@@ -558,16 +558,11 @@ createdAt:{
 
 status:"Pending",
 
-$or:[
-  { deliveryBoyId: deliveryBoyId },
-  { deliveryBoyId: "" },
-  { deliveryBoyId: null }
-]
+deliveryBoyId: deliveryBoyId
 
 }).sort({
 createdAt:1
 });
-
 
 
 console.log(
@@ -845,34 +840,80 @@ exports.rejectOrder = async (req, res) => {
       });
     }
 
-    const onlineBoys =
-    await DeliveryBoy.find({
+    const currentBoy = order.deliveryBoyId;
+
+    if (!order.deliveryRejectedBy) {
+      order.deliveryRejectedBy = [];
+    }
+
+    if (currentBoy) {
+      order.deliveryRejectedBy.push(currentBoy);
+    }
+
+    const onlineBoys = await DeliveryBoy.find({
       online: true,
       status: "Active",
       deliveryId: {
-        $ne: order.deliveryBoyId
+        $nin: order.deliveryRejectedBy
       }
     });
 
+    // sabne reject kar diya
     if (onlineBoys.length === 0) {
 
-      order.deliveryBoyId = "";
-      order.deliveryBoy = {};
-      order.status = "Pending";
+      order.rejectionRound =
+        (order.rejectionRound || 0) + 1;
+
+      // 2 rounds complete
+      if (order.rejectionRound >= 2) {
+
+        order.deliveryBoyId = "";
+        order.deliveryBoy = {};
+        order.status = "Pending";
+
+        await order.save();
+
+        return res.json({
+          success: true,
+          message:
+            "Order pending after 2 rounds"
+        });
+      }
+
+      // next round restart
+      order.deliveryRejectedBy = [];
+
+      const restartBoys =
+      await DeliveryBoy.find({
+        online: true,
+        status: "Active"
+      });
+
+      if (restartBoys.length > 0) {
+
+        const nextBoy = restartBoys[0];
+
+        order.deliveryBoyId =
+          nextBoy.deliveryId;
+
+        order.deliveryBoy = {
+          name: nextBoy.name,
+          phone: nextBoy.mobile
+        };
+      }
 
       await order.save();
 
       return res.json({
         success: true,
-        message: "No other delivery boy online"
+        message: "Round restarted"
       });
-
     }
 
     const nextBoy = onlineBoys[0];
 
     order.deliveryBoyId =
-    nextBoy.deliveryId;
+      nextBoy.deliveryId;
 
     order.deliveryBoy = {
       name: nextBoy.name,

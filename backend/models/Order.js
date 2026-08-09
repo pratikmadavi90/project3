@@ -79,6 +79,11 @@ deliveryRejectedBy:[
   }
 ],
 
+rejectionRound: {
+  type: Number,
+  default: 0
+},
+
 deliveredAt:{
   type:Date,
   default:null
