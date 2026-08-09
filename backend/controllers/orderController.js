@@ -564,6 +564,21 @@ deliveryBoyId: deliveryBoyId
 createdAt:1
 });
 
+console.log(
+  "SEARCHING FOR =",
+  deliveryBoyId
+);
+
+const testOrders =
+await Order.find({
+  status:"Pending"
+});
+
+console.log(
+  "PENDING ORDERS =",
+  JSON.stringify(testOrders,null,2)
+);
+
 
 console.log(
 "LIVE ORDER =",
