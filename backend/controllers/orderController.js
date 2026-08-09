@@ -145,9 +145,20 @@ const order = new Order({
 
   orderId:"ORD"+Date.now(),
 
-deliveryBoy: {},
+deliveryBoy: assignedDeliveryBoy
+  ? {
+      name: assignedDeliveryBoy.name,
+      phone: assignedDeliveryBoy.mobile
+    }
+  : {},
 
-deliveryBoyId: "",
+deliveryBoyId: assignedDeliveryBoy
+  ? assignedDeliveryBoy.deliveryId
+  : "",
+
+deliveryAssignedAt: assignedDeliveryBoy
+  ? new Date()
+  : null,
 
 deliveryAccepted: false,
 
