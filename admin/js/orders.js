@@ -65,11 +65,18 @@ async function getOrders() {
         </select>
       </td>
 
-      <td>
-        <button onclick="assignDelivery('${order._id}')">
-          Assign
-        </button>
-      </td>
+<td>
+  ${
+    order.deliveryBoy?.name
+      ? `
+        <div>
+          <b>${order.deliveryBoy.name}</b><br>
+          <small>${order.deliveryBoy.phone || "-"}</small>
+        </div>
+      `
+      : "-"
+  }
+</td>
 
       <td>
         <button onclick="viewOrder('${order._id}')">
