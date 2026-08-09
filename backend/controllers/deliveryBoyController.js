@@ -103,12 +103,13 @@ const {
   fcmToken
 } = req.body;
 
-const boy=
+const boy =
 await DeliveryBoy.findOne({
-
-deliveryId,
-password
-
+  deliveryId: {
+    $regex: `^${deliveryId}$`,
+    $options: "i"
+  },
+  password
 });
 
 if(!boy){
