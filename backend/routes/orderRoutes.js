@@ -94,6 +94,11 @@ authMiddleware,
 orderController.rejectOrder
 );
 
+router.put(
+"/accept/:id",
+authMiddleware,
+orderController.acceptOrder
+);
 
 
 // Cancel Order

@@ -5,6 +5,7 @@ const Product = require("../models/Product");
 const DeliveryBoy = require("../models/DeliveryBoy");
 const admin = require("firebase-admin");
 const Staff = require("../models/Staff");
+const jwt = require("jsonwebtoken");
 
 // 🧾 CREATE ORDER
 exports.createOrder = async (req, res) => {
@@ -144,16 +145,11 @@ const order = new Order({
 
   orderId:"ORD"+Date.now(),
 
-deliveryBoy: assignedDeliveryBoy
-  ? {
-      name: assignedDeliveryBoy.name,
-      phone: assignedDeliveryBoy.mobile
-    }
-  : {},
+deliveryBoy: {},
 
-deliveryBoyId: assignedDeliveryBoy
-  ? assignedDeliveryBoy.deliveryId
-  : "",
+deliveryBoyId: "",
+
+deliveryAccepted: false,
 
 staffId: assignedStaff
   ? assignedStaff.staffId
@@ -290,6 +286,31 @@ exports.updateStatus = async (req, res) => {
     }
 
     let update = { status };
+
+if (status === "Delivery Accepted") {
+
+ console.log("ADMIN DATA =", req.admin); 
+
+  const deliveryBoy =
+    await DeliveryBoy.findOne({
+      deliveryId: req.admin.deliveryId
+    });
+
+  if (deliveryBoy) {
+
+    update.deliveryBoyId =
+      deliveryBoy.deliveryId;
+
+    update.deliveryBoy = {
+      name: deliveryBoy.name,
+      phone: deliveryBoy.mobile
+    };
+
+    update.deliveryAccepted = true;
+
+  }
+
+}    
 
     if (staffId) {
   update.staffId = staffId;
@@ -547,18 +568,7 @@ $or:[
 createdAt:1
 });
 
-if(
-  liveOrder &&
-  (!liveOrder.deliveryBoyId ||
-   liveOrder.deliveryBoyId === "")
-){
 
-  liveOrder.deliveryBoyId =
-  deliveryBoyId;
-
-  await liveOrder.save();
-
-}
 
 console.log(
 "LIVE ORDER =",
@@ -887,4 +897,57 @@ exports.rejectOrder = async (req, res) => {
 
   }
 
+};
+
+
+
+exports.acceptOrder = async (req, res) => {
+  try {
+
+    const deliveryBoyId =
+      req.user?.deliveryId;
+
+    const boy =
+      await DeliveryBoy.findOne({
+        deliveryId: deliveryBoyId
+      });
+
+    if (!boy) {
+      return res.status(404).json({
+        success: false,
+        message: "Delivery Boy not found"
+      });
+    }
+
+    const order =
+      await Order.findByIdAndUpdate(
+        req.params.id,
+        {
+          deliveryBoyId: boy.deliveryId,
+
+          deliveryBoy: {
+            name: boy.name,
+            phone: boy.mobile
+          },
+
+          deliveryAccepted: true,
+
+          status: "Delivery Accepted"
+        },
+        { new: true }
+      );
+
+    res.json({
+      success: true,
+      order
+    });
+
+  } catch (err) {
+
+    res.status(500).json({
+      success: false,
+      error: err.message
+    });
+
+  }
 };
