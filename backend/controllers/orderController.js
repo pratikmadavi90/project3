@@ -73,15 +73,18 @@ if (onlineDeliveryBoys.length > 0) {
 
       deliveryBoyId: boy.deliveryId,
 
-      status: {
-        $in: [
-          "Pending",
-          "Accepted",
-          "Packing",
-          "Packed",
-          "Out for Delivery"
-        ]
-      }
+status: {
+  $in: [
+    "Pending",
+    "Accepted",
+    "Delivery Accepted",
+    "Staff Accepted",
+    "Packing",
+    "Packed",
+    "Handed Over",
+    "Out for Delivery"
+  ]
+}
 
     });
 
