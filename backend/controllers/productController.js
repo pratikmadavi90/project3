@@ -28,12 +28,14 @@ console.log("FILES:", req.files);
       ? req.files.map(file => file.location)
       : [];
 
-    const product = new Product({
-    name: normalizeText(req.body.name),
-category: normalizeText(req.body.category),
-brand: normalizeText(req.body.brand),
-subCategory: normalizeText(req.body.subCategory),
-weight: req.body.weight,expiryDate: req.body.expiryDate,
+const product = new Product({
+  name: normalizeText(req.body.name),
+  category: normalizeText(req.body.category),
+  brand: normalizeText(req.body.brand),
+  subCategory: normalizeText(req.body.subCategory),
+  weight: req.body.weight,
+  description: req.body.description,
+  expiryDate: req.body.expiryDate,
 
       // 🔥 IMAGE FIX
       images: {
@@ -89,12 +91,14 @@ const getProducts = async (req, res) => {
 const updateProduct = async (req, res) => {
   try {
 
-    let updateData = {
+let updateData = {
   name: normalizeText(req.body.name),
   category: normalizeText(req.body.category),
   brand: normalizeText(req.body.brand),
   subCategory: normalizeText(req.body.subCategory),
-  weight: req.body.weight,expiryDate: req.body.expiryDate,
+  weight: req.body.weight,
+  description: req.body.description,
+  expiryDate: req.body.expiryDate,
 
       pricing: {
         mrp: Number(req.body.mrp) || 0,
