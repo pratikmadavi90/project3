@@ -99,16 +99,31 @@ exports.updateUser = async (req, res) => {
       }
     });
 
-    if (!zoneExists) {
-      return res.status(400).json({
-        success: false,
-        message: "Delivery not available in this area"
-      });
-    }
+if (!zoneExists) {
+  return res.status(400).json({
+    success: false,
+    message: "Delivery not available in this area"
+  });
+}
 
-    let user = await User.findOne({
-      email
-    });
+// YAHAN PASTE KARO 👇
+const existingUser = await User.findOne({ email });
+
+if (
+  existingUser &&
+  existingUser.city &&
+  existingUser.city.toLowerCase() !== city.toLowerCase()
+) {
+  return res.status(403).json({
+    success: false,
+    forceLogout: true,
+    message: "Location no longer available"
+  });
+}
+
+let user = await User.findOne({
+  email
+});
 
     // NEW USER
     if (!user) {
@@ -138,6 +153,18 @@ exports.updateUser = async (req, res) => {
 
       await user.save();
     }
+
+if (
+  existingUser &&
+  existingUser.city &&
+  !zoneExists
+) {
+  return res.status(403).json({
+    success: false,
+    forceLogout: true,
+    message: "Location removed by admin"
+  });
+}    
 
     res.json({
       success: true,
