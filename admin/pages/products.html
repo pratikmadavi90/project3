@@ -52,10 +52,16 @@ if (!token) {
     <input id="price" type="number" placeholder="Selling Price">
     <input id="stock" type="number" placeholder="Stock">
 
-<input id="weight" type="text" placeholder="Weight (kg/g)">
-<input type="date" id="expiryDate">
+    <input id="weight" type="text" placeholder="Weight (kg/g)">
+    <input type="date" id="expiryDate">
+    
+    <textarea
+    id="description"
+    placeholder="Product Description"
+    rows="4"
+    ></textarea>
 
-<input type="file" id="images" multiple accept="image/*">
+    <input type="file" id="images" multiple accept="image/*">
 
 <button id="saveBtn" type="button" class="save-btn" onclick="addOrUpdateProduct()">
   Save Product

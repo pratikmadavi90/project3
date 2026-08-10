@@ -20,6 +20,7 @@ const priceInput = document.getElementById("price");
 const stockInput = document.getElementById("stock");
 const weightInput = document.getElementById("weight");
 const expiryDateInput = document.getElementById("expiryDate");
+const descriptionInput = document.getElementById("description");
 
   const files = document.getElementById("images").files;
 
@@ -34,6 +35,7 @@ formData.append("price", priceInput.value);
 formData.append("stock", stockInput.value);
 formData.append("weight", weightInput.value);
 formData.append("expiryDate", expiryDateInput.value);
+formData.append("description", descriptionInput.value);
 
   // 🔥 IMAGE FIX (DIRECT S3 UPLOAD)
   if (files.length > 6) {
@@ -154,6 +156,8 @@ console.log(product);
 
   document.getElementById("weight").value = product.weight || "";
   document.getElementById("expiryDate").value =product.expiryDate? product.expiryDate.split("T")[0]: "";
+  document.getElementById("description").value =
+  product.description || "";
 
   document.getElementById("saveBtn").innerText = "Update Product";
 }
@@ -175,6 +179,7 @@ function cancelEdit() {
   document.getElementById("stock").value = "";
   document.getElementById("weight").value = "";
   document.getElementById("expiryDate").value = "";
+  
 }
 
 // 👉 LOAD PRODUCTS
@@ -268,6 +273,8 @@ console.log("WEIGHT VALUE:", p.weight);
       Stock: ${stock || 0}<br>
        Expiry: ${p.expiryDate ? new Date(p.expiryDate).toLocaleDateString("en-IN") : "N/A"}<br>
 
+       Description: ${p.description || "N/A"}<br>
+
        <div class="btns">
 
 
@@ -304,6 +311,7 @@ function clearForm() {
   document.getElementById("stock").value = "";
   document.getElementById("weight").value = "";
   document.getElementById("expiryDate").value = "";
+  document.getElementById("description").value = "";
 }
 
 async function getProducts() {
