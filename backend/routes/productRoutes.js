@@ -95,5 +95,26 @@ router.get("/trending", async (req, res) => {
   }
 });
 
+// ================= PRODUCT BY ID =================
+router.get("/:id", async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    res.json(product);
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
+
 
 module.exports = router;
