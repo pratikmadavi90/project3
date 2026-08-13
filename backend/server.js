@@ -30,6 +30,8 @@ const deliveryBoyRoutes =require("./routes/deliveryBoyRoutes");
 const deliveryAuthRoutes =require("./routes/deliveryAuthRoutes");
 const jwt = require("jsonwebtoken");
 const staffRoutes = require("./routes/staffRoutes");
+const homeDisplayRoutes = require("./routes/homeDisplayRoutes");
+
 
 
 const app = express(); 
@@ -141,7 +143,7 @@ app.use("/api/returns",returnRoutes);
 app.use("/api/delivery-boy", deliveryBoyRoutes);
 app.use("/api/delivery-auth",deliveryAuthRoutes);
 app.use("/api/staff", staffRoutes);
-
+app.use("/api/home-display",homeDisplayRoutes);
 
 
 
