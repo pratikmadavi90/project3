@@ -1,10 +1,17 @@
 const HomeDisplay = require("../models/HomeDisplay");
 
-// GET ALL HOME DISPLAY
+// GET HOME DISPLAY
 exports.getHomeDisplay = async (req, res) => {
   try {
-    const data = await HomeDisplay.find()
-      .populate("products");
+    let data = await HomeDisplay.findOne();
+
+    if (!data) {
+      data = await HomeDisplay.create({
+        featured: [],
+        personalCare: [],
+        household: [],
+      });
+    }
 
     res.status(200).json(data);
 
@@ -13,74 +20,58 @@ exports.getHomeDisplay = async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: "Failed to fetch home display",
+      message: "Failed to fetch Home Display",
     });
   }
 };
 
-// GET SINGLE SECTION
-exports.getSection = async (req, res) => {
+// SAVE HOME DISPLAY
+exports.saveHomeDisplay = async (req, res) => {
   try {
-    const section = await HomeDisplay.findOne({
-      section: req.params.section,
-    }).populate("products");
 
-    if (!section) {
-      return res.status(404).json({
-        success: false,
-        message: "Section not found",
-      });
-    }
-
-    res.status(200).json(section);
-
-  } catch (error) {
-    console.log(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch section",
-    });
-  }
-};
-
-// CREATE OR UPDATE SECTION
-exports.saveSection = async (req, res) => {
-  try {
     const {
-      section,
-      products,
-      isActive,
+      featured,
+      personalCare,
+      household,
     } = req.body;
 
-    let existing = await HomeDisplay.findOne({
-      section,
-    });
+    let data = await HomeDisplay.findOne();
 
-    if (existing) {
-      existing.products = products;
-      existing.isActive = isActive;
+    if (data) {
 
-      await existing.save();
+      data.featured =
+        featured || [];
+
+      data.personalCare =
+        personalCare || [];
+
+      data.household =
+        household || [];
+
+      await data.save();
 
       return res.status(200).json({
         success: true,
-        message: "Section updated",
-        data: existing,
+        message:
+          "Home Display Updated",
+        data,
       });
     }
 
-    const newSection =
-      await HomeDisplay.create({
-        section,
-        products,
-        isActive,
-      });
+    data = await HomeDisplay.create({
+      featured:
+        featured || [],
+      personalCare:
+        personalCare || [],
+      household:
+        household || [],
+    });
 
     res.status(201).json({
       success: true,
-      message: "Section created",
-      data: newSection,
+      message:
+        "Home Display Created",
+      data,
     });
 
   } catch (error) {
@@ -88,21 +79,32 @@ exports.saveSection = async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: "Failed to save section",
+      message:
+        "Failed to save Home Display",
     });
   }
 };
 
-// DELETE SECTION
-exports.deleteSection = async (req, res) => {
+// CLEAR HOME DISPLAY
+exports.clearHomeDisplay = async (
+  req,
+  res
+) => {
   try {
-    await HomeDisplay.findByIdAndDelete(
-      req.params.id
+
+    await HomeDisplay.updateMany(
+      {},
+      {
+        featured: [],
+        personalCare: [],
+        household: [],
+      }
     );
 
     res.status(200).json({
       success: true,
-      message: "Section deleted",
+      message:
+        "Home Display Cleared",
     });
 
   } catch (error) {
@@ -110,7 +112,8 @@ exports.deleteSection = async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: "Failed to delete section",
+      message:
+        "Failed to clear data",
     });
   }
 };

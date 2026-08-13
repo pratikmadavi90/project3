@@ -4,21 +4,17 @@ const router = express.Router();
 
 const {
   getHomeDisplay,
-  getSection,
-  saveSection,
-  deleteSection,
+  saveHomeDisplay,
+  clearHomeDisplay,
 } = require("../controllers/homeDisplayController");
 
-// GET ALL SECTIONS
+// GET HOME DISPLAY
 router.get("/", getHomeDisplay);
 
-// GET SINGLE SECTION
-router.get("/:section", getSection);
+// CREATE / UPDATE HOME DISPLAY
+router.post("/save", saveHomeDisplay);
 
-// CREATE / UPDATE SECTION
-router.post("/save", saveSection);
-
-// DELETE SECTION
-router.delete("/:id", deleteSection);
+// CLEAR ALL DATA
+router.delete("/clear", clearHomeDisplay);
 
 module.exports = router;

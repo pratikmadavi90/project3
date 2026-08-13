@@ -1,27 +1,58 @@
 const mongoose = require("mongoose");
 
-const HomeDisplaySchema = new mongoose.Schema(
+const ItemSchema = new mongoose.Schema(
   {
-    section: {
+    name: {
       type: String,
-      required: true,
-      enum: [
-        "Daily Grocery",
-        "Chips & Namkeen",
-        "Drinks",
-        "Dairy, Bread & Eggs",
-        "Personal Care",
-        "Household",
-      ],
-      unique: true,
+      default: "",
     },
 
-    products: [
+    image: {
+      type: String,
+      default: "",
+    },
+
+    category: {
+      type: String,
+      default: "",
+    },
+
+    subCategory: {
+      type: String,
+      default: "",
+    },
+  },
+  { _id: false }
+);
+
+const FeaturedSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+    },
+
+    images: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
+        type: String,
       },
     ],
+
+    category: {
+      type: String,
+      default: "",
+    },
+  },
+  { _id: false }
+);
+
+const HomeDisplaySchema = new mongoose.Schema(
+  {
+    featured: [FeaturedSchema],
+
+    personalCare: [ItemSchema],
+
+    household: [ItemSchema],
 
     isActive: {
       type: Boolean,
