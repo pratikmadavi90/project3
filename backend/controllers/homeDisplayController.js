@@ -33,9 +33,27 @@ exports.saveHomeDisplay = async (req, res) => {
       req.body.featured || "[]"
     );
 
+
     let personalCare = JSON.parse(
       req.body.personalCare || "[]"
-    );
+     );
+
+let snacks = JSON.parse(
+  req.body.snacks || "[]"
+);
+
+let grocery = JSON.parse(
+  req.body.grocery || "[]"
+);
+
+let beverages = JSON.parse(
+  req.body.beverages || "[]"
+);
+
+let dairy = JSON.parse(
+  req.body.dairy || "[]"
+);    
+
 
     let household = JSON.parse(
       req.body.household || "[]"
@@ -86,7 +104,8 @@ exports.saveHomeDisplay = async (req, res) => {
           ] = file.location;
         }
 
-        // PERSONAL CARE IMAGE
+
+         // PERSONAL CARE IMAGE
 
         if (
           field.startsWith(
@@ -103,7 +122,77 @@ exports.saveHomeDisplay = async (req, res) => {
             index
           ].image =
             file.location;
-        }
+        }       
+
+// SNACKS IMAGE
+
+if (
+  field.startsWith(
+    "snacks_"
+  )
+) {
+
+  const index =
+    parseInt(
+      field.split("_")[1]
+    );
+
+  snacks[index].image =
+    file.location;
+}
+
+// GROCERY IMAGE
+
+if (
+  field.startsWith(
+    "grocery_"
+  )
+) {
+
+  const index =
+    parseInt(
+      field.split("_")[1]
+    );
+
+  grocery[index].image =
+    file.location;
+}
+
+// BEVERAGES IMAGE
+
+if (
+  field.startsWith(
+    "beverages_"
+  )
+) {
+
+  const index =
+    parseInt(
+      field.split("_")[1]
+    );
+
+  beverages[index].image =
+    file.location;
+}
+
+// DAIRY IMAGE
+
+if (
+  field.startsWith(
+    "dairy_"
+  )
+) {
+
+  const index =
+    parseInt(
+      field.split("_")[1]
+    );
+
+  dairy[index].image =
+    file.location;
+}        
+
+
 
         // HOUSEHOLD IMAGE
 
@@ -133,14 +222,19 @@ exports.saveHomeDisplay = async (req, res) => {
 
     if (data) {
 
-      data.featured =
-        featured;
+data.featured = featured;
 
-      data.personalCare =
-        personalCare;
+data.personalCare = personalCare;
 
-      data.household =
-        household;
+data.snacks = snacks;
+
+data.grocery = grocery;
+
+data.beverages = beverages;
+
+data.dairy = dairy;
+
+data.household = household;
 
       await data.save();
 
@@ -153,12 +247,16 @@ exports.saveHomeDisplay = async (req, res) => {
 
     }
 
-    data =
-      await HomeDisplay.create({
-        featured,
-        personalCare,
-        household,
-      });
+data = await HomeDisplay.create({
+  featured: [],
+  
+  personalCare: [],
+  snacks: [],
+  grocery: [],
+  beverages: [],
+  dairy: [],
+  household: [],
+});
 
     res.status(201).json({
       success: true,
@@ -190,9 +288,13 @@ exports.clearHomeDisplay = async (
     await HomeDisplay.updateMany(
       {},
       {
-        featured: [],
-        personalCare: [],
-        household: [],
+featured: [],
+personalCare: [],
+snacks: [],
+grocery: [],
+beverages: [],
+dairy: [],
+household: [],
       }
     );
 

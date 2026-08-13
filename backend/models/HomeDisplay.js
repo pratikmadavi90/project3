@@ -52,6 +52,16 @@ const HomeDisplaySchema = new mongoose.Schema(
 
     personalCare: [ItemSchema],
 
+    snacks: [ItemSchema],
+
+    grocery: [ItemSchema],
+
+    beverages: [ItemSchema],
+
+    dairy: [ItemSchema],
+
+    
+
     household: [ItemSchema],
 
     isActive: {
