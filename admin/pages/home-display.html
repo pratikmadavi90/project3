@@ -1,117 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Display Management</title>
 
-<title>Home Display Management</title>
-
-<link rel="stylesheet" href="../css/home-display.css" />
+  <link rel="stylesheet" href="../css/home-display.css">
 </head>
 
 <body>
 
-<div class="container">
+  <div class="container">
 
-<h2>Home Display Management</h2>
+    <h1>Home Display Management</h1>
 
-<!-- Daily Grocery -->
-<div class="section-card">
-  <h3>Daily Grocery</h3>
+    <!-- FEATURED CATEGORY -->
 
-  <select id="daily1"></select>
-  <select id="daily2"></select>
-  <select id="daily3"></select>
-  <select id="daily4"></select>
+    <div class="section">
 
-  <button onclick="saveSection('Daily Grocery')">
-    Save Daily Grocery
-  </button>
-</div>
+      <div class="section-header">
+        <h2>Featured Categories</h2>
 
-<!-- Chips -->
-<div class="section-card">
-  <h3>Chips & Namkeen</h3>
+        <button
+          type="button"
+          id="addFeaturedBtn"
+          class="add-btn"
+        >
+          + Add Category
+        </button>
+      </div>
 
-  <select id="chips1"></select>
-  <select id="chips2"></select>
-  <select id="chips3"></select>
-  <select id="chips4"></select>
+      <div id="featuredContainer"></div>
 
-  <button onclick="saveSection('Chips & Namkeen')">
-    Save Chips & Namkeen
-  </button>
-</div>
+    </div>
 
-<!-- Drinks -->
-<div class="section-card">
-  <h3>Drinks</h3>
+    <!-- PERSONAL CARE -->
 
-  <select id="drinks1"></select>
-  <select id="drinks2"></select>
-  <select id="drinks3"></select>
-  <select id="drinks4"></select>
+    <div class="section">
 
-  <button onclick="saveSection('Drinks')">
-    Save Drinks
-  </button>
-</div>
+      <div class="section-header">
+        <h2>Personal Care</h2>
 
-<!-- Dairy -->
-<div class="section-card">
-  <h3>Dairy, Bread & Eggs</h3>
+        <button
+          type="button"
+          id="addPersonalBtn"
+          class="add-btn"
+        >
+          + Add Item
+        </button>
+      </div>
 
-  <select id="dairy1"></select>
-  <select id="dairy2"></select>
-  <select id="dairy3"></select>
-  <select id="dairy4"></select>
+      <div id="personalCareContainer"></div>
 
-  <button onclick="saveSection('Dairy, Bread & Eggs')">
-    Save Dairy
-  </button>
-</div>
+    </div>
 
-<!-- Personal Care -->
-<div class="section-card">
-  <h3>Personal Care</h3>
+    <!-- HOUSEHOLD -->
 
-  <select id="pc1"></select>
-  <select id="pc2"></select>
-  <select id="pc3"></select>
-  <select id="pc4"></select>
+    <div class="section">
 
-  <select id="pc5"></select>
-  <select id="pc6"></select>
-  <select id="pc7"></select>
-  <select id="pc8"></select>
+      <div class="section-header">
+        <h2>Household</h2>
 
-  <button onclick="saveSection('Personal Care')">
-    Save Personal Care
-  </button>
-</div>
+        <button
+          type="button"
+          id="addHouseholdBtn"
+          class="add-btn"
+        >
+          + Add Item
+        </button>
+      </div>
 
-<!-- Household -->
-<div class="section-card">
-  <h3>Household</h3>
+      <div id="householdContainer"></div>
 
-  <select id="hh1"></select>
-  <select id="hh2"></select>
-  <select id="hh3"></select>
-  <select id="hh4"></select>
+    </div>
 
-  <select id="hh5"></select>
-  <select id="hh6"></select>
-  <select id="hh7"></select>
-  <select id="hh8"></select>
+    <!-- SAVE -->
 
-  <button onclick="saveSection('Household')">
-    Save Household
-  </button>
-</div>
+    <div class="save-area">
 
-</div>
+      <button
+        type="button"
+        id="saveBtn"
+        class="save-btn"
+      >
+        Save Home Display
+      </button>
 
-<script src="../js/home-display.js"></script>
+    </div>
+
+  </div>
+
+  <!-- TEMPLATES -->
+
+  <template id="featuredTemplate">
+
+    <div class="card featured-card">
+
+      <div class="card-header">
+
+        <h3>Featured Category</h3>
+
+        <button
+          type="button"
+          class="delete-btn"
+        >
+          Delete
+        </button>
+
+      </div>
+
+      <input
+        type="text"
+        class="title-input"
+        placeholder="Category Title"
+      >
+
+      <input
+        type="text"
+        class="category-input"
+        placeholder="Open Category (Example: Grocery)"
+      >
+
+      <label>Image 1</label>
+      <input type="file" class="image1">
+
+      <label>Image 2</label>
+      <input type="file" class="image2">
+
+      <label>Image 3</label>
+      <input type="file" class="image3">
+
+      <label>Image 4</label>
+      <input type="file" class="image4">
+
+    </div>
+
+  </template>
+
+  <template id="itemTemplate">
+
+    <div class="card item-card">
+
+      <div class="card-header">
+
+        <h3>Item</h3>
+
+        <button
+          type="button"
+          class="delete-btn"
+        >
+          Delete
+        </button>
+
+      </div>
+
+      <input
+        type="text"
+        class="name-input"
+        placeholder="Item Name"
+      >
+
+      <input
+        type="text"
+        class="category-input"
+        placeholder="Category"
+      >
+
+      <input
+        type="text"
+        class="subcategory-input"
+        placeholder="Sub Category"
+      >
+
+      <input
+        type="file"
+        class="image-input"
+      >
+
+    </div>
+
+  </template>
+
+  <script src="../js/home-display.js"></script>
 
 </body>
+
 </html>

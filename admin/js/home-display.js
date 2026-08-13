@@ -1,180 +1,249 @@
-const API = "https://api.harzo.in/api";
+const featuredContainer =
+  document.getElementById(
+    "featuredContainer"
+  );
 
-let allProducts = [];
+const personalCareContainer =
+  document.getElementById(
+    "personalCareContainer"
+  );
 
-// LOAD PRODUCTS
-async function loadProducts() {
-  try {
-    const res = await fetch(`${API}/products`);
-    const data = await res.json();
+const householdContainer =
+  document.getElementById(
+    "householdContainer"
+  );
 
-    allProducts = data;
+const featuredTemplate =
+  document.getElementById(
+    "featuredTemplate"
+  );
 
-    fillAllDropdowns();
-    loadSavedSections();
+const itemTemplate =
+  document.getElementById(
+    "itemTemplate"
+  );
 
-  } catch (err) {
-    console.log(err);
-  }
-}
+// ======================
+// ADD FEATURED
+// ======================
 
-// FILL DROPDOWNS
-function fillDropdown(id) {
-  const select = document.getElementById(id);
+document
+  .getElementById(
+    "addFeaturedBtn"
+  )
+  .addEventListener(
+    "click",
+    () => {
+      const clone =
+        featuredTemplate.content.cloneNode(
+          true
+        );
 
-  if (!select) return;
+      clone
+        .querySelector(
+          ".delete-btn"
+        )
+        .addEventListener(
+          "click",
+          (e) => {
+            e.target
+              .closest(".card")
+              .remove();
+          }
+        );
 
-  select.innerHTML =
-    `<option value="">Select Product</option>`;
+      featuredContainer.appendChild(
+        clone
+      );
+    }
+  );
 
-  allProducts.forEach((product) => {
-    select.innerHTML += `
-      <option value="${product._id}">
-        ${product.name}
-      </option>
-    `;
-  });
-}
+// ======================
+// ADD PERSONAL CARE
+// ======================
 
-// ALL DROPDOWNS
-function fillAllDropdowns() {
+document
+  .getElementById(
+    "addPersonalBtn"
+  )
+  .addEventListener(
+    "click",
+    () => {
+      const clone =
+        itemTemplate.content.cloneNode(
+          true
+        );
 
-  [
-    "daily1","daily2","daily3","daily4",
+      clone
+        .querySelector(
+          ".delete-btn"
+        )
+        .addEventListener(
+          "click",
+          (e) => {
+            e.target
+              .closest(".card")
+              .remove();
+          }
+        );
 
-    "chips1","chips2","chips3","chips4",
+      personalCareContainer.appendChild(
+        clone
+      );
+    }
+  );
 
-    "drinks1","drinks2","drinks3","drinks4",
+// ======================
+// ADD HOUSEHOLD
+// ======================
 
-    "dairy1","dairy2","dairy3","dairy4",
+document
+  .getElementById(
+    "addHouseholdBtn"
+  )
+  .addEventListener(
+    "click",
+    () => {
+      const clone =
+        itemTemplate.content.cloneNode(
+          true
+        );
 
-    "pc1","pc2","pc3","pc4",
-    "pc5","pc6","pc7","pc8",
+      clone
+        .querySelector(
+          ".delete-btn"
+        )
+        .addEventListener(
+          "click",
+          (e) => {
+            e.target
+              .closest(".card")
+              .remove();
+          }
+        );
 
-    "hh1","hh2","hh3","hh4",
-    "hh5","hh6","hh7","hh8",
+      householdContainer.appendChild(
+        clone
+      );
+    }
+  );
 
-  ].forEach(fillDropdown);
-}
+// ======================
+// SAVE DATA
+// ======================
 
-// SAVE SECTION
-async function saveSection(section) {
+document
+  .getElementById(
+    "saveBtn"
+  )
+  .addEventListener(
+    "click",
+    async () => {
+      try {
+        const featured = [];
 
-  let ids = [];
+        document
+          .querySelectorAll(
+            "#featuredContainer .card"
+          )
+          .forEach((card) => {
+            featured.push({
+              title:
+                card.querySelector(
+                  ".title-input"
+                )?.value || "",
 
-  if (section === "Daily Grocery") {
-    ids = [
-      daily1.value,
-      daily2.value,
-      daily3.value,
-      daily4.value,
-    ];
-  }
+              category:
+                card.querySelector(
+                  ".category-input"
+                )?.value || "",
+            });
+          });
 
-  else if (section === "Chips & Namkeen") {
-    ids = [
-      chips1.value,
-      chips2.value,
-      chips3.value,
-      chips4.value,
-    ];
-  }
+        const personalCare =
+          [];
 
-  else if (section === "Drinks") {
-    ids = [
-      drinks1.value,
-      drinks2.value,
-      drinks3.value,
-      drinks4.value,
-    ];
-  }
+        document
+          .querySelectorAll(
+            "#personalCareContainer .card"
+          )
+          .forEach((card) => {
+            personalCare.push({
+              name:
+                card.querySelector(
+                  ".name-input"
+                )?.value || "",
 
-  else if (section === "Dairy, Bread & Eggs") {
-    ids = [
-      dairy1.value,
-      dairy2.value,
-      dairy3.value,
-      dairy4.value,
-    ];
-  }
+              category:
+                card.querySelector(
+                  ".category-input"
+                )?.value || "",
 
-  else if (section === "Personal Care") {
-    ids = [
-      pc1.value,
-      pc2.value,
-      pc3.value,
-      pc4.value,
-      pc5.value,
-      pc6.value,
-      pc7.value,
-      pc8.value,
-    ];
-  }
+              subCategory:
+                card.querySelector(
+                  ".subcategory-input"
+                )?.value || "",
+            });
+          });
 
-  else if (section === "Household") {
-    ids = [
-      hh1.value,
-      hh2.value,
-      hh3.value,
-      hh4.value,
-      hh5.value,
-      hh6.value,
-      hh7.value,
-      hh8.value,
-    ];
-  }
+        const household =
+          [];
 
-  ids = ids.filter(Boolean);
+        document
+          .querySelectorAll(
+            "#householdContainer .card"
+          )
+          .forEach((card) => {
+            household.push({
+              name:
+                card.querySelector(
+                  ".name-input"
+                )?.value || "",
 
-  try {
+              category:
+                card.querySelector(
+                  ".category-input"
+                )?.value || "",
 
-    const res = await fetch(
-      `${API}/home-display/save`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type":
-            "application/json",
-        },
-        body: JSON.stringify({
-          section,
-          products: ids,
-          isActive: true,
-        }),
+              subCategory:
+                card.querySelector(
+                  ".subcategory-input"
+                )?.value || "",
+            });
+          });
+
+        const response =
+          await fetch(
+            "https://api.harzo.in/api/home-display/save",
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type":
+                  "application/json",
+              },
+
+              body: JSON.stringify({
+                featured,
+                personalCare,
+                household,
+              }),
+            }
+          );
+
+        const data =
+          await response.json();
+
+        alert(
+          data.message ||
+            "Saved Successfully"
+        );
+      } catch (error) {
+        console.log(error);
+
+        alert(
+          "Failed to Save"
+        );
       }
-    );
-
-    const result =
-      await res.json();
-
-    alert(result.message);
-
-  } catch (err) {
-    console.log(err);
-    alert("Save Failed");
-  }
-}
-
-// LOAD SAVED DATA
-async function loadSavedSections() {
-
-  try {
-
-    const res = await fetch(
-      `${API}/home-display`
-    );
-
-    const sections =
-      await res.json();
-
-    console.log(
-      "HOME DISPLAY:",
-      sections
-    );
-
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-loadProducts();
+    }
+  );
