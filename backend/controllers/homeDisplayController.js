@@ -29,24 +29,118 @@ exports.getHomeDisplay = async (req, res) => {
 exports.saveHomeDisplay = async (req, res) => {
   try {
 
-    const {
-      featured,
-      personalCare,
-      household,
-    } = req.body;
+    let featured = JSON.parse(
+      req.body.featured || "[]"
+    );
 
-    let data = await HomeDisplay.findOne();
+    let personalCare = JSON.parse(
+      req.body.personalCare || "[]"
+    );
+
+    let household = JSON.parse(
+      req.body.household || "[]"
+    );
+
+    // =====================
+    // S3 URL MAPPING
+    // =====================
+
+    if (req.files && req.files.length) {
+
+      req.files.forEach((file) => {
+
+        const field =
+          file.fieldname;
+
+        // FEATURED IMAGES
+
+        if (
+          field.startsWith(
+            "featured_"
+          )
+        ) {
+
+          const parts =
+            field.split("_");
+
+          const cardIndex =
+            parseInt(parts[1]);
+
+          const imageIndex =
+            parseInt(parts[3]);
+
+          if (
+            !featured[
+              cardIndex
+            ].images
+          ) {
+            featured[
+              cardIndex
+            ].images = [];
+          }
+
+          featured[
+            cardIndex
+          ].images[
+            imageIndex
+          ] = file.location;
+        }
+
+        // PERSONAL CARE IMAGE
+
+        if (
+          field.startsWith(
+            "personalCare_"
+          )
+        ) {
+
+          const index =
+            parseInt(
+              field.split("_")[1]
+            );
+
+          personalCare[
+            index
+          ].image =
+            file.location;
+        }
+
+        // HOUSEHOLD IMAGE
+
+        if (
+          field.startsWith(
+            "household_"
+          )
+        ) {
+
+          const index =
+            parseInt(
+              field.split("_")[1]
+            );
+
+          household[
+            index
+          ].image =
+            file.location;
+        }
+
+      });
+
+    }
+
+    let data =
+      await HomeDisplay.findOne();
 
     if (data) {
 
       data.featured =
-        featured || [];
+        featured;
 
       data.personalCare =
-        personalCare || [];
+        personalCare;
 
       data.household =
-        household || [];
+        household;
 
       await data.save();
 
@@ -56,16 +150,15 @@ exports.saveHomeDisplay = async (req, res) => {
           "Home Display Updated",
         data,
       });
+
     }
 
-    data = await HomeDisplay.create({
-      featured:
-        featured || [],
-      personalCare:
-        personalCare || [],
-      household:
-        household || [],
-    });
+    data =
+      await HomeDisplay.create({
+        featured,
+        personalCare,
+        household,
+      });
 
     res.status(201).json({
       success: true,
@@ -75,13 +168,15 @@ exports.saveHomeDisplay = async (req, res) => {
     });
 
   } catch (error) {
+
     console.log(error);
 
     res.status(500).json({
       success: false,
       message:
-        "Failed to save Home Display",
+        error.message,
     });
+
   }
 };
 
@@ -117,3 +212,4 @@ exports.clearHomeDisplay = async (
     });
   }
 };
+
