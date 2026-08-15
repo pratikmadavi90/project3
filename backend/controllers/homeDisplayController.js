@@ -125,6 +125,58 @@ exports.saveHomeDisplay = async (
         "[]"
       );
 
+ if (req.files && req.files.length) {
+
+  req.files.forEach((file) => {
+
+    const field = file.fieldname;
+
+    if (field.startsWith("personalCare_")) {
+      const index = parseInt(field.split("_")[1]);
+      if (personalCare[index]) {
+        personalCare[index].image = file.location;
+      }
+    }
+
+    if (field.startsWith("snacks_")) {
+      const index = parseInt(field.split("_")[1]);
+      if (snacks[index]) {
+        snacks[index].image = file.location;
+      }
+    }
+
+    if (field.startsWith("grocery_")) {
+      const index = parseInt(field.split("_")[1]);
+      if (grocery[index]) {
+        grocery[index].image = file.location;
+      }
+    }
+
+    if (field.startsWith("beverages_")) {
+      const index = parseInt(field.split("_")[1]);
+      if (beverages[index]) {
+        beverages[index].image = file.location;
+      }
+    }
+
+    if (field.startsWith("dairy_")) {
+      const index = parseInt(field.split("_")[1]);
+      if (dairy[index]) {
+        dairy[index].image = file.location;
+      }
+    }
+
+    if (field.startsWith("household_")) {
+      const index = parseInt(field.split("_")[1]);
+      if (household[index]) {
+        household[index].image = file.location;
+      }
+    }
+
+  });
+
+}     
+
     let data =
       await HomeDisplay.findOne();
 
