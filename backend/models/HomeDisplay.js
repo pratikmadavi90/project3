@@ -11,62 +11,58 @@ const ItemSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-
-    category: {
-      type: String,
-      default: "",
-    },
-
-    subCategory: {
-      type: String,
-      default: "",
-    },
-  },
-  { _id: false }
-);
-
-const FeaturedSchema = new mongoose.Schema(
-  {
-    title: {
-      type: String,
-      required: true,
-    },
-
-    images: [
-      {
-        type: String,
-      },
-    ],
-
-    category: {
-      type: String,
-      default: "",
-    },
   },
   { _id: false }
 );
 
 const HomeDisplaySchema = new mongoose.Schema(
   {
-    featured: [FeaturedSchema],
+    personalCare: {
+      type: [ItemSchema],
+      default: Array(8).fill({
+        name: "",
+        image: "",
+      }),
+    },
 
-    personalCare: [ItemSchema],
+    snacks: {
+      type: [ItemSchema],
+      default: Array(8).fill({
+        name: "",
+        image: "",
+      }),
+    },
 
-    snacks: [ItemSchema],
+    grocery: {
+      type: [ItemSchema],
+      default: Array(8).fill({
+        name: "",
+        image: "",
+      }),
+    },
 
-    grocery: [ItemSchema],
+    beverages: {
+      type: [ItemSchema],
+      default: Array(8).fill({
+        name: "",
+        image: "",
+      }),
+    },
 
-    beverages: [ItemSchema],
+    dairy: {
+      type: [ItemSchema],
+      default: Array(8).fill({
+        name: "",
+        image: "",
+      }),
+    },
 
-    dairy: [ItemSchema],
-
-    
-
-    household: [ItemSchema],
-
-    isActive: {
-      type: Boolean,
-      default: true,
+    household: {
+      type: [ItemSchema],
+      default: Array(8).fill({
+        name: "",
+        image: "",
+      }),
     },
   },
   {
