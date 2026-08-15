@@ -19,8 +19,9 @@ async function addBanner() {
 
   try {
     // 1️⃣ Upload to S3
-    const formData = new FormData();
-    formData.append("image", file);
+const formData = new FormData();
+formData.append("image", file);
+formData.append("folder", "banners");
 
 const token = localStorage.getItem("adminToken");
 
