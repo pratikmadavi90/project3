@@ -32,10 +32,10 @@ const upload = multer({
         .replace(/-+/g, "-")
         .replace(/^-|-$/g, "");
 
-      cb(
-        null,
-        `${Date.now()}-${fileName}${ext.toLowerCase()}`
-      );
+     cb(
+     null,
+    `products/${Date.now()}-${fileName}${ext.toLowerCase()}`
+    );
     }
   })
 });
