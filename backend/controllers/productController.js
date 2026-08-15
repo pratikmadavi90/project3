@@ -1,5 +1,15 @@
 const Product = require("../models/Product");
 
+const { S3Client, DeleteObjectCommand } = require("@aws-sdk/client-s3");
+
+const s3 = new S3Client({
+  region: "ap-south-1",
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+  }
+});
+
 // 👉 AUTO SKU GENERATE
 const generateSKU = () => {
   return "SKU-" + Math.floor(100000 + Math.random() * 900000);
@@ -141,10 +151,37 @@ if (req.files && req.files.length > 0) {
 // 👉 DELETE PRODUCT
 const deleteProduct = async (req, res) => {
   try {
+    const product = await Product.findById(req.params.id);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    const images = product.images?.gallery || [];
+
+    for (const imageUrl of images) {
+      const key = imageUrl.split(".amazonaws.com/")[1];
+
+      if (key) {
+        await s3.send(
+          new DeleteObjectCommand({
+            Bucket: "harzo-images-storage",
+            Key: key
+          })
+        );
+      }
+    }
+
     await Product.findByIdAndDelete(req.params.id);
-    res.json({ message: "Deleted ✅" });
+
+    res.json({
+      message: "Product + S3 Images Deleted ✅"
+    });
+
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({
+      message: err.message
+    });
   }
 };
 

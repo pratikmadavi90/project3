@@ -1,4 +1,13 @@
 const HomeDisplay = require("../models/HomeDisplay");
+const { S3Client, DeleteObjectCommand } = require("@aws-sdk/client-s3");
+
+const s3 = new S3Client({
+  region: "ap-south-1",
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+  }
+});
 
 // GET HOME DISPLAY
 exports.getHomeDisplay = async (req, res) => {
