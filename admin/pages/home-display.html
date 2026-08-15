@@ -1,233 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home Display Management</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home Display Management</title>
 
-  <link rel="stylesheet" href="../css/home-display.css">
+<link rel="stylesheet" href="../css/home-display.css">
 </head>
-
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <h1>Home Display Management</h1>
+<h1>Home Display Management</h1>
 
-    <!-- FEATURED CATEGORY -->
-
-    <div class="section">
-
-      <div class="section-header">
-        <h2>Featured Categories</h2>
-
-        <button
-          type="button"
-          id="addFeaturedBtn"
-          class="add-btn"
-        >
-          + Add Category
-        </button>
-      </div>
-
-      <div id="featuredContainer"></div>
-
-    </div>
-
-    <!-- PERSONAL CARE -->
-
-    <div class="section">
-
-      <div class="section-header">
-        <h2>Personal Care</h2>
-
-        <button
-          type="button"
-          id="addPersonalBtn"
-          class="add-btn"
-        >
-          + Add Item
-        </button>
-      </div>
-
-      <div id="personalCareContainer"></div>
-
-    </div>
+<!-- PERSONAL CARE -->
+<div class="section">
+  <h2>PERSONAL CARE</h2>
+  <div id="personalCareContainer" class="grid"></div>
+</div>
 
 <!-- SNACKS -->
 <div class="section">
-  <div class="section-header">
-    <h2>Snacks</h2>
-    <button type="button" id="addSnacksBtn" class="add-btn">
-      + Add Item
-    </button>
-  </div>
-  <div id="snacksContainer"></div>
+  <h2>SNACKS</h2>
+  <div id="snacksContainer" class="grid"></div>
 </div>
 
 <!-- GROCERY -->
 <div class="section">
-  <div class="section-header">
-    <h2>Grocery</h2>
-    <button type="button" id="addGroceryBtn" class="add-btn">
-      + Add Item
-    </button>
-  </div>
-  <div id="groceryContainer"></div>
+  <h2>GROCERY</h2>
+  <div id="groceryContainer" class="grid"></div>
 </div>
 
 <!-- BEVERAGES -->
 <div class="section">
-  <div class="section-header">
-    <h2>Beverages</h2>
-    <button type="button" id="addBeveragesBtn" class="add-btn">
-      + Add Item
-    </button>
-  </div>
-  <div id="beveragesContainer"></div>
+  <h2>BEVERAGES</h2>
+  <div id="beveragesContainer" class="grid"></div>
 </div>
 
 <!-- DAIRY -->
 <div class="section">
-  <div class="section-header">
-    <h2>Dairy</h2>
-    <button type="button" id="addDairyBtn" class="add-btn">
-      + Add Item
-    </button>
-  </div>
-  <div id="dairyContainer"></div>
+  <h2>DAIRY</h2>
+  <div id="dairyContainer" class="grid"></div>
 </div>
 
-    <!-- HOUSEHOLD -->
+<!-- HOUSEHOLD -->
+<div class="section">
+  <h2>HOUSEHOLD</h2>
+  <div id="householdContainer" class="grid"></div>
+</div>
 
-    <div class="section">
+<button id="saveBtn" class="save-btn">
+  Save All Changes
+</button>
 
-      <div class="section-header">
-        <h2>Household</h2>
+</div>
 
-        <button
-          type="button"
-          id="addHouseholdBtn"
-          class="add-btn"
-        >
-          + Add Item
-        </button>
-      </div>
+<!-- CARD TEMPLATE -->
+<template id="itemTemplate">
+  <div class="card">
 
-      <div id="householdContainer"></div>
+    <img
+      class="preview"
+      src="https://via.placeholder.com/120"
+      alt=""
+    >
 
-    </div>
+    <input
+      type="file"
+      class="image-input"
+      accept="image/*"
+    >
 
-    <!-- SAVE -->
+    <input
+      type="text"
+      class="name-input"
+      placeholder="Category Name"
+    >
 
-    <div class="save-area">
-
-      <button
-        type="button"
-        id="saveBtn"
-        class="save-btn"
-      >
-        Save Home Display
-      </button>
-
-    </div>
+    <button
+      class="clear-btn"
+      type="button"
+    >
+      Clear
+    </button>
 
   </div>
+</template>
 
-  <!-- TEMPLATES -->
-
-  <template id="featuredTemplate">
-
-    <div class="card featured-card">
-
-      <div class="card-header">
-
-        <h3>Featured Category</h3>
-
-        <button
-          type="button"
-          class="delete-btn"
-        >
-          Delete
-        </button>
-
-      </div>
-
-      <input
-        type="text"
-        class="title-input"
-        placeholder="Category Title"
-      >
-
-      <input
-        type="text"
-        class="category-input"
-        placeholder="Open Category (Example: Grocery)"
-      >
-
-      <label>Image 1</label>
-      <input type="file" class="image1">
-
-      <label>Image 2</label>
-      <input type="file" class="image2">
-
-      <label>Image 3</label>
-      <input type="file" class="image3">
-
-      <label>Image 4</label>
-      <input type="file" class="image4">
-
-    </div>
-
-  </template>
-
-  <template id="itemTemplate">
-
-    <div class="card item-card">
-
-      <div class="card-header">
-
-        <h3>Item</h3>
-
-        <button
-          type="button"
-          class="delete-btn"
-        >
-          Delete
-        </button>
-
-      </div>
-
-      <input
-        type="text"
-        class="name-input"
-        placeholder="Item Name"
-      >
-
-      <input
-        type="text"
-        class="category-input"
-        placeholder="Category"
-      >
-
-      <input
-        type="text"
-        class="subcategory-input"
-        placeholder="Sub Category"
-      >
-
-      <input
-        type="file"
-        class="image-input"
-      >
-
-    </div>
-
-  </template>
-
-  <script src="../js/home-display.js"></script>
+<script src="../js/home-display.js"></script>
 
 </body>
-
 </html>

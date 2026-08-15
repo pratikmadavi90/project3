@@ -1,626 +1,236 @@
-const featuredContainer =
-  document.getElementById(
-    "featuredContainer"
-  );
+const categories = [
+  "personalCare",
+  "snacks",
+  "grocery",
+  "beverages",
+  "dairy",
+  "household"
+];
 
-const personalCareContainer =
-  document.getElementById(
-    "personalCareContainer"
-  );
-
-const snacksContainer =
-  document.getElementById(
-    "snacksContainer"
-  );
-
-const groceryContainer =
-  document.getElementById(
-    "groceryContainer"
-  );
-
-const beveragesContainer =
-  document.getElementById(
-    "beveragesContainer"
-  );
-
-const dairyContainer =
-  document.getElementById(
-    "dairyContainer"
-  );  
-
-const householdContainer =
-  document.getElementById(
-    "householdContainer"
-  );
-
-const featuredTemplate =
-  document.getElementById(
-    "featuredTemplate"
-  );
-
-const itemTemplate =
+const template =
   document.getElementById(
     "itemTemplate"
   );
 
 // ======================
-// ADD FEATURED
+// CREATE 8 BOXES
+// ======================
+
+function createBoxes() {
+
+  categories.forEach(
+    (category) => {
+
+      const container =
+        document.getElementById(
+          `${category}Container`
+        );
+
+      for (
+        let i = 0;
+        i < 8;
+        i++
+      ) {
+
+        const clone =
+          template.content.cloneNode(
+            true
+          );
+
+        const card =
+          clone.querySelector(
+            ".card"
+          );
+
+        const imageInput =
+          clone.querySelector(
+            ".image-input"
+          );
+
+        const preview =
+          clone.querySelector(
+            ".preview"
+          );
+
+        const clearBtn =
+          clone.querySelector(
+            ".clear-btn"
+          );
+
+        imageInput.addEventListener(
+          "change",
+          (e) => {
+
+            const file =
+              e.target.files[0];
+
+            if (file) {
+
+              preview.src =
+                URL.createObjectURL(
+                  file
+                );
+            }
+          }
+        );
+
+        clearBtn.addEventListener(
+          "click",
+          () => {
+
+            card.querySelector(
+              ".name-input"
+            ).value = "";
+
+            imageInput.value = "";
+
+            preview.src =
+              "https://via.placeholder.com/120";
+          }
+        );
+
+        container.appendChild(
+          clone
+        );
+      }
+    }
+  );
+}
+
+// ======================
+// LOAD DATA
+// ======================
+
+async function loadData() {
+
+  try {
+
+    const response =
+      await fetch(
+        "https://api.harzo.in/api/home-display"
+      );
+
+    const data =
+      await response.json();
+
+    categories.forEach(
+      (category) => {
+
+        const cards =
+          document.querySelectorAll(
+            `#${category}Container .card`
+          );
+
+        const items =
+          data[category] || [];
+
+        cards.forEach(
+          (card, index) => {
+
+            if (
+              !items[index]
+            )
+              return;
+
+            card.querySelector(
+              ".name-input"
+            ).value =
+              items[index].name || "";
+
+            if (
+              items[index].image
+            ) {
+
+              card.querySelector(
+                ".preview"
+              ).src =
+                items[index].image;
+            }
+          }
+        );
+      }
+    );
+
+  } catch (error) {
+
+    console.log(error);
+  }
+}
+
+// ======================
+// SAVE
 // ======================
 
 document
   .getElementById(
-    "addFeaturedBtn"
+    "saveBtn"
   )
-  .addEventListener(
-    "click",
-    () => {
-      const clone =
-        featuredTemplate.content.cloneNode(
-          true
-        );
-
-      clone
-        .querySelector(
-          ".delete-btn"
-        )
-        .addEventListener(
-          "click",
-          (e) => {
-            e.target
-              .closest(".card")
-              .remove();
-          }
-        );
-
-      featuredContainer.appendChild(
-        clone
-      );
-    }
-  );
-
-// ======================
-// ADD PERSONAL CARE
-// ======================
-
-document
-  .getElementById(
-    "addPersonalBtn"
-  )
-  .addEventListener(
-    "click",
-    () => {
-      const clone =
-        itemTemplate.content.cloneNode(
-          true
-        );
-
-      clone
-        .querySelector(
-          ".delete-btn"
-        )
-        .addEventListener(
-          "click",
-          (e) => {
-            e.target
-              .closest(".card")
-              .remove();
-          }
-        );
-
-      personalCareContainer.appendChild(
-        clone
-      );
-    }
-  );
-
-// ======================
-// ADD SNACKS
-// ======================
-
-document
-  .getElementById("addSnacksBtn")
-  .addEventListener("click", () => {
-
-    const clone =
-      itemTemplate.content.cloneNode(
-        true
-      );
-
-    clone
-      .querySelector(".delete-btn")
-      .addEventListener(
-        "click",
-        (e) => {
-          e.target
-            .closest(".card")
-            .remove();
-        }
-      );
-
-    snacksContainer.appendChild(
-      clone
-    );
-  });
-
-// ======================
-// ADD GROCERY
-// ======================
-
-document
-  .getElementById("addGroceryBtn")
-  .addEventListener("click", () => {
-
-    const clone =
-      itemTemplate.content.cloneNode(
-        true
-      );
-
-    clone
-      .querySelector(".delete-btn")
-      .addEventListener(
-        "click",
-        (e) => {
-          e.target
-            .closest(".card")
-            .remove();
-        }
-      );
-
-    groceryContainer.appendChild(
-      clone
-    );
-  });
-
-// ======================
-// ADD BEVERAGES
-// ======================
-
-document
-  .getElementById("addBeveragesBtn")
-  .addEventListener("click", () => {
-
-    const clone =
-      itemTemplate.content.cloneNode(
-        true
-      );
-
-    clone
-      .querySelector(".delete-btn")
-      .addEventListener(
-        "click",
-        (e) => {
-          e.target
-            .closest(".card")
-            .remove();
-        }
-      );
-
-    beveragesContainer.appendChild(
-      clone
-    );
-  });
-
-// ======================
-// ADD DAIRY
-// ======================
-
-document
-  .getElementById("addDairyBtn")
-  .addEventListener("click", () => {
-
-    const clone =
-      itemTemplate.content.cloneNode(
-        true
-      );
-
-    clone
-      .querySelector(".delete-btn")
-      .addEventListener(
-        "click",
-        (e) => {
-          e.target
-            .closest(".card")
-            .remove();
-        }
-      );
-
-    dairyContainer.appendChild(
-      clone
-    );
-  });  
-
-// ======================
-// ADD HOUSEHOLD
-// ======================
-
-document
-  .getElementById(
-    "addHouseholdBtn"
-  )
-  .addEventListener(
-    "click",
-    () => {
-      const clone =
-        itemTemplate.content.cloneNode(
-          true
-        );
-
-      clone
-        .querySelector(
-          ".delete-btn"
-        )
-        .addEventListener(
-          "click",
-          (e) => {
-            e.target
-              .closest(".card")
-              .remove();
-          }
-        );
-
-      householdContainer.appendChild(
-        clone
-      );
-    }
-  );
-
-// ======================
-// SAVE DATA (S3 READY)
-// ======================
-
-document
-  .getElementById("saveBtn")
   .addEventListener(
     "click",
     async () => {
+
       try {
 
         const formData =
           new FormData();
 
-        const featured = [];
+        categories.forEach(
+          (category) => {
 
-        document
-          .querySelectorAll(
-            "#featuredContainer .card"
-          )
-          .forEach(
-            (card, index) => {
+            const items =
+              [];
 
-              featured.push({
-                title:
+            const cards =
+              document.querySelectorAll(
+                `#${category}Container .card`
+              );
+
+            cards.forEach(
+              (
+                card,
+                index
+              ) => {
+
+                items.push({
+                  name:
+                    card.querySelector(
+                      ".name-input"
+                    ).value,
+
+                  category:
+                    category
+                });
+
+                const file =
                   card.querySelector(
-                    ".title-input"
-                  )?.value || "",
+                    ".image-input"
+                  ).files[0];
 
-                category:
-                  card.querySelector(
-                    ".category-input"
-                  )?.value || "",
-              });
+                if (file) {
 
-              const img1 =
-                card.querySelector(
-                  ".image1"
-                )?.files?.[0];
-
-              const img2 =
-                card.querySelector(
-                  ".image2"
-                )?.files?.[0];
-
-              const img3 =
-                card.querySelector(
-                  ".image3"
-                )?.files?.[0];
-
-              const img4 =
-                card.querySelector(
-                  ".image4"
-                )?.files?.[0];
-
-              if (img1)
-                formData.append(
-                  `featured_${index}_image_0`,
-                  img1
-                );
-
-              if (img2)
-                formData.append(
-                  `featured_${index}_image_1`,
-                  img2
-                );
-
-              if (img3)
-                formData.append(
-                  `featured_${index}_image_2`,
-                  img3
-                );
-
-              if (img4)
-                formData.append(
-                  `featured_${index}_image_3`,
-                  img4
-                );
-            }
-          );
-
-        const personalCare =
-          [];
-
-        document
-          .querySelectorAll(
-            "#personalCareContainer .card"
-          )
-          .forEach(
-            (card, index) => {
-
-              personalCare.push({
-                name:
-                  card.querySelector(
-                    ".name-input"
-                  )?.value || "",
-
-                category:
-                  card.querySelector(
-                    ".category-input"
-                  )?.value || "",
-
-                subCategory:
-                  card.querySelector(
-                    ".subcategory-input"
-                  )?.value || "",
-              });
-
-              const image =
-                card.querySelector(
-                  ".image-input"
-                )?.files?.[0];
-
-              if (image) {
-                formData.append(
-                  `personalCare_${index}_image`,
-                  image
-                );
+                  formData.append(
+                    `${category}_${index}_image`,
+                    file
+                  );
+                }
               }
-            }
+            );
+
+            formData.append(
+              category,
+              JSON.stringify(
+                items
+              )
+            );
+          }
+        );
+
+        const token =
+          localStorage.getItem(
+            "adminToken"
           );
 
- const snacks = [];
-
-document
-  .querySelectorAll(
-    "#snacksContainer .card"
-  )
-  .forEach((card, index) => {
-
-    snacks.push({
-      name:
-        card.querySelector(
-          ".name-input"
-        )?.value || "",
-
-      category:
-        card.querySelector(
-          ".category-input"
-        )?.value || "",
-
-      subCategory:
-        card.querySelector(
-          ".subcategory-input"
-        )?.value || "",
-    });
-
-    const image =
-      card.querySelector(
-        ".image-input"
-      )?.files?.[0];
-
-    if (image) {
-      formData.append(
-        `snacks_${index}_image`,
-        image
-      );
-    }
-  });
-
-const grocery = [];
-
-document
-  .querySelectorAll(
-    "#groceryContainer .card"
-  )
-  .forEach((card, index) => {
-
-    grocery.push({
-      name:
-        card.querySelector(
-          ".name-input"
-        )?.value || "",
-
-      category:
-        card.querySelector(
-          ".category-input"
-        )?.value || "",
-
-      subCategory:
-        card.querySelector(
-          ".subcategory-input"
-        )?.value || "",
-    });
-
-    const image =
-      card.querySelector(
-        ".image-input"
-      )?.files?.[0];
-
-    if (image) {
-      formData.append(
-        `grocery_${index}_image`,
-        image
-      );
-    }
-  });
-
-const beverages = [];
-
-document
-  .querySelectorAll(
-    "#beveragesContainer .card"
-  )
-  .forEach((card, index) => {
-
-    beverages.push({
-      name:
-        card.querySelector(
-          ".name-input"
-        )?.value || "",
-
-      category:
-        card.querySelector(
-          ".category-input"
-        )?.value || "",
-
-      subCategory:
-        card.querySelector(
-          ".subcategory-input"
-        )?.value || "",
-    });
-
-    const image =
-      card.querySelector(
-        ".image-input"
-      )?.files?.[0];
-
-    if (image) {
-      formData.append(
-        `beverages_${index}_image`,
-        image
-      );
-    }
-  });
-
-const dairy = [];
-
-document
-  .querySelectorAll(
-    "#dairyContainer .card"
-  )
-  .forEach((card, index) => {
-
-    dairy.push({
-      name:
-        card.querySelector(
-          ".name-input"
-        )?.value || "",
-
-      category:
-        card.querySelector(
-          ".category-input"
-        )?.value || "",
-
-      subCategory:
-        card.querySelector(
-          ".subcategory-input"
-        )?.value || "",
-    });
-
-    const image =
-      card.querySelector(
-        ".image-input"
-      )?.files?.[0];
-
-    if (image) {
-      formData.append(
-        `dairy_${index}_image`,
-        image
-      );
-    }
-  });         
-
-        const household =
-          [];
-
-        document
-          .querySelectorAll(
-            "#householdContainer .card"
-          )
-          .forEach(
-            (card, index) => {
-
-              household.push({
-                name:
-                  card.querySelector(
-                    ".name-input"
-                  )?.value || "",
-
-                category:
-                  card.querySelector(
-                    ".category-input"
-                  )?.value || "",
-
-                subCategory:
-                  card.querySelector(
-                    ".subcategory-input"
-                  )?.value || "",
-              });
-
-              const image =
-                card.querySelector(
-                  ".image-input"
-                )?.files?.[0];
-
-              if (image) {
-                formData.append(
-                  `household_${index}_image`,
-                  image
-                );
-              }
-            }
-          );
-
-formData.append(
-  "featured",
-  JSON.stringify(featured)
-);
-
-formData.append(
-  "personalCare",
-  JSON.stringify(personalCare)
-);
-
-formData.append(
-  "snacks",
-  JSON.stringify(snacks)
-);
-
-formData.append(
-  "grocery",
-  JSON.stringify(grocery)
-);
-
-formData.append(
-  "beverages",
-  JSON.stringify(beverages)
-);
-
-formData.append(
-  "dairy",
-  JSON.stringify(dairy)
-);
-
-
-formData.append(
-  "household",
-  JSON.stringify(household)
-);
-
-const token =
-  localStorage.getItem(
-    "adminToken"
-  );
-
-        const response =
+const response =
           await fetch(
             "https://api.harzo.in/api/home-display/save",
             {
@@ -651,3 +261,11 @@ const token =
       }
     }
   );
+
+// ======================
+// START
+// ======================
+
+createBoxes();
+
+loadData();
