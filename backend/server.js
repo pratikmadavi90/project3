@@ -145,7 +145,7 @@ app.use("/api/returns",returnRoutes);
 app.use("/api/delivery-boy", deliveryBoyRoutes);
 app.use("/api/delivery-auth",deliveryAuthRoutes);
 app.use("/api/staff", staffRoutes);
-app.use("/api/home-display",homeDisplayRoutes);
+app.use("/api/home-display", homeDisplayRoutes);
 
 
 
