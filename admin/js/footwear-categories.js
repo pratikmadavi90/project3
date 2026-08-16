@@ -28,33 +28,40 @@ async function loadCategories() {
 
     categoriesGrid.innerHTML = "";
 
-    data.categories.forEach((category) => {
-      categoriesGrid.innerHTML += `
-        <div class="category-card">
+data.categories.forEach((category) => {
+  categoriesGrid.innerHTML += `
+    <div class="category-card">
 
-          <h3>${category.name}</h3>
+      <h3>${category.name}</h3>
 
-          <div class="category-actions">
+      <div class="category-actions">
 
-            <button
-              class="edit-btn"
-              onclick="editCategory('${category._id}','${category.name}')"
-            >
-              Edit
-            </button>
+        <button
+          class="products-btn"
+          onclick="openCategory('${category._id}')"
+        >
+          Products
+        </button>
 
-            <button
-              class="delete-btn"
-              onclick="deleteCategory('${category._id}')"
-            >
-              Delete
-            </button>
+        <button
+          class="edit-btn"
+          onclick="editCategory('${category._id}','${category.name}')"
+        >
+          Edit
+        </button>
 
-          </div>
+        <button
+          class="delete-btn"
+          onclick="deleteCategory('${category._id}')"
+        >
+          Delete
+        </button>
 
-        </div>
-      `;
-    });
+      </div>
+
+    </div>
+  `;
+});
 
   } catch (error) {
     console.error(error);
