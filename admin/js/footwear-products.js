@@ -110,7 +110,7 @@ const response = await fetch(
 
     const data =
       await response.json();
-window.allProducts = data.products;
+
 
     alert(
       data.message ||
@@ -174,6 +174,8 @@ async function loadProducts() {
 
     const data =
       await response.json();
+
+      window.allProducts = data.products;
 
     productsGrid.innerHTML = "";
 
