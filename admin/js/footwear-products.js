@@ -32,10 +32,10 @@ async function addProduct() {
   try {
     const formData = new FormData();
 
-    formData.append(
-      "category",
-      categoryId
-    );
+formData.append(
+  "category",
+  categorySelect.value
+);
 
     formData.append(
       "name",
