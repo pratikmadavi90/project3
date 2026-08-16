@@ -12,6 +12,8 @@ const categoryId =
 const productsGrid =
   document.getElementById("productsGrid");
 
+  const imageIndexes = {};
+
 const saveBtn =
   document.getElementById("saveBtn");
 
@@ -108,6 +110,7 @@ const response = await fetch(
 
     const data =
       await response.json();
+window.allProducts = data.products;
 
     alert(
       data.message ||
@@ -208,19 +211,31 @@ async function loadProducts() {
           </div>
 
 ${
-  product.images && product.images.length
+  product.images &&
+  product.images.length
     ? `
-      <div class="product-images">
-        ${product.images
-          .map(
-            (img) => `
-              <img
-                src="${img}"
-                class="product-image"
-              >
-            `
-          )
-          .join("")}
+      <div class="image-slider">
+
+        <button
+          class="slider-btn prev"
+          onclick="changeImage('${product._id}', -1)"
+        >
+          ❮
+        </button>
+
+        <img
+          src="${product.images[0]}"
+          id="img-${product._id}"
+          class="product-image"
+        >
+
+        <button
+          class="slider-btn next"
+          onclick="changeImage('${product._id}', 1)"
+        >
+          ❯
+        </button>
+
       </div>
     `
     : ""
@@ -254,6 +269,7 @@ ${
   }
 }
 
+
 async function deleteProduct(id) {
 
   try {
@@ -278,6 +294,41 @@ async function deleteProduct(id) {
     console.error(error);
   }
 
+}
+
+
+function changeImage(productId, direction) {
+
+  const product = window.allProducts.find(
+    (p) => p._id === productId
+  );
+
+  if (!product || !product.images.length) return;
+
+  if (imageIndexes[productId] === undefined) {
+    imageIndexes[productId] = 0;
+  }
+
+  imageIndexes[productId] += direction;
+
+  if (imageIndexes[productId] < 0) {
+    imageIndexes[productId] =
+      product.images.length - 1;
+  }
+
+  if (
+    imageIndexes[productId] >=
+    product.images.length
+  ) {
+    imageIndexes[productId] = 0;
+  }
+
+  document.getElementById(
+    `img-${productId}`
+  ).src =
+    product.images[
+      imageIndexes[productId]
+    ];
 }
 
 
