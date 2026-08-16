@@ -207,18 +207,24 @@ async function loadProducts() {
             ${product.description}
           </div>
 
-          ${
-            product.images &&
-            product.images.length
-              ? `
-            <img
-              src="${product.images[0]}"
-              class="product-image"
-            >
-          `
-              : ""
-          }
-
+${
+  product.images && product.images.length
+    ? `
+      <div class="product-images">
+        ${product.images
+          .map(
+            (img) => `
+              <img
+                src="${img}"
+                class="product-image"
+              >
+            `
+          )
+          .join("")}
+      </div>
+    `
+    : ""
+}
           <div class="product-actions">
 
             <button

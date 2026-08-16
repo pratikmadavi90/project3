@@ -154,3 +154,18 @@ h1 {
     grid-template-columns: 1fr;
   }
 }
+
+.product-images {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin-top: 10px;
+}
+
+.product-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
