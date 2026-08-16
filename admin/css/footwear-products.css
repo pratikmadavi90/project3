@@ -1,0 +1,156 @@
+body {
+  margin: 0;
+  padding: 20px;
+  background: #f5f6fa;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  max-width: 1400px;
+  margin: auto;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+.product-form {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.product-form input,
+.product-form textarea {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.product-form textarea {
+  min-height: 100px;
+  resize: vertical;
+  grid-column: span 2;
+}
+
+.product-form input[type="file"] {
+  grid-column: span 2;
+}
+
+#saveBtn {
+  background: #16a34a;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  grid-column: span 2;
+}
+
+#saveBtn:hover {
+  opacity: 0.9;
+}
+
+#productsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.product-card {
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.product-card h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.product-info {
+  margin-bottom: 10px;
+  line-height: 1.8;
+}
+
+.product-description {
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.product-image {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.product-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.edit-btn {
+  flex: 1;
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.delete-btn {
+  flex: 1;
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.edit-btn:hover,
+.delete-btn:hover {
+  opacity: 0.9;
+}
+
+@media (max-width: 1200px) {
+  #productsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  #productsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .product-form {
+    grid-template-columns: 1fr;
+  }
+
+  .product-form textarea,
+  .product-form input[type="file"],
+  #saveBtn {
+    grid-column: span 1;
+  }
+}
+
+@media (max-width: 600px) {
+  #productsGrid {
+    grid-template-columns: 1fr;
+  }
+}
