@@ -178,9 +178,52 @@ exports.saveHomeDisplay = async (
 }     
 
     let data =
-      await HomeDisplay.findOne();
+ 
+    await HomeDisplay.findOne();
+
+const oldData = data;
+
+if (oldData) {
+  personalCare.forEach((item, i) => {
+    if (!item.image) {
+      item.image = oldData.personalCare?.[i]?.image || "";
+    }
+  });
+
+  snacks.forEach((item, i) => {
+    if (!item.image) {
+      item.image = oldData.snacks?.[i]?.image || "";
+    }
+  });
+
+  grocery.forEach((item, i) => {
+    if (!item.image) {
+      item.image = oldData.grocery?.[i]?.image || "";
+    }
+  });
+
+  beverages.forEach((item, i) => {
+    if (!item.image) {
+      item.image = oldData.beverages?.[i]?.image || "";
+    }
+  });
+
+  dairy.forEach((item, i) => {
+    if (!item.image) {
+      item.image = oldData.dairy?.[i]?.image || "";
+    }
+  });
+
+  household.forEach((item, i) => {
+    if (!item.image) {
+      item.image = oldData.household?.[i]?.image || "";
+    }
+  });
+}
 
     if (!data) {
+
+
 
       data =
         new HomeDisplay();
