@@ -233,8 +233,34 @@ async function loadProducts() {
         `;
       }
     );
+    
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function deleteProduct(id) {
+
+  try {
+
+    const response = await fetch(
+      `${API}/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    alert(data.message);
+
+    loadProducts();
 
   } catch (error) {
     console.error(error);
   }
+
 }
