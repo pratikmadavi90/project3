@@ -15,6 +15,10 @@ const productsGrid =
 const saveBtn =
   document.getElementById("saveBtn");
 
+ const categorySelect =
+  document.getElementById("category"); 
+
+loadCategories();
 loadProducts();
 
 saveBtn.addEventListener(
@@ -102,6 +106,38 @@ async function addProduct() {
     );
 
     loadProducts();
+
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function loadCategories() {
+  try {
+
+    const res = await fetch(
+      "https://api.harzo.in/api/footwear/categories",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await res.json();
+
+    categorySelect.innerHTML =
+      '<option value="">Select Category</option>';
+
+    data.categories.forEach((cat) => {
+
+      categorySelect.innerHTML += `
+        <option value="${cat._id}">
+          ${cat.name}
+        </option>
+      `;
+
+    });
 
   } catch (error) {
     console.error(error);
