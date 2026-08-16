@@ -244,7 +244,7 @@ async function deleteProduct(id) {
   try {
 
     const response = await fetch(
-      `${API}/${id}`,
+      `${API}/delete/${id}`,
       {
         method: "DELETE",
         headers: {
