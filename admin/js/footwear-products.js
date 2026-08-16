@@ -15,6 +15,8 @@ const productsGrid =
 const saveBtn =
   document.getElementById("saveBtn");
 
+ let editingProductId = null; 
+
  const categorySelect =
   document.getElementById("category"); 
 
@@ -268,57 +270,56 @@ async function deleteProduct(id) {
 
 async function editProduct(id) {
 
-  const name = prompt("Product Name");
-  if (name === null) return;
+  const response = await fetch(
+    `${API}/category/${categoryId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
-  const brand = prompt("Brand");
-  if (brand === null) return;
+  const data = await response.json();
 
-  const size = prompt("Size (8,9,10)");
-  if (size === null) return;
+  const product = data.products.find(
+    (p) => p._id === id
+  );
 
-  const mrp = prompt("MRP");
-  if (mrp === null) return;
+  if (!product) return;
 
-  const sellingPrice = prompt("Selling Price");
-  if (sellingPrice === null) return;
+  editingProductId = id;
 
-  const stock = prompt("Stock");
-  if (stock === null) return;
+  document.getElementById("name").value =
+    product.name || "";
 
-  const description = prompt("Description");
-  if (description === null) return;
+  document.getElementById("brand").value =
+    product.brand || "";
 
-  try {
+  document.getElementById("size").value =
+    Array.isArray(product.size)
+      ? product.size.join(",")
+      : product.size;
 
-    const formData = new FormData();
+  document.getElementById("mrp").value =
+    product.mrp || "";
 
-    formData.append("name", name);
-    formData.append("brand", brand);
-    formData.append("size", size);
-    formData.append("mrp", mrp);
-    formData.append("sellingPrice", sellingPrice);
-    formData.append("stock", stock);
-    formData.append("description", description);
+  document.getElementById("sellingPrice").value =
+    product.sellingPrice || "";
 
-    const response = await fetch(
-      `${API}/update/${id}`,
-      {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      }
-    );
+  document.getElementById("stock").value =
+    product.stock || "";
 
-    const data = await response.json();
+  document.getElementById("description").value =
+    product.description || "";
 
-    alert(data.message);
+  categorySelect.value =
+    product.category._id;
 
-    loadProducts();
+  saveBtn.textContent =
+    "Update Product";
 
-  } catch (error) {
-    console.error(error);
-  }
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
 }
