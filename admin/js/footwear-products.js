@@ -264,3 +264,61 @@ async function deleteProduct(id) {
   }
 
 }
+
+
+async function editProduct(id) {
+
+  const name = prompt("Product Name");
+  if (name === null) return;
+
+  const brand = prompt("Brand");
+  if (brand === null) return;
+
+  const size = prompt("Size (8,9,10)");
+  if (size === null) return;
+
+  const mrp = prompt("MRP");
+  if (mrp === null) return;
+
+  const sellingPrice = prompt("Selling Price");
+  if (sellingPrice === null) return;
+
+  const stock = prompt("Stock");
+  if (stock === null) return;
+
+  const description = prompt("Description");
+  if (description === null) return;
+
+  try {
+
+    const formData = new FormData();
+
+    formData.append("name", name);
+    formData.append("brand", brand);
+    formData.append("size", size);
+    formData.append("mrp", mrp);
+    formData.append("sellingPrice", sellingPrice);
+    formData.append("stock", stock);
+    formData.append("description", description);
+
+    const response = await fetch(
+      `${API}/update/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      }
+    );
+
+    const data = await response.json();
+
+    alert(data.message);
+
+    loadProducts();
+
+  } catch (error) {
+    console.error(error);
+  }
+}
