@@ -15,7 +15,8 @@ const productsGrid =
 const saveBtn =
   document.getElementById("saveBtn");
 
- let editingProductId = null; 
+ editingProductId = null;
+saveBtn.textContent = "Add Product";
 
  const categorySelect =
   document.getElementById("category"); 
@@ -86,18 +87,24 @@ formData.append(
       );
     }
 
-    const response =
-      await fetch(
-        `${API}/add`,
-        {
-          method: "POST",
-          headers: {
-            Authorization:
-              `Bearer ${token}`,
-          },
-          body: formData,
-        }
-      );
+const url = editingProductId
+  ? `${API}/update/${editingProductId}`
+  : `${API}/add`;
+
+const method = editingProductId
+  ? "PUT"
+  : "POST";
+
+const response = await fetch(
+  url,
+  {
+    method,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  }
+);
 
     const data =
       await response.json();
