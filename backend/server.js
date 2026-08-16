@@ -31,7 +31,8 @@ const deliveryAuthRoutes =require("./routes/deliveryAuthRoutes");
 const jwt = require("jsonwebtoken");
 const staffRoutes = require("./routes/staffRoutes");
 const homeDisplayRoutes = require("./routes/homeDisplayRoutes");
-
+const footwearCategoryRoutes = require("./routes/footwearCategoryRoutes");
+const footwearProductRoutes =require("./routes/footwearProductRoutes");
 
 
 const app = express(); 
@@ -146,8 +147,8 @@ app.use("/api/delivery-boy", deliveryBoyRoutes);
 app.use("/api/delivery-auth",deliveryAuthRoutes);
 app.use("/api/staff", staffRoutes);
 app.use("/api/home-display", homeDisplayRoutes);
-
-
+app.use("/api/footwear/categories",footwearCategoryRoutes);
+app.use( "/api/footwear/products",footwearProductRoutes);
 
 
 // ✅ TEST MAIL ROUTE (YAHAN ADD KAR)
