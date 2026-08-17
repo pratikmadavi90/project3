@@ -139,3 +139,17 @@ h1 {
     grid-template-columns: repeat(1, 1fr);
   }
 }
+
+.single-save-btn{
+  background:#28a745;
+  color:#fff;
+  border:none;
+  padding:8px 12px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:14px;
+}
+
+.single-save-btn:hover{
+  opacity:0.9;
+}

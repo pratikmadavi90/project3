@@ -18,83 +18,144 @@ const template =
 
 function createBoxes() {
 
-  categories.forEach(
-    (category) => {
+  categories.forEach((category) => {
 
-      const container =
-        document.getElementById(
-          `${category}Container`
-        );
+    const container =
+      document.getElementById(
+        `${category}Container`
+      );
 
-      for (
-        let i = 0;
-        i < 8;
-        i++
-      ) {
+    for (let i = 0; i < 8; i++) {
 
-        const clone =
-          template.content.cloneNode(
-            true
-          );
+      const clone =
+        template.content.cloneNode(true);
 
-        const card =
-          clone.querySelector(
-            ".card"
-          );
+      const card =
+        clone.querySelector(".card");
 
-        const imageInput =
-          clone.querySelector(
-            ".image-input"
-          );
+      const imageInput =
+        clone.querySelector(".image-input");
 
-        const preview =
-          clone.querySelector(
-            ".preview"
-          );
+      const preview =
+        clone.querySelector(".preview");
 
-        const clearBtn =
-          clone.querySelector(
-            ".clear-btn"
-          );
+      const clearBtn =
+        clone.querySelector(".clear-btn");
 
-        imageInput.addEventListener(
-          "change",
-          (e) => {
+      const saveBtn =
+        clone.querySelector(".single-save-btn");
+
+      imageInput.addEventListener(
+        "change",
+        (e) => {
+
+          const file =
+            e.target.files[0];
+
+          if (file) {
+
+            preview.src =
+              URL.createObjectURL(file);
+
+          }
+        }
+      );
+
+      saveBtn.addEventListener(
+        "click",
+        async () => {
+
+          try {
+
+            const formData =
+              new FormData();
+
+            const name =
+              card.querySelector(
+                ".name-input"
+              ).value;
+
+            formData.append(
+              category,
+              JSON.stringify([
+                {
+                  name,
+                  image: ""
+                }
+              ])
+            );
 
             const file =
-              e.target.files[0];
+              imageInput.files[0];
 
             if (file) {
 
-              preview.src =
-                URL.createObjectURL(
-                  file
-                );
+              formData.append(
+                `${category}_${i}`,
+                file
+              );
+
             }
+
+            const token =
+              localStorage.getItem(
+                "adminToken"
+              );
+
+            const response =
+              await fetch(
+                "https://api.harzo.in/api/home-display/save",
+                {
+                  method: "POST",
+                  headers: {
+                    Authorization:
+                      `Bearer ${token}`,
+                  },
+                  body: formData,
+                }
+              );
+
+            const data =
+              await response.json();
+
+            alert(
+              data.message || "Saved"
+            );
+
+          } catch (error) {
+
+            console.log(error);
+
+            alert("Save Failed");
+
           }
-        );
+        }
+      );
 
-        clearBtn.addEventListener(
-          "click",
-          () => {
+      clearBtn.addEventListener(
+        "click",
+        () => {
 
-            card.querySelector(
-              ".name-input"
-            ).value = "";
+          card.querySelector(
+            ".name-input"
+          ).value = "";
 
-            imageInput.value = "";
+          imageInput.value = "";
 
-            preview.src =
-              "https://via.placeholder.com/120";
-          }
-        );
+          preview.src =
+            "https://via.placeholder.com/120";
 
-        container.appendChild(
-          clone
-        );
-      }
+        }
+      );
+
+      container.appendChild(
+        clone
+      );
+
     }
-  );
+
+  });
+
 }
 
 // ======================
