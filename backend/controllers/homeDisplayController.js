@@ -346,3 +346,49 @@ exports.clearHomeDisplay =
       });
     }
   };
+
+
+ exports.saveSingleBox = async (req, res) => {
+  try {
+    const { section, index, name } = req.body;
+
+    let data = await HomeDisplay.findOne();
+
+    if (!data) {
+      data = await HomeDisplay.create({});
+    }
+
+    if (!data[section]) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid section",
+      });
+    }
+
+    const boxIndex = Number(index);
+
+    if (name !== undefined) {
+      data[section][boxIndex].name = name;
+    }
+
+    if (req.files && req.files.length > 0) {
+      data[section][boxIndex].image =
+        req.files[0].location;
+    }
+
+    await data.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Box Saved Successfully",
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}; 

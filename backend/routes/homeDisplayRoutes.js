@@ -9,6 +9,7 @@ const {
   getHomeDisplay,
   saveHomeDisplay,
   clearHomeDisplay,
+  saveSingleBox,
 } = require("../controllers/homeDisplayController");
 
 // ================= S3 =================
@@ -56,6 +57,12 @@ router.post(
   "/save",
   upload.any(),
   saveHomeDisplay
+);
+
+router.post(
+  "/save-single",
+  upload.any(),
+  saveSingleBox
 );
 
 // ================= CLEAR =================
