@@ -11,18 +11,37 @@ const s3 = new S3Client({
   },
 });
 
+const allowedTypes = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp"
+];
+
+const fileFilter = (req, file, cb) => {
+  if (allowedTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error("Only JPG, PNG and WEBP images allowed"));
+  }
+};
+
 const upload = multer({
+  fileFilter,
+  limits: {
+    fileSize: 5 * 1024 * 1024
+  },
+
   storage: multerS3({
     s3,
     bucket: "harzo-images-storage",
-
     contentType: multerS3.AUTO_CONTENT_TYPE,
 
     key: (req, file, cb) => {
       const fileName =
-        `footwear/${Date.now()}-${file.originalname
+        `footwear/${Date.now()}-${file.originalname}`
           .toLowerCase()
-          .replace(/\s+/g, "-")}`;
+          .replace(/\s+/g, "-");
 
       cb(null, fileName);
     },
