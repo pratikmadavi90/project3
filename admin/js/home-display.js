@@ -75,25 +75,19 @@ function createBoxes() {
                 ".name-input"
               ).value;
 
-            formData.append(
-              category,
-              JSON.stringify([
-                {
-                  name,
-                  image: ""
-                }
-              ])
-            );
+formData.append("section", category);
+formData.append("index", i);
+formData.append("name", name);
 
             const file =
               imageInput.files[0];
 
             if (file) {
 
-              formData.append(
-                `${category}_${i}`,
-                file
-              );
+formData.append(
+  "image",
+  file
+);
 
             }
 
@@ -102,9 +96,9 @@ function createBoxes() {
                 "adminToken"
               );
 
-            const response =
-              await fetch(
-                "https://api.harzo.in/api/home-display/save",
+const response =
+  await fetch(
+    "https://api.harzo.in/api/home-display/save-single",
                 {
                   method: "POST",
                   headers: {
@@ -142,8 +136,7 @@ function createBoxes() {
 
           imageInput.value = "";
 
-          preview.src =
-            "https://via.placeholder.com/120";
+        preview.src = "";
 
         }
       );
