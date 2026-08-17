@@ -367,6 +367,13 @@ exports.clearHomeDisplay =
 
     const boxIndex = Number(index);
 
+if (!data[section][boxIndex]) {
+  data[section][boxIndex] = {
+    name: "",
+    image: ""
+  };
+}
+
     if (name !== undefined) {
       data[section][boxIndex].name = name;
     }
