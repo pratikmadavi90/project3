@@ -118,7 +118,7 @@ alert(
 );
 
 // RESET EDIT MODE
-let editingProductId = null;
+editingProductId = null;
 
 saveBtn.textContent =
   "Add Product";
