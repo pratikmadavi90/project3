@@ -112,12 +112,29 @@ const response = await fetch(
       await response.json();
 
 
-    alert(
-      data.message ||
-      "Product Added"
-    );
+alert(
+  data.message ||
+  "Product Added"
+);
 
-    loadProducts();
+// RESET EDIT MODE
+let editingProductId = null;
+
+saveBtn.textContent =
+  "Add Product";
+
+document.getElementById("name").value = "";
+document.getElementById("brand").value = "";
+document.getElementById("size").value = "";
+document.getElementById("mrp").value = "";
+document.getElementById("sellingPrice").value = "";
+document.getElementById("stock").value = "";
+document.getElementById("description").value = "";
+document.getElementById("images").value = "";
+
+categorySelect.value = "";
+
+loadProducts();
 
   } catch (error) {
     console.error(error);
