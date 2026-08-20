@@ -34,8 +34,8 @@ exports.addCategory = async (req, res) => {
 // Get All Categories
 exports.getCategories = async (req, res) => {
   try {
-    const categories = await FootwearCategory.find()
-      .sort({ createdAt: -1 });
+const categories = await FootwearCategory.find()
+  .sort({ createdAt: 1 });
 
     res.status(200).json({
       success: true,
