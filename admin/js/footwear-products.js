@@ -17,7 +17,7 @@ const productsGrid =
 const saveBtn =
   document.getElementById("saveBtn");
 
- editingProductId = null;
+ const editingProductId = null;
 saveBtn.textContent = "Add Product";
 
  const categorySelect =
