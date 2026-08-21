@@ -91,18 +91,32 @@ const footwearOrderSchema = new mongoose.Schema(
     default: "Pending",
   },
 
-  status: {
-    type: String,
-    enum: [
-      "Pending",
-      "Confirmed",
-      "Packed",
-      "Shipped",
-      "Delivered",
-      "Cancelled",
-    ],
-    default: "Pending",
-  },
+status: {
+  type: String,
+  enum: [
+    "Pending",
+    "Accepted",
+    "Delivery Accepted",
+    "Staff Accepted",
+    "Packing",
+    "Packed",
+    "Handed Over",
+    "Out for Delivery",
+    "Delivered",
+    "Cancelled",
+  ],
+  default: "Pending",
+},
+
+deliveryBoyId: {
+  type: String,
+  default: "",
+},
+
+deliveredAt: {
+  type: Date,
+  default: null,
+},
 
   totalAmount: {
     type: Number,
