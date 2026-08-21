@@ -6,8 +6,7 @@ const FootwearOrder = require("../models/FootwearOrder");
 // ==========================
 exports.createFootwearOrder = async (req, res) => {
   try {
-
-  console.log("FOOTWEAR ORDER =", req.body);  
+    
 
     const order = await FootwearOrder.create(req.body);
 

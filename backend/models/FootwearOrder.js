@@ -13,6 +13,11 @@ const footwearOrderSchema = new mongoose.Schema(
     required: true,
   },
 
+ email: {
+  type: String,
+  required: true,
+}, 
+
   customerName: {
     type: String,
     required: true,
