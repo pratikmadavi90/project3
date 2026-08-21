@@ -13,6 +13,7 @@ async function getOrders() {
 
   const orders = await res.json();
 console.log("API RESPONSE =", orders);
+
   const table =
     document.getElementById(
       "ordersTable"
@@ -20,7 +21,7 @@ console.log("API RESPONSE =", orders);
 
   table.innerHTML = "";
 
-  orders.forEach(order => {
+  orders.orders.forEach(order => {
 
     const row =
       document.createElement("tr");
