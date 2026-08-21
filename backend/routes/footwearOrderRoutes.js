@@ -6,6 +6,7 @@ const {
   createFootwearOrder,
   getAllFootwearOrders,
   getFootwearOrderById,
+  getUserFootwearOrders,
   getUserFootwearOrderDetails,
   updateFootwearOrderStatus,
 } = require("../controllers/footwearOrderController");
@@ -20,6 +21,11 @@ router.post(
 router.get(
   "/all",
   getAllFootwearOrders
+);
+
+router.get(
+  "/user/:email",
+  getUserFootwearOrders
 );
 
 router.get(
