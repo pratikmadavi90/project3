@@ -6,9 +6,9 @@ const {
   createFootwearOrder,
   getAllFootwearOrders,
   getFootwearOrderById,
+  getUserFootwearOrderDetails,
   updateFootwearOrderStatus,
 } = require("../controllers/footwearOrderController");
-
 
 // Create Order
 router.post(
@@ -20,6 +20,11 @@ router.post(
 router.get(
   "/all",
   getAllFootwearOrders
+);
+
+router.get(
+  "/user/:email/:id",
+  getUserFootwearOrderDetails
 );
 
 // Get Single Order

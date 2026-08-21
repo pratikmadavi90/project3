@@ -29,6 +29,29 @@ exports.createFootwearOrder = async (req, res) => {
 };
 
 
+exports.getUserFootwearOrderDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const order = await FootwearOrder.findById(id);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    res.json(order);
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 // ==========================
 // GET ALL ORDERS
 // ==========================
