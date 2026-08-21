@@ -77,6 +77,8 @@ async function viewOrder(id) {
   const order =
     await res.json();
 
+  console.log("VIEW ORDER =", order);  
+
   let badgeClass =
     "pending";
 
