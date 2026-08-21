@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Footwear Orders - HARZO</title>
+
+<script>
+const token = localStorage.getItem("adminToken");
+
+if (!token) {
+  window.location.href = "login.html";
+}
+</script>
+
+<link rel="stylesheet" href="../css/footwear-orders.css">
+</head>
+
+<body>
+
+<h1>Footwear Orders</h1>
+
+<table>
+
+<thead>
+<tr>
+<th>Order ID</th>
+<th>User ID</th>
+<th>Customer</th>
+<th>Phone</th>
+<th>Address</th>
+<th>Status</th>
+<th>Date</th>
+<th>View</th>
+</tr>
+</thead>
+
+<tbody id="ordersTable"></tbody>
+
+</table>
+
+<!-- VIEW POPUP -->
+
+<div id="orderPopup" class="popup">
+
+<div class="popup-content">
+
+<span
+class="close-btn"
+onclick="closePopup()"
+>
+✖
+</span>
+
+<h2>Footwear Order Details</h2>
+
+<div id="orderDetails"></div>
+
+</div>
+
+</div>
+
+<script src="../js/footwear-orders.js"></script>
+
+</body>
+</html>
