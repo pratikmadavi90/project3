@@ -12,7 +12,7 @@ async function getOrders() {
   });
 
   const orders = await res.json();
-
+console.log("API RESPONSE =", orders);
   const table =
     document.getElementById(
       "ordersTable"
