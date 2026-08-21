@@ -6,7 +6,6 @@ const DeliveryBoy = require("../models/DeliveryBoy");
 const admin = require("firebase-admin");
 const Staff = require("../models/Staff");
 const jwt = require("jsonwebtoken");
-const FootwearProduct = require("../models/FootwearProduct");
 
 // 🧾 CREATE ORDER
 exports.createOrder = async (req, res) => {
@@ -16,12 +15,7 @@ exports.createOrder = async (req, res) => {
 // ✅ Stock Check
 for (const item of req.body.items) {
 
-  let product = await Product.findById(item.productId);
-
-if (!product) {
-  product = await FootwearProduct.findById(item.productId);
-}
-
+  const product = await Product.findById(item.productId);
 
   if (!product) {
     return res.status(404).json({
@@ -29,11 +23,11 @@ if (!product) {
     });
   }
 
-if (product.stock.quantity < item.qty) {
-  return res.status(400).json({
-    message: `Only ${product.stock.quantity} ${item.name} available`
-  });
-}
+  if (product.stock.quantity < item.qty) {
+    return res.status(400).json({
+      message: `Only ${product.stock.quantity} ${item.name} available`
+    });
+  }
 
 }
 
@@ -375,24 +369,19 @@ if (status === "Delivered") {
 
   for (const item of order.items) {
 
-let product = await Product.findById(item.productId);
+    const product = await Product.findById(item.productId);
 
-if (!product) {
-  product = await FootwearProduct.findById(item.productId);
-}
+    if (!product) continue;
 
-if (!product) continue;
+    product.stock.quantity -= item.qty;
 
-product.stock.quantity -= item.qty;
+    if (product.stock.quantity < 0) {
+      product.stock.quantity = 0;
+    }
 
-if (product.stock.quantity < 0) {
-  product.stock.quantity = 0;
-}
+    product.stock.inStock = product.stock.quantity > 0;
 
-product.stock.inStock =
-  product.stock.quantity > 0;
-
-await product.save();
+    await product.save();
 
   }
 
