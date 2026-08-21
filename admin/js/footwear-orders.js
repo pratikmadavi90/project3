@@ -74,8 +74,11 @@ async function viewOrder(id) {
     }
   );
 
-  const order =
-    await res.json();
+const data = await res.json();
+const order = data.order;
+
+console.log(order);
+
 
   console.log("VIEW ORDER =", order);  
 
