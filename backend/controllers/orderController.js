@@ -369,7 +369,17 @@ if (status === "Delivered") {
 
   for (const item of order.items) {
 
+console.log(
+  "CHECK PRODUCT ID =",
+  item.productId
+);
+
     const product = await Product.findById(item.productId);
+
+console.log(
+  "FOUND PRODUCT =",
+  product
+);
 
     if (!product) continue;
 
