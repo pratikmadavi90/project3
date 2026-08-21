@@ -16,10 +16,12 @@ exports.createOrder = async (req, res) => {
 // ✅ Stock Check
 for (const item of req.body.items) {
 
-  const product = await Product.findById(item.productId);
+  let product = await Product.findById(item.productId);
 
-  console.log("PRODUCT ID =", item.productId);
-console.log("PRODUCT DATA =", product);
+if (!product) {
+  product = await FootwearProduct.findById(item.productId);
+}
+
 
   if (!product) {
     return res.status(404).json({
@@ -27,11 +29,11 @@ console.log("PRODUCT DATA =", product);
     });
   }
 
-  if (product.stock.quantity < item.qty) {
-    return res.status(400).json({
-      message: `Only ${product.stock.quantity} ${item.name} available`
-    });
-  }
+if (product.stock.quantity < item.qty) {
+  return res.status(400).json({
+    message: `Only ${product.stock.quantity} ${item.name} available`
+  });
+}
 
 }
 
@@ -373,19 +375,24 @@ if (status === "Delivered") {
 
   for (const item of order.items) {
 
-    const product = await Product.findById(item.productId);
+let product = await Product.findById(item.productId);
 
-    if (!product) continue;
+if (!product) {
+  product = await FootwearProduct.findById(item.productId);
+}
 
-    product.stock.quantity -= item.qty;
+if (!product) continue;
 
-    if (product.stock.quantity < 0) {
-      product.stock.quantity = 0;
-    }
+product.stock.quantity -= item.qty;
 
-    product.stock.inStock = product.stock.quantity > 0;
+if (product.stock.quantity < 0) {
+  product.stock.quantity = 0;
+}
 
-    await product.save();
+product.stock.inStock =
+  product.stock.quantity > 0;
+
+await product.save();
 
   }
 
