@@ -2,7 +2,6 @@ const Order = require("../models/Order");
 const { applyOffer } = require("../utils/offerHelper");
 const User = require("../models/User");
 const Product = require("../models/Product");
-const FootwearProduct = require("../models/FootwearProduct");
 const DeliveryBoy = require("../models/DeliveryBoy");
 const admin = require("firebase-admin");
 const Staff = require("../models/Staff");
@@ -16,17 +15,13 @@ exports.createOrder = async (req, res) => {
 // ✅ Stock Check
 for (const item of req.body.items) {
 
-let product = await Product.findById(item.productId);
+  const product = await Product.findById(item.productId);
 
-if (!product) {
-  product = await FootwearProduct.findById(item.productId);
-}
-
-if (!product) {
-  return res.status(404).json({
-    message: `${item.name} not found`
-  });
-}
+  if (!product) {
+    return res.status(404).json({
+      message: `${item.name} not found`
+    });
+  }
 
   if (product.stock.quantity < item.qty) {
     return res.status(400).json({
@@ -374,17 +369,7 @@ if (status === "Delivered") {
 
   for (const item of order.items) {
 
-console.log(
-  "CHECK PRODUCT ID =",
-  item.productId
-);
-
     const product = await Product.findById(item.productId);
-
-console.log(
-  "FOUND PRODUCT =",
-  product
-);
 
     if (!product) continue;
 
