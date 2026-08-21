@@ -3,7 +3,7 @@ const API = "https://api.harzo.in/api/footwear-orders";
 // LOAD ORDERS
 async function getOrders() {
 
-  const res = await fetch(API, {
+  const res = await fetch(`${API}/all`, {
     headers: {
       Authorization:
         "Bearer " +
@@ -30,7 +30,7 @@ async function getOrders() {
 
       <td>${order.userId || "-"}</td>
 
-      <td>${order.userName || "-"}</td>
+      <td>${order.customerName || "-"}</td>
 
       <td>${order.phone || "-"}</td>
 
@@ -123,7 +123,7 @@ Customer Details
 
 <p>
 <b>Name:</b>
-${order.userName}
+${order.customerName}
 </p>
 
 <p>
@@ -160,7 +160,7 @@ ${order.productName}
 
 <div class="size-box">
 Size :
-${order.selectedSize}
+${order.size}
 </div>
 
 <div class="price-row">
