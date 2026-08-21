@@ -6,6 +6,7 @@ const DeliveryBoy = require("../models/DeliveryBoy");
 const admin = require("firebase-admin");
 const Staff = require("../models/Staff");
 const jwt = require("jsonwebtoken");
+const FootwearProduct = require("../models/FootwearProduct");
 
 // 🧾 CREATE ORDER
 exports.createOrder = async (req, res) => {
@@ -16,6 +17,9 @@ exports.createOrder = async (req, res) => {
 for (const item of req.body.items) {
 
   const product = await Product.findById(item.productId);
+
+  console.log("PRODUCT ID =", item.productId);
+console.log("PRODUCT DATA =", product);
 
   if (!product) {
     return res.status(404).json({
