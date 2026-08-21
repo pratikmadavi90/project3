@@ -190,6 +190,13 @@ ${order.size}
 </span>
 </div>
 
+<div class="price-row">
+<span>Total Amount</span>
+<span>
+₹${order.totalAmount}
+</span>
+</div>
+
 </div>
 
 </div>
