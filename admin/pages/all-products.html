@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All Products</title>
+
+<link rel="stylesheet" href="../css/all-products.css">
+</head>
+<body>
+
+<div class="container">
+
+    <div class="top-bar">
+        <h2>All Products</h2>
+
+        <a href="add-product.html" class="add-btn">
+            + Add Product
+        </a>
+    </div>
+
+    <div id="productsContainer" class="products-grid">
+    </div>
+
+</div>
+
+<!-- Product Details Modal -->
+
+<div id="productModal" class="modal">
+
+    <div class="modal-content">
+
+        <span class="close-btn">&times;</span>
+
+        <div id="modalImages" class="modal-images"></div>
+
+        <h2 id="modalName"></h2>
+
+        <p><b>Category:</b> <span id="modalCategory"></span></p>
+
+        <p><b>Sub Category:</b> <span id="modalSubCategory"></span></p>
+
+        <p><b>MRP:</b> ₹<span id="modalMrp"></span></p>
+
+        <p><b>Price:</b> ₹<span id="modalPrice"></span></p>
+
+        <p><b>Weight:</b> <span id="modalWeight"></span></p>
+
+        <p><b>Stock:</b> <span id="modalStock"></span></p>
+
+        <p><b>Description:</b></p>
+
+        <p id="modalDescription"></p>
+
+    </div>
+
+</div>
+
+<script src="../js/all-products.js"></script>
+
+</body>
+</html>

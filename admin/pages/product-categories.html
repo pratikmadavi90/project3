@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Categories</title>
+
+    <link rel="stylesheet" href="../css/product-categories.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h2>Product Categories</h2>
+
+    <!-- Category Form -->
+    <div class="form-box">
+
+        <input type="hidden" id="categoryId">
+
+        <input
+            type="text"
+            id="categoryName"
+            placeholder="Category Name"
+        >
+
+        <input
+            type="file"
+            id="categoryImage"
+            accept="image/*"
+        >
+
+        <button id="saveCategoryBtn">
+            Save Category
+        </button>
+
+    </div>
+
+    <!-- Category List -->
+    <div id="categoriesContainer" class="category-grid">
+
+    </div>
+
+</div>
+
+<script src="../js/product-categories.js"></script>
+
+</body>
+</html>
