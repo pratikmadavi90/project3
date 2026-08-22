@@ -1,6 +1,8 @@
 const API =
   "https://api.harzo.in/api/product-categories";
 
+  const token = localStorage.getItem("token");
+
 const categoriesContainer =
   document.getElementById("categoriesContainer");
 
@@ -22,7 +24,11 @@ async function loadCategories() {
 
   try {
 
-    const res = await fetch(API);
+    const res = await fetch(API, {
+  headers: {
+    Authorization: `Bearer ${token}`
+  }
+});
 
     const data = await res.json();
 
@@ -116,11 +122,14 @@ saveCategoryBtn.addEventListener(
         method = "PUT";
       }
 
-      const res =
-        await fetch(url, {
-          method,
-          body: formData,
-        });
+const res =
+  await fetch(url, {
+    method,
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    body: formData,
+  });
 
       const data =
         await res.json();
@@ -146,10 +155,15 @@ async function editCategory(id) {
 
   try {
 
-    const res =
-      await fetch(
-        `${API}/${id}`
-      );
+const res =
+  await fetch(
+    `${API}/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  );
 
     const data =
       await res.json();
@@ -183,13 +197,16 @@ async function deleteCategory(id) {
 
   try {
 
-    const res =
-      await fetch(
-        `${API}/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
+const res =
+  await fetch(
+    `${API}/${id}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  );
 
     const data =
       await res.json();

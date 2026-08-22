@@ -1,5 +1,7 @@
 const API = "https://api.harzo.in/api/all-products";
 
+const token = localStorage.getItem("token");
+
 const productsContainer = document.getElementById("productsContainer");
 
 const modal = document.getElementById("productModal");
@@ -9,7 +11,11 @@ const closeBtn = document.querySelector(".close-btn");
 async function loadProducts() {
   try {
 
-    const res = await fetch(API);
+    const res = await fetch(API, {
+  headers: {
+    Authorization: `Bearer ${token}`
+  }
+});
 
     const products = await res.json();
 
@@ -137,9 +143,12 @@ async function deleteProduct(id) {
 
   try {
 
-    await fetch(`${API}/${id}`, {
-      method: "DELETE"
-    });
+await fetch(`${API}/${id}`, {
+  method: "DELETE",
+  headers: {
+    Authorization: `Bearer ${token}`
+  }
+});
 
     loadProducts();
 
