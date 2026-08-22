@@ -36,6 +36,7 @@ const footwearProductRoutes =require("./routes/footwearProductRoutes");
 const footwearOrderRoutes = require("./routes/footwearOrderRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const allProductRoutes = require("./routes/allProductRoutes");
+const productCategoryRoutes =require("./routes/productCategoryRoutes");
 
 
 
@@ -179,7 +180,7 @@ app.use( "/api/footwear/products",footwearProductRoutes);
 app.use("/api/footwear-orders",footwearOrderRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/all-products",allProductRoutes);
-
+app.use("/api/product-categories",productCategoryRoutes);
 
 // ✅ TEST MAIL ROUTE (YAHAN ADD KAR)
 app.get("/test-mail", async (req, res) => {
