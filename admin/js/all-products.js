@@ -163,4 +163,18 @@ await fetch(`${API}/${id}`, {
   }
 }
 
+const addProductBtn =
+  document.getElementById("addProductBtn");
+
+if (addProductBtn) {
+
+  addProductBtn.addEventListener("click", () => {
+
+    window.location.href =
+      `add-product.html?categoryId=${categoryId}`;
+
+  });
+
+}
+
 loadProducts();

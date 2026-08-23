@@ -28,11 +28,17 @@
             placeholder="Product Name"
         >
 
-        <select id="category">
-            <option value="">
-                Loading Categories...
-            </option>
-        </select>
+<select id="category">
+  <option value="">
+    Loading Categories...
+  </option>
+</select>
+
+<select id="subCategory">
+  <option value="">
+    Select Sub Category
+  </option>
+</select>
 
         <input
             type="number"
@@ -87,6 +93,9 @@ const categorySelect =
     document.getElementById("category");
 
 
+ const subCategory =
+  document.getElementById("subCategory");   
+
 // Load Categories
 async function loadCategories() {
 
@@ -113,6 +122,40 @@ async function loadCategories() {
             `;
 
         });
+
+
+    category.addEventListener("change", async () => {
+
+  const categoryId = category.value;
+
+  subCategory.innerHTML =
+    `<option value="">Select Sub Category</option>`;
+
+  if (!categoryId) return;
+
+  const res = await fetch(
+    `https://api.harzo.in/api/sub-categories/category/${categoryId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  );
+
+  const data = await res.json();
+
+  data.subCategories.forEach(sub => {
+
+    subCategory.innerHTML += `
+      <option value="${sub.name}">
+        ${sub.name}
+      </option>
+    `;
+
+  });
+
+});
+        
 
     } catch (error) {
 
@@ -180,6 +223,11 @@ async function addProduct() {
             "categoryId",
             categorySelect.value
         );
+
+formData.append(
+  "subCategory",
+  subCategory.value
+);        
 
         formData.append(
             "categoryName",
