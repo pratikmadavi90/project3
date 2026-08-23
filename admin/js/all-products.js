@@ -44,7 +44,7 @@ const products = data.products || [];
 
         <h3>${product.name}</h3>
 
-        <p class="price">₹${product.price}</p>
+      <p class="price">₹${product.sellingPrice}</p>
 
         <div class="card-buttons">
 
@@ -92,8 +92,8 @@ function openModal(product) {
   document.getElementById("modalMrp").innerText =
     product.mrp || "";
 
-  document.getElementById("modalPrice").innerText =
-    product.price || "";
+document.getElementById("modalPrice").innerText =
+  product.sellingPrice || "";
 
   document.getElementById("modalWeight").innerText =
     product.weight || "";
