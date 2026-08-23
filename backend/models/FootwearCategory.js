@@ -14,6 +14,11 @@ const footwearCategorySchema = new mongoose.Schema(
       default: "",
     },
 
+    displayOrder: {
+  type: Number,
+  default: 0,
+},
+
     isActive: {
       type: Boolean,
       default: true,

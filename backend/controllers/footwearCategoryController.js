@@ -3,7 +3,10 @@ const FootwearCategory = require("../models/FootwearCategory");
 // Add Category
 exports.addCategory = async (req, res) => {
   try {
-    const { name } = req.body;
+    const {
+  name,
+  displayOrder
+} = req.body;
 
     const existing = await FootwearCategory.findOne({ name });
 
@@ -14,9 +17,10 @@ exports.addCategory = async (req, res) => {
       });
     }
 
-    const category = await FootwearCategory.create({
-      name,
-    });
+  const category = await FootwearCategory.create({
+  name,
+  displayOrder,
+});
 
     res.status(201).json({
       success: true,
@@ -35,7 +39,7 @@ exports.addCategory = async (req, res) => {
 exports.getCategories = async (req, res) => {
   try {
 const categories = await FootwearCategory.find()
-  .sort({ createdAt: 1 });
+  .sort({ displayOrder: 1, createdAt: 1 });
 
     res.status(200).json({
       success: true,

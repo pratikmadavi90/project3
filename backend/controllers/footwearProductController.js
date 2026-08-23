@@ -15,6 +15,7 @@ exports.addProduct = async (req, res) => {
       description,
       featured,
       newArrival,
+      displayOrder,
     } = req.body;
 
     const categoryExists =
@@ -44,6 +45,7 @@ exports.addProduct = async (req, res) => {
       images,
       featured,
       newArrival,
+      displayOrder,
     });
 
     res.status(201).json({
@@ -64,7 +66,7 @@ exports.getProducts = async (req, res) => {
   try {
     const products = await FootwearProduct.find()
       .populate("category")
-      .sort({ createdAt: -1 });
+      .sort({ displayOrder: 1, createdAt: -1 });
 
     res.status(200).json({
       success: true,
@@ -89,7 +91,7 @@ exports.getProductsByCategory = async (
         category: req.params.categoryId,
       })
         .populate("category")
-        .sort({ createdAt: -1 });
+        .sort({ displayOrder: 1, createdAt: -1 });
 
     res.status(200).json({
       success: true,

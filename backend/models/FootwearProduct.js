@@ -41,6 +41,12 @@ const footwearProductSchema = new mongoose.Schema(
       default: 0,
     },
 
+        displayOrder: {
+  type: Number,
+  default: 0,
+},
+
+
     description: {
       type: String,
       default: "",
