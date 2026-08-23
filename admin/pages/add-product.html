@@ -130,6 +130,10 @@ async function loadCategories() {
 
         });
 
+ if (categoryId) {
+    categorySelect.value = categoryId;
+    loadSubCategories();
+}      
 
 async function loadSubCategories() {
 
@@ -203,9 +207,9 @@ async function addProduct() {
             return alert("Enter Product Name");
         }
 
-        if (!categorySelect.value) {
-            return alert("Select Category");
-        }
+if (!categoryId && !categorySelect.value) {
+    return alert("Select Category");
+}
 
         if (!mrp) {
             return alert("Enter MRP");
@@ -223,10 +227,10 @@ async function addProduct() {
         const formData =
             new FormData();
 
-        formData.append(
-            "categoryId",
-            categorySelect.value
-        );
+formData.append(
+    "categoryId",
+    categoryId || categorySelect.value
+);
 
 formData.append(
   "subCategory",
