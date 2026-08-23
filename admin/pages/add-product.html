@@ -178,6 +178,52 @@ async function loadSubCategories() {
 }
 
 
+async function loadProductForEdit() {
+
+    if (!productId) return;
+
+    try {
+
+        const res = await fetch(
+            `${BASE_URL}/api/all-products/${productId}`
+        );
+
+        const data = await res.json();
+
+        const product = data.product;
+
+        document.getElementById("name").value =
+            product.name || "";
+
+        document.getElementById("mrp").value =
+            product.mrp || "";
+
+        document.getElementById("price").value =
+            product.price || "";
+
+        document.getElementById("stock").value =
+            product.stock || "";
+
+        document.getElementById("weight").value =
+            product.weight || "";
+
+        document.getElementById("description").value =
+            product.description || "";
+
+        if(product.categoryId){
+            categorySelect.value = product.categoryId;
+        }
+
+        subCategory.value =
+            product.subCategory || "";
+
+    } catch(error) {
+
+        console.log(error);
+
+    }
+}
+
 
 // Add Product
 async function addProduct() {
@@ -334,7 +380,9 @@ formData.append(
 
 
 
-loadCategories();
+loadCategories().then(() => {
+    loadProductForEdit();
+});
 
 </script>
 
