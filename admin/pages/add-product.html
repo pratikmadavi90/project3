@@ -94,6 +94,11 @@ const categorySelect =
 const categoryId = params.get("categoryId");
 const categoryName = params.get("categoryName");
 const productId = params.get("id");
+
+
+if (productId) {
+    document.querySelector("button").innerText = "Update Product";
+}
 // document.getElementById("category").value = categoryId; 
 
 
@@ -310,14 +315,18 @@ formData.append(
 
         }
 
-        const res =
-            await fetch(
-                `${BASE_URL}/api/all-products/add`,
-                {
-                    method: "POST",
-                    body: formData
-                }
-            );
+let url = `${BASE_URL}/api/all-products/add`;
+let method = "POST";
+
+if (productId) {
+    url = `${BASE_URL}/api/all-products/${productId}`;
+    method = "PUT";
+}
+
+const res = await fetch(url, {
+    method,
+    body: formData
+});
 
         const result =
             await res.json();
