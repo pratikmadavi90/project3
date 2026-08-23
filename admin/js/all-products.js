@@ -19,6 +19,8 @@ async function loadProducts() {
 
     const products = await res.json();
 
+  console.log(products);  
+
     productsContainer.innerHTML = "";
 
     products.forEach(product => {
