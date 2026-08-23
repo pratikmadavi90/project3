@@ -1,4 +1,9 @@
-const API = "https://api.harzo.in/api/all-products";
+const params = new URLSearchParams(window.location.search);
+const categoryId = params.get("categoryId");
+
+const API = categoryId
+  ? `https://api.harzo.in/api/all-products/category/${categoryId}`
+  : "https://api.harzo.in/api/all-products";
 
 const token = localStorage.getItem("token");
 
