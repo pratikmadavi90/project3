@@ -103,32 +103,6 @@ const categoryName = params.get("categoryName");
 
 // document.getElementById("category").value = categoryId; 
 
-// Load Categories
-async function loadCategories() {
-
-    try {
-
-        const res = await fetch(
-            `${BASE_URL}/api/product-categories`
-        );
-
-        const data = await res.json();
-
-        categorySelect.innerHTML =
-            '<option value="">Select Category</option>';
-
-        data.categories.forEach(cat => {
-
-            categorySelect.innerHTML += `
-                <option
-                    value="${cat._id}"
-                    data-name="${cat.name}"
-                >
-                    ${cat.name}
-                </option>
-            `;
-
-        });
 
  if (categoryId) {
     categorySelect.value = categoryId;
@@ -137,44 +111,42 @@ async function loadCategories() {
 
 async function loadSubCategories() {
 
-  if (!categoryId) return;
+    try {
 
-  const res = await fetch(
-    `https://api.harzo.in/api/sub-categories/category/${categoryId}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }
-  );
+        if (!categoryId) return;
 
-  const data = await res.json();
+        const res = await fetch(
+            `https://api.harzo.in/api/sub-categories/category/${categoryId}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
 
-  subCategory.innerHTML =
-    `<option value="">Select Sub Category</option>`;
+        const data = await res.json();
 
-  data.subCategories.forEach(sub => {
+        subCategory.innerHTML =
+            `<option value="">Select Sub Category</option>`;
 
-    subCategory.innerHTML += `
-      <option value="${sub.name}">
-        ${sub.name}
-      </option>
-    `;
+        data.subCategories.forEach(sub => {
 
-  });
+            subCategory.innerHTML += `
+                <option value="${sub.name}">
+                    ${sub.name}
+                </option>
+            `;
 
-}   
+        });
 
     } catch (error) {
 
         console.error(error);
 
-        categorySelect.innerHTML =
-            '<option value="">Failed To Load</option>';
-
     }
 
 }
+
 
 
 // Add Product
@@ -219,10 +191,6 @@ if (!categoryId && !categorySelect.value) {
             return alert("Enter Selling Price");
         }
 
-        const selectedCategory =
-            categorySelect.options[
-                categorySelect.selectedIndex
-            ];
 
         const formData =
             new FormData();
@@ -237,10 +205,10 @@ formData.append(
   subCategory.value
 );        
 
-        formData.append(
-            "categoryName",
-            selectedCategory.dataset.name
-        );
+formData.append(
+    "categoryName",
+    categoryName || ""
+);
 
         formData.append(
             "name",
@@ -335,9 +303,6 @@ formData.append(
 
 
 
-if (selectedCategoryId) {
-  document.getElementById("subCategory").style.display = "block";
-}
 
 loadCategories();
 
