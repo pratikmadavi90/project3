@@ -61,16 +61,23 @@
             placeholder="Description"
         ></textarea>
 
-        <input
-            type="file"
-            id="images"
-            multiple
-            accept="image/*"
-        >
+<input
+    type="file"
+    id="images"
+    multiple
+    accept="image/*"
+>
 
-        <button onclick="addProduct()">
-            Add Product
-        </button>
+<input
+    type="number"
+    id="displayOrder"
+    placeholder="Display Order"
+    style="width:120px;margin-top:10px;"
+>
+
+<button onclick="addProduct()">
+    Add Product
+</button>
 
     </div>
 
@@ -203,6 +210,9 @@ async function loadProductForEdit() {
         subCategory.value =
             product.subCategory || "";
 
+        document.getElementById("displayOrder").value =
+            product.displayOrder || 1;            
+
     } catch(error) {
 
         console.log(error);
@@ -233,6 +243,9 @@ async function addProduct() {
 
         const description =
             document.getElementById("description").value;
+  
+        const displayOrder =
+             document.getElementById("displayOrder").value || 999;
 
         const files =
             document.getElementById("images").files;
@@ -302,6 +315,11 @@ formData.append(
             description
         );
 
+formData.append(
+    "displayOrder",
+    displayOrder
+);        
+
         for (
             let i = 0;
             i < files.length;
@@ -351,6 +369,7 @@ const res = await fetch(url, {
         document.getElementById("stock").value = "";
         document.getElementById("weight").value = "";
         document.getElementById("description").value = "";
+        document.getElementById("displayOrder").value = "";
         document.getElementById("images").value = "";
 
         categorySelect.selectedIndex = 0;
