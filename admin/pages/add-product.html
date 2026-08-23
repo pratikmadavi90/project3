@@ -28,10 +28,9 @@
             placeholder="Product Name"
         >
 
-<input
-  type="hidden"
-  id="category"
-/>
+<select id="category">
+    <option value="">Select Category</option>
+</select>
 
 <input
   type="text"
@@ -104,10 +103,41 @@ const categoryName = params.get("categoryName");
 // document.getElementById("category").value = categoryId; 
 
 
- if (categoryId) {
-    categorySelect.value = categoryId;
-    loadSubCategories();
-}      
+ async function loadCategories() {
+
+    try {
+
+        const res = await fetch(
+            `${BASE_URL}/api/product-categories`
+        );
+
+        const data = await res.json();
+
+        categorySelect.innerHTML =
+            '<option value="">Select Category</option>';
+
+        data.categories.forEach(cat => {
+
+            categorySelect.innerHTML += `
+                <option value="${cat._id}">
+                    ${cat.name}
+                </option>
+            `;
+
+        });
+
+        if (categoryId) {
+            categorySelect.value = categoryId;
+            loadSubCategories();
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+
+}    
 
 async function loadSubCategories() {
 
