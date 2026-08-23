@@ -3,95 +3,282 @@
 <head>
     <title>Add Product</title>
 
-<script>
-const token = localStorage.getItem("adminToken");
+    <script>
+        const token = localStorage.getItem("adminToken");
 
-if (!token) {
-    window.location.href = "login.html";
-}
-</script>
+        if (!token) {
+            window.location.href = "login.html";
+        }
+    </script>
 
     <link rel="stylesheet" href="../css/products.css">
 </head>
+
 <body>
 
-
 <div class="container">
-  
-  <div class="form-section">
 
-      <h2>Add Product</h2> 
+    <div class="form-section">
 
-<input id="name" placeholder="Product Name">
+        <h2>Add Product</h2>
 
-<select id="category">
-  <option value="">Select Category</option>
-  <option>Grocery</option>
-  <option>Snacks</option>
-  <option>Beverages</option>
-  <option>Dairy</option>
-  <option>Personal Care</option>
-</select>
+        <input
+            type="text"
+            id="name"
+            placeholder="Product Name"
+        >
 
-<input id="brand" placeholder="Brand">
+        <select id="category">
+            <option value="">
+                Loading Categories...
+            </option>
+        </select>
 
-<input id="mrp" placeholder="MRP">
-<input id="price" placeholder="Selling Price">
-<input id="stock" placeholder="Stock">
+        <input
+            type="number"
+            id="mrp"
+            placeholder="MRP"
+        >
 
-<input id="weight" placeholder="Weight (kg/g)">
-<textarea id="description" placeholder="Description"></textarea>
+        <input
+            type="number"
+            id="price"
+            placeholder="Selling Price"
+        >
 
-<!-- 🔥 MULTIPLE IMAGE -->
-<input type="file" id="images" multiple accept="image/*">
+        <input
+            type="number"
+            id="stock"
+            placeholder="Stock"
+        >
 
-<button onclick="addProduct()">Add Product</button>
+        <input
+            type="text"
+            id="weight"
+            placeholder="Weight (500g, 1kg, 2L etc)"
+        >
 
-<!-- ✅ FIX START -->
-  </div>
+        <textarea
+            id="description"
+            placeholder="Description"
+        ></textarea>
+
+        <input
+            type="file"
+            id="images"
+            multiple
+            accept="image/*"
+        >
+
+        <button onclick="addProduct()">
+            Add Product
+        </button>
+
+    </div>
+
 </div>
-<!-- ✅ FIX END -->
 
 <script>
-const BASE_URL = "https://api.harzo.in";
 
+const BASE_URL =
+    "https://api.harzo.in";
+
+const categorySelect =
+    document.getElementById("category");
+
+
+// Load Categories
+async function loadCategories() {
+
+    try {
+
+        const res = await fetch(
+            `${BASE_URL}/api/product-categories`
+        );
+
+        const data = await res.json();
+
+        categorySelect.innerHTML =
+            '<option value="">Select Category</option>';
+
+        data.categories.forEach(cat => {
+
+            categorySelect.innerHTML += `
+                <option
+                    value="${cat._id}"
+                    data-name="${cat.name}"
+                >
+                    ${cat.name}
+                </option>
+            `;
+
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        categorySelect.innerHTML =
+            '<option value="">Failed To Load</option>';
+
+    }
+
+}
+
+
+// Add Product
 async function addProduct() {
 
-  const files = document.getElementById("images").files;
+    try {
 
-  if (files.length === 0) {
-    alert("Image select karo");
-    return;
-  }
+        const name =
+            document.getElementById("name").value.trim();
 
-  const formData = new FormData();
+        const mrp =
+            document.getElementById("mrp").value;
 
-  formData.append("name", name.value);
-  formData.append("category", category.value);
-  formData.append("brand", brand.value);
+        const sellingPrice =
+            document.getElementById("price").value;
 
-  formData.append("mrp", mrp.value);
-  formData.append("price", price.value);
-  formData.append("stock", stock.value);
-  formData.append("weight", weight.value);
-  formData.append("description", description.value);
+        const stock =
+            document.getElementById("stock").value;
 
-  // 🔥 multiple images
-  for (let i = 0; i < files.length; i++) {
-    formData.append("images", files[i]);
-  }
+        const weight =
+            document.getElementById("weight").value;
 
-const res = await fetch(`${BASE_URL}/api/all-products/add`, {
-  method: "POST",
-  headers: {
-    Authorization: `Bearer ${token}`
-  },
-  body: formData
-});
+        const description =
+            document.getElementById("description").value;
 
-  const result = await res.json();
-  alert(result.message);
+        const files =
+            document.getElementById("images").files;
+
+        if (!name) {
+            return alert("Enter Product Name");
+        }
+
+        if (!categorySelect.value) {
+            return alert("Select Category");
+        }
+
+        if (!mrp) {
+            return alert("Enter MRP");
+        }
+
+        if (!sellingPrice) {
+            return alert("Enter Selling Price");
+        }
+
+        const selectedCategory =
+            categorySelect.options[
+                categorySelect.selectedIndex
+            ];
+
+        const formData =
+            new FormData();
+
+        formData.append(
+            "categoryId",
+            categorySelect.value
+        );
+
+        formData.append(
+            "categoryName",
+            selectedCategory.dataset.name
+        );
+
+        formData.append(
+            "name",
+            name
+        );
+
+        formData.append(
+            "mrp",
+            mrp
+        );
+
+        formData.append(
+            "sellingPrice",
+            sellingPrice
+        );
+
+        formData.append(
+            "stock",
+            stock
+        );
+
+        formData.append(
+            "weight",
+            weight
+        );
+
+        formData.append(
+            "description",
+            description
+        );
+
+        for (
+            let i = 0;
+            i < files.length;
+            i++
+        ) {
+
+            formData.append(
+                "images",
+                files[i]
+            );
+
+        }
+
+        const res =
+            await fetch(
+                `${BASE_URL}/api/all-products/add`,
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+        const result =
+            await res.json();
+
+        if (!res.ok) {
+
+            alert(
+                result.message ||
+                "Failed To Add Product"
+            );
+
+            return;
+        }
+
+        alert(
+            "Product Added Successfully"
+        );
+
+        document.getElementById("name").value = "";
+        document.getElementById("mrp").value = "";
+        document.getElementById("price").value = "";
+        document.getElementById("stock").value = "";
+        document.getElementById("weight").value = "";
+        document.getElementById("description").value = "";
+        document.getElementById("images").value = "";
+
+        categorySelect.selectedIndex = 0;
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Something Went Wrong"
+        );
+
+    }
+
 }
+
+loadCategories();
+
 </script>
 
 </body>
