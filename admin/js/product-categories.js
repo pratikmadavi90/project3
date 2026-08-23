@@ -190,29 +190,28 @@ const res =
 // Delete Category
 async function deleteCategory(id) {
 
-  const confirmDelete =
-    confirm(
-      "Delete Category?"
-    );
+  const confirmNumber = prompt(
+    "Delete karne ke liye mobile number enter karo"
+  );
 
-  if (!confirmDelete) return;
+  if (confirmNumber !== "9373694729") {
+    alert("Wrong Number. Delete Cancelled.");
+    return;
+  }
 
   try {
 
-const res =
-  await fetch(
-    `${API}/${id}`,
-    {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`
+    const res = await fetch(
+      `${API}/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       }
-    }
-  );
+    );
 
-    const data =
-      await res.json();
-     
+    const data = await res.json();
 
     alert(data.message);
 
