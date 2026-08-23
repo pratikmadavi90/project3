@@ -4,7 +4,7 @@ const ProductCategory = require("../models/ProductCategory");
 // Add Category
 exports.addCategory = async (req, res) => {
   try {
-    const { name, status } = req.body;
+    const { name, status, order } = req.body;
 
     const existingCategory = await ProductCategory.findOne({
       name: name.trim(),
@@ -17,11 +17,12 @@ exports.addCategory = async (req, res) => {
       });
     }
 
-    const category = await ProductCategory.create({
-      name: name.trim(),
-      image: req.file?.location || "",
-      status: status || "Active",
-    });
+const category = await ProductCategory.create({
+  name: name.trim(),
+  image: req.file?.location || "",
+  order: Number(order) || 0,
+  status: status || "Active",
+});
 
     res.status(201).json({
       success: true,
@@ -42,9 +43,9 @@ exports.addCategory = async (req, res) => {
 // Get All Categories
 exports.getCategories = async (req, res) => {
   try {
-    const categories = await ProductCategory.find()
-      .sort({ createdAt: -1 });
-
+ const categories = await ProductCategory.find()
+  .sort({ order: 1 });
+  
     res.status(200).json({
       success: true,
       count: categories.length,
@@ -107,8 +108,8 @@ exports.updateCategory = async (req, res) => {
     category.name =
       req.body.name || category.name;
 
-    category.status =
-      req.body.status || category.status;
+category.order =
+  req.body.order || category.order;
 
     if (req.file?.location) {
       category.image = req.file.location;
