@@ -72,6 +72,11 @@ formData.append(
       document.getElementById("stock").value
     );
 
+formData.append(
+  "displayOrder",
+  document.getElementById("displayOrder").value || 0
+);
+
     formData.append(
       "description",
       document.getElementById("description")
@@ -391,6 +396,9 @@ async function editProduct(id) {
 
   document.getElementById("stock").value =
     product.stock || "";
+
+ document.getElementById("displayOrder").value =
+  product.displayOrder || 0;   
 
   document.getElementById("description").value =
     product.description || "";

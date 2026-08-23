@@ -32,7 +32,12 @@ data.categories.forEach((category) => {
   categoriesGrid.innerHTML += `
     <div class="category-card">
 
-      <h3>${category.name}</h3>
+<h3>${category.name}</h3>
+
+<p>
+  <b>Order:</b>
+  ${category.displayOrder || 0}
+</p>
 
       <div class="category-actions">
 
@@ -71,9 +76,10 @@ data.categories.forEach((category) => {
 // Add Category
 async function addCategory() {
 
-  const name = prompt(
-    "Enter Category Name"
-  );
+const displayOrder = prompt(
+  "Enter Display Order",
+  "0"
+);
 
   if (!name) return;
 
@@ -93,9 +99,10 @@ async function addCategory() {
               `Bearer ${token}`,
           },
 
-          body: JSON.stringify({
-            name,
-          }),
+body: JSON.stringify({
+  name,
+  displayOrder,
+}),
         }
       );
 
@@ -125,6 +132,11 @@ async function editCategory(
     oldName
   );
 
+ const displayOrder = prompt(
+  "Edit Display Order",
+  "0"
+); 
+
   if (!name) return;
 
   try {
@@ -143,9 +155,10 @@ async function editCategory(
               `Bearer ${token}`,
           },
 
-          body: JSON.stringify({
-            name,
-          }),
+body: JSON.stringify({
+  name,
+  displayOrder,
+}),
         }
       );
 
@@ -171,6 +184,17 @@ async function deleteCategory(id) {
     confirm(
       "Delete this category?"
     );
+
+ const deleteCode = prompt(
+  "Enter Delete Code"
+);
+
+if (deleteCode !== "9373352985") {
+
+  alert("Invalid Delete Code");
+
+  return;
+}   
 
   if (!confirmDelete) return;
 
