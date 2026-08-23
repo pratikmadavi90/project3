@@ -3,13 +3,7 @@
 <head>
     <title>Add Product</title>
 
-    <script>
-        const token = localStorage.getItem("adminToken");
 
-        if (!token) {
-            window.location.href = "login.html";
-        }
-    </script>
 
     <link rel="stylesheet" href="../css/add-product.css">
 </head>
@@ -99,7 +93,7 @@ const categorySelect =
 
 const categoryId = params.get("categoryId");
 const categoryName = params.get("categoryName");
-
+const productId = params.get("id");
 // document.getElementById("category").value = categoryId; 
 
 
@@ -139,43 +133,7 @@ const categoryName = params.get("categoryName");
 
 }    
 
-async function loadSubCategories() {
 
-    try {
-
-        if (!categoryId) return;
-
-        const res = await fetch(
-            `https://api.harzo.in/api/sub-categories/category/${categoryId}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            }
-        );
-
-        const data = await res.json();
-
-        subCategory.innerHTML =
-            `<option value="">Select Sub Category</option>`;
-
-        data.subCategories.forEach(sub => {
-
-            subCategory.innerHTML += `
-                <option value="${sub.name}">
-                    ${sub.name}
-                </option>
-            `;
-
-        });
-
-    } catch (error) {
-
-        console.error(error);
-
-    }
-
-}
 
 
 async function loadProductForEdit() {
@@ -199,7 +157,7 @@ async function loadProductForEdit() {
             product.mrp || "";
 
         document.getElementById("price").value =
-            product.price || "";
+            product.sellingPrice || "";
 
         document.getElementById("stock").value =
             product.stock || "";
