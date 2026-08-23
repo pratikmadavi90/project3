@@ -32,6 +32,8 @@ async function loadCategories() {
 
     const data = await res.json();
 
+     console.log(data);
+
     categoriesContainer.innerHTML = "";
 
     data.categories.forEach(category => {
@@ -210,7 +212,7 @@ const res =
 
     const data =
       await res.json();
-      console.log(data);
+     
 
     alert(data.message);
 
