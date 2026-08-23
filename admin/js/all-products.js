@@ -7,6 +7,9 @@ const API = categoryId
 
 const token = localStorage.getItem("token");
 
+const imageIndexes = {};
+const productImages = {};
+
 const productsContainer = document.getElementById("productsContainer");
 
 const modal = document.getElementById("productModal");
@@ -29,6 +32,11 @@ const products = data.products || [];
 
     products.forEach(product => {
 
+productImages[product._id] =
+  product.images || [];
+
+imageIndexes[product._id] = 0;
+
       const image =
         product.images?.length > 0
           ? product.images[0]
@@ -40,7 +48,34 @@ const products = data.products || [];
 
 card.innerHTML = `
 
-  <img src="${image}" class="product-image">
+<div class="image-slider">
+
+  <button
+    class="slider-btn prev"
+    onclick="event.stopPropagation();changeImage('${product._id}',-1)"
+  >
+    ❮
+  </button>
+
+  <img
+    src="${image}"
+    class="product-image"
+    id="img-${product._id}"
+  >
+
+  <button
+    class="slider-btn next"
+    onclick="event.stopPropagation();changeImage('${product._id}',1)"
+  >
+    ❯
+  </button>
+
+  <div
+    class="dots"
+    id="dots-${product._id}"
+  ></div>
+
+</div>
 
   <h3>${product.name}</h3>
 
@@ -77,6 +112,24 @@ card.innerHTML = `
       card.addEventListener("click", () => {
         openModal(product);
       });
+
+const dotsContainer =
+  card.querySelector(`#dots-${product._id}`);
+
+if (product.images?.length > 1) {
+
+  product.images.forEach((_, index) => {
+
+    const dot = document.createElement("span");
+
+    dot.className =
+      index === 0 ? "dot active" : "dot";
+
+    dotsContainer.appendChild(dot);
+
+  });
+
+}      
 
       productsContainer.appendChild(card);
 
@@ -188,5 +241,55 @@ if (addProductBtn) {
   });
 
 }
+
+
+function changeImage(productId, direction) {
+
+  const images =
+    productImages[productId];
+
+  if (!images || images.length === 0) return;
+
+  imageIndexes[productId] += direction;
+
+  if (imageIndexes[productId] < 0) {
+    imageIndexes[productId] =
+      images.length - 1;
+  }
+
+  if (
+    imageIndexes[productId] >=
+    images.length
+  ) {
+    imageIndexes[productId] = 0;
+  }
+
+  const img =
+    document.getElementById(
+      `img-${productId}`
+    );
+
+  img.src =
+    images[
+      imageIndexes[productId]
+    ];
+
+  const dots =
+    document.querySelectorAll(
+      `#dots-${productId} .dot`
+    );
+
+  dots.forEach((dot, index) => {
+
+    dot.classList.toggle(
+      "active",
+      index ===
+        imageIndexes[productId]
+    );
+
+  });
+
+}
+
 
 loadProducts();
