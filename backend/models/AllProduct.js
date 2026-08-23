@@ -67,6 +67,12 @@ const allProductSchema = new mongoose.Schema(
       enum: ["Active", "Inactive"],
       default: "Active",
     },
+
+displayOrder: {
+  type: Number,
+  default: 9999,
+},
+
   },
   {
     timestamps: true,

@@ -15,10 +15,17 @@ exports.addProduct = async (req, res) => {
       stock,
       description,
       status,
+      displayOrder,
     } = req.body;
 
-    const images =
-      req.files?.map((file) => file.location) || [];
+const images =
+  req.files?.map((file) => file.location) || [];
+
+const lastProduct =
+  await AllProduct.findOne()
+    .sort({ displayOrder: -1 });
+
+
 
     const product = await AllProduct.create({
       categoryId,
@@ -31,6 +38,7 @@ exports.addProduct = async (req, res) => {
       stock,
       description,
       status: status || "Active",
+      displayOrder: displayOrder || 9999,
       images,
     });
 
@@ -53,9 +61,9 @@ exports.addProduct = async (req, res) => {
 // Get All Products
 exports.getAllProducts = async (req, res) => {
   try {
-    const products = await AllProduct.find()
-      .populate("categoryId", "name image")
-      .sort({ createdAt: -1 });
+const products = await AllProduct.find()
+  .populate("categoryId", "name image")
+  .sort({ displayOrder: 1 });
 
     res.status(200).json({
       success: true,
@@ -76,9 +84,9 @@ exports.getAllProducts = async (req, res) => {
 // Get Products By Category
 exports.getProductsByCategory = async (req, res) => {
   try {
-    const products = await AllProduct.find({
-      categoryId: req.params.categoryId,
-    }).sort({ createdAt: -1 });
+const products = await AllProduct.find({
+  categoryId: req.params.categoryId,
+}).sort({ displayOrder: 1 });
 
     res.status(200).json({
       success: true,
@@ -150,6 +158,7 @@ exports.updateProduct = async (req, res) => {
       stock,
       description,
       status,
+      displayOrder,
     } = req.body;
 
     product.categoryId =
@@ -181,6 +190,9 @@ exports.updateProduct = async (req, res) => {
 
     product.status =
       status || product.status;
+
+    product.displayOrder =
+      displayOrder || product.displayOrder;  
 
     // New Images Selected
     if (req.files && req.files.length > 0) {
