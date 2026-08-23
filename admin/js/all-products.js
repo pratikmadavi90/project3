@@ -23,11 +23,11 @@ async function loadProducts() {
 
     products.forEach(product => {
 
-      const image =
-        product.images?.length > 0
-          ? product.images[0]
-          : "https://via.placeholder.com/200";
-
+const image =
+  product.thumbnail ||
+  product.gallery?.[0] ||
+  product.images?.[0] ||
+  "https://via.placeholder.com/200";
       const card = document.createElement("div");
 
       card.className = "product-card";
