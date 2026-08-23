@@ -38,32 +38,41 @@ const products = data.products || [];
 
       card.className = "product-card";
 
-      card.innerHTML = `
-      
-        <img src="${image}" class="product-image">
+card.innerHTML = `
 
-        <h3>${product.name}</h3>
+  <img src="${image}" class="product-image">
 
-      <p class="price">₹${product.sellingPrice}</p>
+  <h3>${product.name}</h3>
 
-        <div class="card-buttons">
+  <p><b>MRP:</b> ₹${product.mrp || 0}</p>
 
-          <button
-            class="edit-btn"
-            onclick="editProduct('${product._id}')"
-          >
-            Edit
-          </button>
+  <p class="price">
+    <b>Price:</b> ₹${product.price || product.sellingPrice || 0}
+  </p>
 
-          <button
-            class="delete-btn"
-            onclick="deleteProduct('${product._id}')"
-          >
-            Delete
-          </button>
+  <p><b>Weight:</b> ${product.weight || "-"}</p>
 
-        </div>
-      `;
+  <p><b>Sub Category:</b> ${product.subCategory || "-"}</p>
+
+  <div class="card-buttons">
+
+    <button
+      class="edit-btn"
+      onclick="editProduct('${product._id}')"
+    >
+      Edit
+    </button>
+
+    <button
+      class="delete-btn"
+      onclick="deleteProduct('${product._id}')"
+    >
+      Delete
+    </button>
+
+  </div>
+
+`;
 
       card.addEventListener("click", () => {
         openModal(product);
