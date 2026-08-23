@@ -28,11 +28,10 @@
             placeholder="Product Name"
         >
 
-<select id="category">
-  <option value="">
-    Loading Categories...
-  </option>
-</select>
+<input
+  type="hidden"
+  id="category"
+/>
 
 <select id="subCategory">
   <option value="">
@@ -96,6 +95,14 @@ const categorySelect =
  const subCategory =
   document.getElementById("subCategory");   
 
+ const params =
+  new URLSearchParams(window.location.search);
+
+const categoryId = params.get("categoryId");
+const categoryName = params.get("categoryName");
+
+// document.getElementById("category").value = categoryId; 
+
 // Load Categories
 async function loadCategories() {
 
@@ -124,12 +131,7 @@ async function loadCategories() {
         });
 
 
-    category.addEventListener("change", async () => {
-
-  const categoryId = category.value;
-
-  subCategory.innerHTML =
-    `<option value="">Select Sub Category</option>`;
+async function loadSubCategories() {
 
   if (!categoryId) return;
 
@@ -144,6 +146,9 @@ async function loadCategories() {
 
   const data = await res.json();
 
+  subCategory.innerHTML =
+    `<option value="">Select Sub Category</option>`;
+
   data.subCategories.forEach(sub => {
 
     subCategory.innerHTML += `
@@ -154,8 +159,7 @@ async function loadCategories() {
 
   });
 
-});
-        
+}   
 
     } catch (error) {
 
@@ -323,6 +327,12 @@ formData.append(
 
     }
 
+}
+
+
+
+if (selectedCategoryId) {
+  document.getElementById("subCategory").style.display = "block";
 }
 
 loadCategories();
