@@ -133,7 +133,30 @@ const productId = params.get("id");
 
 }    
 
+async function loadSubCategories() {
 
+    try {
+
+        if (!categoryId) return;
+
+        const res = await fetch(
+            `https://api.harzo.in/api/sub-categories/category/${categoryId}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+
+        const data = await res.json();
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+
+}
 
 
 async function loadProductForEdit() {
