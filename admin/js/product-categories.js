@@ -9,6 +9,9 @@ const categoriesContainer =
 const categoryName =
   document.getElementById("categoryName");
 
+const categoryOrder =
+  document.getElementById("categoryOrder");
+
 const categoryImage =
   document.getElementById("categoryImage");
 
@@ -50,7 +53,7 @@ async function loadCategories() {
           alt="${category.name}"
         >
 
-        <h3>${category.name}</h3>
+        <h3>${category.order || 0}. ${category.name}</h3>
 
         <div class="card-actions">
 
@@ -103,6 +106,11 @@ saveCategoryBtn.addEventListener(
         categoryName.value
       );
 
+ formData.append(
+  "order",
+  categoryOrder.value || 0
+);     
+
       if (
         categoryImage.files[0]
       ) {
@@ -140,6 +148,7 @@ const res =
 
       categoryId.value = "";
       categoryName.value = "";
+      categoryOrder.value = "";
       categoryImage.value = "";
 
       loadCategories();
@@ -175,6 +184,9 @@ const res =
 
     categoryName.value =
       data.category.name;
+
+categoryOrder.value =
+  data.category.order || 0;
 
     window.scrollTo({
       top: 0,
