@@ -237,7 +237,7 @@ formData.append(
 
 formData.append(
     "categoryName",
-    categoryName || ""
+    localStorage.getItem("selectedCategoryName") || categoryName
 );
 
         formData.append(
