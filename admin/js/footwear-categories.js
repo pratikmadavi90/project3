@@ -76,49 +76,43 @@ data.categories.forEach((category) => {
 // Add Category
 async function addCategory() {
 
+const name = prompt(
+  "Enter Category Name"
+);
+
 const displayOrder = prompt(
   "Enter Display Order",
   "0"
 );
 
-  if (!name) return;
+if (!name) return;
 
-  try {
+try {
 
-    const response =
-      await fetch(
-        `${API}/add`,
-        {
-          method: "POST",
+  const response = await fetch(
+    `${API}/add`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        name,
+        displayOrder,
+      }),
+    }
+  );
 
-          headers: {
-            "Content-Type":
-              "application/json",
+  const data = await response.json();
 
-            Authorization:
-              `Bearer ${token}`,
-          },
+  alert(data.message || "Category Added");
 
-body: JSON.stringify({
-  name,
-  displayOrder,
-}),
-        }
-      );
+  loadCategories();
 
-    const data =
-      await response.json();
-
-    alert(
-      data.message ||
-      "Category Added"
-    );
-
-    loadCategories();
-
-  } catch (error) {
-    console.error(error);
-  }
+} catch (error) {
+  console.error(error);
+}
 }
 
 // Edit Category
