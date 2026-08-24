@@ -1,4 +1,5 @@
 const AllProduct = require("../models/AllProduct");
+const ProductCategory = require("../models/ProductCategory");
 
 
 // Add Product
@@ -21,6 +22,16 @@ exports.addProduct = async (req, res) => {
 const images =
   req.files?.map((file) => file.location) || [];
 
+const category =
+  await ProductCategory.findById(categoryId);
+
+if (!category) {
+  return res.status(404).json({
+    success: false,
+    message: "Category not found",
+  });
+}
+
 const lastProduct =
   await AllProduct.findOne()
     .sort({ displayOrder: -1 });
@@ -29,7 +40,7 @@ const lastProduct =
 
     const product = await AllProduct.create({
       categoryId,
-      categoryName,
+      categoryName: category.name,
       name,
       subCategory,
       mrp,
