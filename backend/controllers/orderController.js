@@ -1,7 +1,7 @@
 const Order = require("../models/Order");
 const { applyOffer } = require("../utils/offerHelper");
 const User = require("../models/User");
-const Product = require("../models/Product");
+const Product = require("../models/AllProduct");
 const DeliveryBoy = require("../models/DeliveryBoy");
 const admin = require("firebase-admin");
 const Staff = require("../models/Staff");
@@ -23,11 +23,11 @@ for (const item of req.body.items) {
     });
   }
 
-  if (product.stock.quantity < item.qty) {
-    return res.status(400).json({
-      message: `Only ${product.stock.quantity} ${item.name} available`
-    });
-  }
+if (product.stock < item.qty) {
+  return res.status(400).json({
+    message: `Only ${product.stock} ${item.name} available`
+  });
+}
 
 }
 
@@ -373,18 +373,14 @@ if (status === "Delivered") {
 
     if (!product) continue;
 
-    product.stock.quantity -= item.qty;
+    product.stock -= item.qty;
 
-    if (product.stock.quantity < 0) {
-      product.stock.quantity = 0;
+    if (product.stock < 0) {
+      product.stock = 0;
     }
 
-    product.stock.inStock = product.stock.quantity > 0;
-
     await product.save();
-
   }
-
 }
     
     if (!order) {
