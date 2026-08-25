@@ -138,7 +138,6 @@ saveBtn.textContent =
 
 document.getElementById("name").value = "";
 document.getElementById("brand").value = "";
-document.getElementById("size").value = "";
 document.getElementById("mrp").value = "";
 document.getElementById("sellingPrice").value = "";
 document.getElementById("stock5").value = "";
