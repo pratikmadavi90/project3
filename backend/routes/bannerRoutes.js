@@ -27,8 +27,22 @@ router.post("/add-banner", authMiddleware, async (req, res) => {
 // GET BANNERS
 router.get("/banners", async (req, res) => {
   try {
-    const banners = await Banner.find({ isActive: true }).sort({ position: 1 });
+
+    const section = req.query.section;
+
+    let filter = {
+      isActive: true
+    };
+
+    if (section) {
+      filter.section = section;
+    }
+
+    const banners = await Banner.find(filter)
+      .sort({ position: 1 });
+
     res.json(banners);
+
   } catch (err) {
     res.status(500).json(err);
   }

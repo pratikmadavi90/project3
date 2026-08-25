@@ -4,6 +4,7 @@ const bannerSchema = new mongoose.Schema({
   title: String,
   image: String,
   type: String, 
+  section: String,
   position: Number,
   isActive: { type: Boolean, default: true },
 
