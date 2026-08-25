@@ -7,6 +7,7 @@ let sliderInterval = null;
 async function addBanner() {
   const title = document.getElementById("title").value;
   const type = document.getElementById("type").value;
+  const section =document.getElementById("section").value;
   const redirectTypeEl = document.getElementById("redirectType");
   const redirectValueEl = document.getElementById("redirectValue");
   const file = document.getElementById("image").files[0];
@@ -47,15 +48,16 @@ const uploadRes = await fetch(`${BASE_URL}/upload`, {
     "Content-Type": "application/json",
     Authorization: `Bearer ${token}`
   },
-  body: JSON.stringify({
-    title,
-    type,
-    image: uploadData.imageUrl,
-    position: Date.now(),
-    isActive: true,
-    redirectType,
-    redirectValue
-  })
+body: JSON.stringify({
+  title,
+  type,
+  section,
+  image: uploadData.imageUrl,
+  position: Date.now(),
+  isActive: true,
+  redirectType,
+  redirectValue
+})
 });
 
     const saveData = await saveRes.json();
