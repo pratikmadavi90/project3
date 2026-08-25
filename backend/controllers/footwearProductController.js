@@ -112,12 +112,44 @@ exports.getProductsByCategory = async (
 // Update Product
 exports.updateProduct = async (req, res) => {
   try {
-    const updateData = { ...req.body };
 
-if (req.body.sizeStock) {
-  updateData.sizeStock =
-    JSON.parse(req.body.sizeStock);
-}    
+const existingProduct =
+  await FootwearProduct.findById(req.params.id);
+
+const updateData = {
+  category:
+    req.body.category ||
+    existingProduct.category,
+
+  name:
+    req.body.name ||
+    existingProduct.name,
+
+  brand:
+    req.body.brand ||
+    existingProduct.brand,
+
+  mrp:
+    req.body.mrp ||
+    existingProduct.mrp,
+
+  sellingPrice:
+    req.body.sellingPrice ||
+    existingProduct.sellingPrice,
+
+  description:
+    req.body.description ||
+    existingProduct.description,
+
+  displayOrder:
+    req.body.displayOrder ||
+    existingProduct.displayOrder,
+
+  sizeStock:
+    req.body.sizeStock
+      ? JSON.parse(req.body.sizeStock)
+      : existingProduct.sizeStock,
+};
 
     if (req.files && req.files.length > 0) {
       updateData.images = req.files.map(
