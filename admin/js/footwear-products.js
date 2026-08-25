@@ -140,16 +140,14 @@ document.getElementById("name").value = "";
 document.getElementById("brand").value = "";
 document.getElementById("mrp").value = "";
 document.getElementById("sellingPrice").value = "";
-document.getElementById("stock5").value = "";
-document.getElementById("stock6").value = "";
-document.getElementById("stock7").value = "";
-document.getElementById("stock8").value = "";
-document.getElementById("stock9").value = "";
-document.getElementById("stock10").value = "";
-document.getElementById("stock11").value = "";
-document.getElementById("stock12").value = "";
-document.getElementById("description").value = "";
-document.getElementById("images").value = "";
+document.getElementById("size5").value = "";
+document.getElementById("size6").value = "";
+document.getElementById("size7").value = "";
+document.getElementById("size8").value = "";
+document.getElementById("size9").value = "";
+document.getElementById("size10").value = "";
+document.getElementById("size11").value = "";
+document.getElementById("size12").value = "";
 
 categorySelect.value = "";
 
@@ -406,10 +404,7 @@ async function editProduct(id) {
   document.getElementById("brand").value =
     product.brand || "";
 
-  document.getElementById("size").value =
-    Array.isArray(product.size)
-      ? product.size.join(",")
-      : product.size;
+
 
   document.getElementById("mrp").value =
     product.mrp || "";
@@ -419,14 +414,14 @@ async function editProduct(id) {
 
 const sizeStock = product.sizeStock || {};
 
-document.getElementById("stock5").value = sizeStock["5"] || 0;
-document.getElementById("stock6").value = sizeStock["6"] || 0;
-document.getElementById("stock7").value = sizeStock["7"] || 0;
-document.getElementById("stock8").value = sizeStock["8"] || 0;
-document.getElementById("stock9").value = sizeStock["9"] || 0;
-document.getElementById("stock10").value = sizeStock["10"] || 0;
-document.getElementById("stock11").value = sizeStock["11"] || 0;
-document.getElementById("stock12").value = sizeStock["12"] || 0;
+document.getElementById("size5").value = sizeStock["5"] || 0;
+document.getElementById("size6").value = sizeStock["6"] || 0;
+document.getElementById("size7").value = sizeStock["7"] || 0;
+document.getElementById("size8").value = sizeStock["8"] || 0;
+document.getElementById("size9").value = sizeStock["9"] || 0;
+document.getElementById("size10").value = sizeStock["10"] || 0;
+document.getElementById("size11").value = sizeStock["11"] || 0;
+document.getElementById("size12").value = sizeStock["12"] || 0;
 
  document.getElementById("displayOrder").value =
   product.displayOrder || 0;   
