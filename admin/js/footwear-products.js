@@ -64,7 +64,7 @@ const sizes = {
 };
 
 formData.append(
-  "sizes",
+  "sizeStock",
   JSON.stringify(sizes)
 );
 
