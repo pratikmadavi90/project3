@@ -50,6 +50,12 @@ const allProductSchema = new mongoose.Schema(
       min: 0,
     },
 
+maxOrderQuantity: {
+  type: Number,
+  default: 10,
+  min: 1,
+},    
+
     description: {
       type: String,
       default: "",

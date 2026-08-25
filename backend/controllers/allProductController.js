@@ -13,6 +13,7 @@ exports.addProduct = async (req, res) => {
       mrp,
       sellingPrice,
       weight,
+      maxOrderQuantity,
       stock,
       description,
       status,
@@ -47,6 +48,7 @@ const lastProduct =
       sellingPrice,
       weight,
       stock,
+      maxOrderQuantity,
       description,
       status: status || "Active",
       displayOrder: displayOrder || 9999,
@@ -166,6 +168,7 @@ exports.updateProduct = async (req, res) => {
       mrp,
       sellingPrice,
       weight,
+      maxOrderQuantity,
       stock,
       description,
       status,
@@ -195,6 +198,10 @@ exports.updateProduct = async (req, res) => {
 
     product.stock =
       stock || product.stock;
+
+    product.maxOrderQuantity =
+      maxOrderQuantity ||
+      product.maxOrderQuantity;     
 
     product.description =
       description || product.description;
