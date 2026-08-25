@@ -160,26 +160,31 @@ exports.updateProduct = async (req, res) => {
       });
     }
 
-    const {
-      categoryId,
-      categoryName,
-      name,
-      subCategory,
-      mrp,
-      sellingPrice,
-      weight,
-      maxOrderQuantity,
-      stock,
-      description,
-      status,
-      displayOrder,
-    } = req.body;
+const {
+  categoryId,
+  categoryName,
+  name,
+  subCategory,
+  mrp,
+  sellingPrice,
+  weight,
+  maxOrderQuantity,
+  stock,
+  description,
+  status,
+  displayOrder,
+} = req.body;
 
-    product.categoryId =
-      categoryId || product.categoryId;
 
-    product.categoryName =
-      categoryName || product.categoryName;
+// Category Update
+if (categoryId) {
+  const category = await ProductCategory.findById(categoryId);
+
+  if (category) {
+    product.categoryId = category._id;
+    product.categoryName = category.name;
+  }
+}
 
     product.name =
       name || product.name;
