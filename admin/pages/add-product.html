@@ -205,6 +205,9 @@ async function loadProductForEdit() {
         document.getElementById("stock").value =
             product.stock || "";
 
+        document.getElementById("maxOrderQuantity").value =
+           product.maxOrderQuantity || "";    
+
         document.getElementById("weight").value =
             product.weight || "";
 
@@ -245,6 +248,9 @@ async function addProduct() {
 
         const stock =
             document.getElementById("stock").value;
+
+        const maxOrderQuantity =
+            document.getElementById("maxOrderQuantity").value;
 
         const weight =
             document.getElementById("weight").value;
@@ -313,6 +319,11 @@ formData.append(
             stock
         );
 
+ formData.append(
+    "maxOrderQuantity",
+    maxOrderQuantity
+);       
+
         formData.append(
             "weight",
             weight
@@ -375,6 +386,7 @@ const res = await fetch(url, {
         document.getElementById("mrp").value = "";
         document.getElementById("price").value = "";
         document.getElementById("stock").value = "";
+        document.getElementById("maxOrderQuantity").value = "";
         document.getElementById("weight").value = "";
         document.getElementById("description").value = "";
         document.getElementById("displayOrder").value = "";
