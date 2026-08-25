@@ -278,8 +278,14 @@ exports.deleteProduct = async (req, res) => {
 // Search Products
 exports.searchProducts = async (req, res) => {
   try {
+    
 
     const q = req.query.q || "";
+
+    console.log("SEARCH QUERY =", req.query.q);
+
+const count = await AllProduct.countDocuments();
+console.log("TOTAL PRODUCTS =", count);
 
     const products = await AllProduct.find({
       name: {
