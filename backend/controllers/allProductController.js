@@ -204,9 +204,9 @@ if (categoryId) {
     product.stock =
       stock || product.stock;
 
-    product.maxOrderQuantity =
-      maxOrderQuantity ||
-      product.maxOrderQuantity;     
+if (maxOrderQuantity !== undefined) {
+  product.maxOrderQuantity = Number(maxOrderQuantity);
+}  
 
     product.description =
       description || product.description;
