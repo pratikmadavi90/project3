@@ -76,6 +76,9 @@ async function loadProductForEdit() {
         document.getElementById("stock").value =
             product.stock || "";
 
+         document.getElementById("maxOrderQuantity").value =
+             product.maxOrderQuantity || 10;   
+
         document.getElementById("weight").value =
             product.weight || "";
 
@@ -121,6 +124,9 @@ async function addProduct() {
 
         const stock =
             document.getElementById("stock").value;
+
+        const maxOrderQuantity =
+             document.getElementById("maxOrderQuantity").value;    
 
         const weight =
             document.getElementById("weight").value;
@@ -181,6 +187,11 @@ async function addProduct() {
             "stock",
             stock
         );
+
+        formData.append(
+           "maxOrderQuantity",
+           maxOrderQuantity
+        );  
 
         formData.append(
             "weight",
