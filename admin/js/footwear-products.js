@@ -52,10 +52,21 @@ formData.append(
       document.getElementById("brand").value
     );
 
-    formData.append(
-      "size",
-      document.getElementById("size").value
-    );
+const sizes = {
+  5: document.getElementById("size5").value || 0,
+  6: document.getElementById("size6").value || 0,
+  7: document.getElementById("size7").value || 0,
+  8: document.getElementById("size8").value || 0,
+  9: document.getElementById("size9").value || 0,
+  10: document.getElementById("size10").value || 0,
+  11: document.getElementById("size11").value || 0,
+  12: document.getElementById("size12").value || 0,
+};
+
+formData.append(
+  "sizes",
+  JSON.stringify(sizes)
+);
 
     formData.append(
       "mrp",
@@ -67,10 +78,7 @@ formData.append(
       document.getElementById("sellingPrice").value
     );
 
-    formData.append(
-      "stock",
-      document.getElementById("stock").value
-    );
+
 
 formData.append(
   "displayOrder",
@@ -133,7 +141,14 @@ document.getElementById("brand").value = "";
 document.getElementById("size").value = "";
 document.getElementById("mrp").value = "";
 document.getElementById("sellingPrice").value = "";
-document.getElementById("stock").value = "";
+document.getElementById("stock5").value = "";
+document.getElementById("stock6").value = "";
+document.getElementById("stock7").value = "";
+document.getElementById("stock8").value = "";
+document.getElementById("stock9").value = "";
+document.getElementById("stock10").value = "";
+document.getElementById("stock11").value = "";
+document.getElementById("stock12").value = "";
 document.getElementById("description").value = "";
 document.getElementById("images").value = "";
 
@@ -224,8 +239,17 @@ async function loadProducts() {
             <b>Selling :</b>
             ₹${product.sellingPrice}<br>
 
-            <b>Stock :</b>
-            ${product.stock}
+<b>Size Stock :</b><br>
+
+5 : ${product.sizeStock?.["5"] || 0} |
+6 : ${product.sizeStock?.["6"] || 0} |
+7 : ${product.sizeStock?.["7"] || 0} |
+8 : ${product.sizeStock?.["8"] || 0} <br>
+
+9 : ${product.sizeStock?.["9"] || 0} |
+10 : ${product.sizeStock?.["10"] || 0} |
+11 : ${product.sizeStock?.["11"] || 0} |
+12 : ${product.sizeStock?.["12"] || 0}
 
           </div>
 
@@ -394,8 +418,16 @@ async function editProduct(id) {
   document.getElementById("sellingPrice").value =
     product.sellingPrice || "";
 
-  document.getElementById("stock").value =
-    product.stock || "";
+const sizeStock = product.sizeStock || {};
+
+document.getElementById("stock5").value = sizeStock["5"] || 0;
+document.getElementById("stock6").value = sizeStock["6"] || 0;
+document.getElementById("stock7").value = sizeStock["7"] || 0;
+document.getElementById("stock8").value = sizeStock["8"] || 0;
+document.getElementById("stock9").value = sizeStock["9"] || 0;
+document.getElementById("stock10").value = sizeStock["10"] || 0;
+document.getElementById("stock11").value = sizeStock["11"] || 0;
+document.getElementById("stock12").value = sizeStock["12"] || 0;
 
  document.getElementById("displayOrder").value =
   product.displayOrder || 0;   

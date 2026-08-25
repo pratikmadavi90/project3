@@ -198,3 +198,33 @@ h1 {
 .slider-btn:hover {
   background: rgba(0, 0, 0, 0.8);
 }
+
+
+.sizes-section{
+  margin:15px 0;
+}
+
+.sizes-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+
+.size-item{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.size-item label{
+  font-weight:700;
+  min-width:20px;
+}
+
+.size-item input{
+  flex:1;
+  padding:8px;
+  border:1px solid #ddd;
+  border-radius:8px;
+  text-align:center;
+}
