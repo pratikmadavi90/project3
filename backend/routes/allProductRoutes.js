@@ -8,6 +8,7 @@ const {
   getProductById,
   updateProduct,
   deleteProduct,
+  searchProducts,
 } = require("../controllers/allProductController");
 
 const upload = require("../middleware/uploadProductImages");
@@ -25,6 +26,12 @@ router.post(
 router.get(
   "/",
   getAllProducts
+);
+
+// Search Products
+router.get(
+  "/search",
+  searchProducts
 );
 
 

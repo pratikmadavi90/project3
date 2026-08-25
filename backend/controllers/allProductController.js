@@ -273,3 +273,28 @@ exports.deleteProduct = async (req, res) => {
     });
   }
 };
+
+
+// Search Products
+exports.searchProducts = async (req, res) => {
+  try {
+
+    const q = req.query.q || "";
+
+    const products = await AllProduct.find({
+      name: {
+        $regex: q,
+        $options: "i",
+      },
+    }).limit(50);
+
+    res.json(products);
+
+  } catch (error) {
+
+    console.log("SEARCH ERROR:", error);
+
+    res.status(500).json([]);
+
+  }
+};
