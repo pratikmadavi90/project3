@@ -12,6 +12,7 @@ exports.addProduct = async (req, res) => {
       mrp,
       sellingPrice,
       stock,
+      sizeStock,
       description,
       featured,
       newArrival,
@@ -41,6 +42,9 @@ exports.addProduct = async (req, res) => {
       mrp,
       sellingPrice,
       stock,
+      sizeStock: sizeStock
+       ? JSON.parse(sizeStock)
+       : {},
       description,
       images,
       featured,
@@ -109,6 +113,11 @@ exports.getProductsByCategory = async (
 exports.updateProduct = async (req, res) => {
   try {
     const updateData = { ...req.body };
+
+if (req.body.sizeStock) {
+  updateData.sizeStock =
+    JSON.parse(req.body.sizeStock);
+}    
 
     if (req.files && req.files.length > 0) {
       updateData.images = req.files.map(

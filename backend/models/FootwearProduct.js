@@ -46,6 +46,11 @@ const footwearProductSchema = new mongoose.Schema(
   default: 0,
 },
 
+sizeStock: {
+  type: Object,
+  default: {},
+},
+
 
     description: {
       type: String,
