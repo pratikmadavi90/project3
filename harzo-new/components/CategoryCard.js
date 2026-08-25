@@ -1,6 +1,7 @@
-import { View, Text, Image } from "react-native";
+import { View, Text } from "react-native";
+import { Image } from "expo-image";
 
-export default function ProductCard({ item }) {
+export default function CategoryCard({ item }) {
   return (
     <View
       style={{
@@ -18,14 +19,39 @@ export default function ProductCard({ item }) {
         shadowRadius: 4,
       }}
     >
- <Image
+      <View
+        style={{
+          width: "100%",
+          height: 100,
+          backgroundColor: "#ffffff", // andar ka box white
+          borderRadius: 8,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+<Image
   source={{
-    uri: item.images?.thumbnail || "https://via.placeholder.com/150"
+    uri:
+      item.images?.thumbnail ||
+      item.images?.[0] ||
+      "https://via.placeholder.com/150",
   }}
-  style={{ width: "100%", height: 100, borderRadius: 8 }}
-/> 
+  style={{
+    width: 80,
+    height: 80,
+  }}
+  contentFit="contain"
+  cachePolicy="memory-disk"
+/>
+      </View>
 
-      <Text style={{ marginTop: 5, fontWeight: "600" }}>
+      <Text
+        style={{
+          marginTop: 8,
+          fontWeight: "600",
+          textAlign: "center",
+        }}
+      >
         {item.name}
       </Text>
     </View>

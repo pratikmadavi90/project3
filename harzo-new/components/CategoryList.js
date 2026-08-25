@@ -8,14 +8,6 @@ import {
 
 import { router } from "expo-router";
 
-const categories = [
-  { title: "Grocery", category: "Grocery", subCategory: "" },
-  { title: "Snacks", category: "Snacks", subCategory: "" },
-  { title: "Beverages", category: "Beverages", subCategory: "" },
-  { title: "Dairy", category: "Dairy", subCategory: "" },
-  { title: "Personal Care", category: "Personal Care", subCategory: "" },
-  { title: "Household", category: "Household", subCategory: "" },
-];
 
 export default function CategoryList() {
   return (

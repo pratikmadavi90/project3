@@ -104,6 +104,7 @@ JSON.stringify(returnRes,null,2)
 
       // ✅ API ORDERS
       let apiOrders: any[] = [];
+      let footwearOrders: any[] = [];
 
       try {
 
@@ -117,14 +118,35 @@ console.log("USER ORDERS:", data);
 
 apiOrders = data?.data || []; 
 
+
+
+try {
+
+const footwearRes = await fetch(
+  `https://api.harzo.in/api/footwear-orders/user/${encodeURIComponent(user.email)}`
+);
+
+const footwearData = await footwearRes.json();
+
+console.log("FOOTWEAR ORDERS:", footwearData);
+
+footwearOrders = footwearData?.data || [];
+
+} catch (err) {
+
+console.log("FOOTWEAR ERROR:", err);
+
+}
+
       } catch (e) {
 
         console.log("API ERROR:", e);
       }
 
       // ✅ MERGE ORDERS
- const mergedOrders = [
+const mergedOrders = [
   ...apiOrders,
+  ...footwearOrders,
   ...filteredLocalOrders,
 ];
 
@@ -244,8 +266,19 @@ const onRefresh = async () => {
 const currentIndex =
   (productIndex as any)[key] || 0;
 
-  const currentProduct =
-    item?.items?.[currentIndex];
+const currentProduct =
+  item?.items?.[currentIndex] || {
+    name: item?.productName,
+    image: item?.productImage,
+    price: item?.sellingPrice,
+    quantity: 1,
+  };
+
+    console.log(
+  "CURRENT PRODUCT =",
+  JSON.stringify(currentProduct, null, 2)
+);
+
 
   return (
 
@@ -348,15 +381,16 @@ const currentIndex =
 
 <View style={styles.productCard}>
 
-  <Image
-    source={{
-      uri:
-        currentProduct?.image ||
-        currentProduct?.images?.thumbnail ||
-        "https://dummyimage.com/100x100/cccccc/000000.png",
-    }}
-    style={styles.image}
-  />
+<Image
+  source={{
+    uri:
+      currentProduct?.image ||
+      currentProduct?.images?.[0] ||
+      currentProduct?.productImage ||
+      "https://dummyimage.com/100x100/cccccc/000000.png",
+  }}
+  style={styles.image}
+/>
 
   <View style={styles.details}>
 
@@ -427,23 +461,28 @@ const currentIndex =
                 "Cash On Delivery"
               }
             </Text>
-            <Text style={styles.orderText}>
+<Text style={styles.orderText}>
   🚚 Delivery:{" "}
   {
     item?.address?.fullAddress
       ? `${item.address.fullAddress}, ${item.address.city} - ${item.address.pincode}`
-      : item?.deliveryAddress || "Korpana"
+
+      : item?.address
+      ? `${item.address}, ${item.city || ""} - ${item.pincode || ""}`
+
+      : item?.deliveryAddress || "Address Not Available"
   }
 </Text>
 
-            <Text style={styles.total}>
-              Total: ₹
-              {
-                item?.total ||
-                item?.totalAmount ||
-                0
-              }
-            </Text>
+<Text style={styles.total}>
+  Total: ₹
+  {
+    item?.total ||
+    item?.totalAmount ||
+    item?.sellingPrice ||
+    0
+  }
+</Text>
 
           </View>
 

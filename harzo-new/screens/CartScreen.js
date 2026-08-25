@@ -274,16 +274,16 @@ return (
 
                 <View style={styles.card}>
 
-                  <Image
-                    source={{
-                      uri:
-                        item?.images?.thumbnail ||
-                        item?.image ||
-                        "https://dummyimage.com/100x100/cccccc/000000.png",
-                    }}
-
-                    style={styles.img}
-                  />
+<Image
+  source={{
+    uri:
+      item?.images?.[0] ||
+      item?.images?.thumbnail ||
+      item?.image ||
+      "https://dummyimage.com/100x100/cccccc/000000.png",
+  }}
+  style={styles.img}
+/>
 
                   <View style={{ flex: 1 }}>
 
@@ -304,14 +304,15 @@ return (
                       }
                     </Text>
 
-                    <Text style={styles.price}>
-                      ₹
-                      {
-                        item?.pricing?.sellingPrice ||
-                        item?.price ||
-                        0
-                      }
-                    </Text>
+ <Text style={styles.price}>
+  ₹
+  {
+    item?.pricing?.sellingPrice ||
+    item?.sellingPrice ||
+    item?.price ||
+    0
+  }
+</Text>
 
                     <View style={styles.row}>
 

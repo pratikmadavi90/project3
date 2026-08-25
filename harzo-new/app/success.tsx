@@ -192,19 +192,7 @@ const oldOrders =
 
       <View style={styles.infoCard}>
 
-        <View style={styles.row}>
-
-          <Text style={styles.label}>
-            Order ID
-          </Text>
-
-          <Text style={styles.value}>
-            {orderId}
-          </Text>
-
-        </View>
-
-        <View style={styles.line} />
+ 
 
         <View style={styles.row}>
 

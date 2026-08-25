@@ -60,6 +60,22 @@ useFocusEffect(
     router.push("/search");
   };
 
+const minutes = Number(deliveryTime);
+
+let deliveryText = "Welcome to Harzo";
+
+if (deliveryTime) {
+
+  if (minutes < 60) {
+    deliveryText = `${minutes} Minute Delivery`;
+  } else if (minutes === 60) {
+    deliveryText = "1 Hour Delivery";
+  } else {
+    deliveryText = `${minutes / 60} Hours Delivery`;
+  }
+
+}
+
   return (
     <View style={styles.header}>
 
@@ -67,7 +83,7 @@ useFocusEffect(
       <View style={styles.topRow}>
 
 <Text style={styles.time}>
-  ⚡ {deliveryTime ? `${deliveryTime} Minute Delivery` : "Welcome to Harzo"}
+  ⚡ {deliveryText}
 </Text>
 
 
@@ -141,7 +157,7 @@ const styles = StyleSheet.create({
 
   // ✅ TEXT FIX
   time: {
-    fontSize: 16,
+    fontSize: 15,
 
     fontWeight:
       Platform.OS === "android"

@@ -21,6 +21,7 @@ export default function Layout() {
 
           if (route.name === "index") iconName = "home";
           else if (route.name === "cart") iconName = "cart";
+          else if (route.name === "footwear")iconName = "footsteps";
           else if (route.name === "search") iconName = "search";
           else if (route.name === "profile") iconName = "person";
 
@@ -34,6 +35,7 @@ export default function Layout() {
         },
 
         tabBarStyle: {
+          
           height:
             Platform.OS === "android"
               ? 70 + insets.bottom
@@ -69,6 +71,13 @@ export default function Layout() {
         }}
       />
 
+ <Tabs.Screen
+  name="footwear"
+  options={{
+    title: "Footwear",
+  }}
+/>     
+
       <Tabs.Screen
         name="cart"
         options={{
@@ -103,6 +112,21 @@ export default function Layout() {
           href: null,
         }}
       />
+
+<Tabs.Screen
+  name="footwear-products"
+  options={{
+    href: null,
+  }}
+/>
+
+<Tabs.Screen
+  name="footwear-product-detail"
+  options={{
+    href: null,
+  }}
+/>
+
     </Tabs>
   );
 }

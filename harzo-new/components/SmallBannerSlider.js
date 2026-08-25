@@ -1,4 +1,5 @@
-import { ScrollView, Image, View, TouchableOpacity } from "react-native";
+import { ScrollView, View, TouchableOpacity } from "react-native";
+import { Image } from "expo-image";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "expo-router";
 
@@ -78,15 +79,17 @@ export default function SmallBannerSlider() {
             activeOpacity={0.9}
             onPress={() => handleBannerClick(item)} // ✅ CLICK ENABLED
           >
-            <Image
-              source={{ uri: item.image }}
-              style={{
-                width: 140,
-                height: 140,
-                borderRadius: 15,
-                marginRight: 15
-              }}
-            />
+<Image
+  source={{ uri: item.image }}
+  style={{
+    width: 140,
+    height: 140,
+    borderRadius: 15,
+    marginRight: 15
+  }}
+  contentFit="cover"
+  cachePolicy="memory-disk"
+/>
           </TouchableOpacity>
         ))}
       </ScrollView>

@@ -1,16 +1,18 @@
 import {
   View,
+  Text,
   StyleSheet,
   ScrollView,
   Dimensions,
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import LoadingScreen from "./LoadingScreen";
+
 import { Image } from "expo-image";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "expo-router";
 import { Linking } from "react-native";
+import { getFootwearProducts } from "../../services/footwearService";
 
 const { width } = Dimensions.get("window");
 
@@ -34,35 +36,27 @@ export default function BannerSlider() {
   const currentIndex = useRef(0);
 
   // ✅ ONLY SLIDER BANNERS
-  const sliderBanners = banners.filter(
-  (b) =>
-    b.type === "slider" &&
-    b.section === "home"
-);
+  const sliderBanners = banners.filter((b) => b.type === "slider");
 
   // ✅ FETCH BANNERS
-const fetchBanners = async () => {
-  try {
+  const fetchBanners = async () => {
+    try {
     const res = await fetch(
-      "https://api.harzo.in/banners?section=home"
-    );
-
-    const data = await res.json();
-
-    setLoading(false);
-
-    setBanners((prev) => {
-      if (JSON.stringify(prev) !== JSON.stringify(data)) {
-        return data;
-      }
-      return prev;
-    });
-
-  } catch (err) {
-    console.log(err);
-    setLoading(false);
-  }
-};
+  "https://api.harzo.in/banners?section=footwear"
+);
+      const data = await res.json();
+      setLoading(false);
+      setBanners((prev) => {
+        if (JSON.stringify(prev) !== JSON.stringify(data)) {
+          return data;
+        }
+        return prev;
+      });
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  };
 
   // ✅ LOAD ONCE
 useEffect(() => {
@@ -81,26 +75,40 @@ const handleBannerClick = async (banner) => {
 
   if (!banner) return;
 
-  if (banner.redirectType === "category") {
-    router.push({
-      pathname: "/category",
-      params: {
-        category: banner.redirectValue,
-      },
-    });
-  } else if (banner.redirectType === "product") {
+if (banner.redirectType === "category") {
+router.push({
+  pathname: "/footwear-products",
+  params: {
+    categoryName: banner.redirectValue,
+  },
+});
+}
+
+ 
+ else if (banner.redirectType === "product") {
 
 const productId =
   String(banner.redirectValue)
     .replace(/"/g, "")
     .trim();
 
-router.push({
-  pathname: "/product-detail",
-  params: {
-    id: productId,
-  },
-});
+const data = await getFootwearProducts();
+
+const product = data.products?.find(
+  (p) => p._id === productId
+);
+
+
+if (product) {
+  router.push({
+    pathname: "/footwear-product-detail",
+    params: {
+      product: JSON.stringify(product),
+    },
+  });
+}
+
+
 
   } else if (
     banner.redirectType === "website" ||
@@ -150,12 +158,51 @@ router.push({
     setActiveIndex(slide);
   };
 
-  if (loading) {
-  return <LoadingScreen />;
+if (loading) {
+  return null;
 }
 
-  return (
-    <View style={styles.container}>
+return (
+<View>
+
+<View
+  style={{
+    backgroundColor: "#FACC15",
+    paddingTop: 70,
+    paddingBottom: 20,
+    paddingHorizontal: 20,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    alignItems: "center", // 👈 center karega
+  }}
+>
+
+<Text
+  style={{
+    fontSize: 16,
+    color: "#333",
+    marginBottom: 8,
+    textAlign: "center",
+    fontWeight: "800",
+  }}
+>
+  ⚡ Welcome to Harzo Footwear
+</Text>
+
+<Text
+  style={{
+    fontSize: 14,
+    fontWeight: "800",
+    color: "#111",
+    textAlign: "center",
+  }}
+>
+   👟 Step Into Style 👟
+</Text>
+
+</View>
+
+    <View style={styles.container}></View>
       <ScrollView
         ref={scrollRef}
         horizontal

@@ -1,290 +1,131 @@
-// @ts-nocheck
-
-
 import Header from "../../components/Header";
-import CategoryList from "../../components/CategoryList";
 import BannerSlider from "../../components/BannerSlider";
 import ProductRow from "../../components/ProductRow";
-import SmallBannerSlider from "../../components/SmallBannerSlider";
 
 import {
   ScrollView,
   View,
   Text,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
   RefreshControl,
 } from "react-native";
+
 import { useEffect, useState } from "react";
-import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useCart } from "../../context/CartContext";
 import ViewCartBar from "../../components/ViewCartBar";
 
 export default function HomeScreen() {
-  const router = useRouter();
-
-useCart();
-
-  // ✅ FIRST products state
-  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
- const refreshDeliverySettings = async () => {
+  const refreshDeliverySettings = async () => {
+    try {
+      const userData = await AsyncStorage.getItem("user");
 
-  try {
+      if (!userData) return;
 
-    const userData = await AsyncStorage.getItem("user");
+      const user = JSON.parse(userData);
 
-    if (!userData) return;
+      if (!user.village || !user.pincode) return;
 
-    const user = JSON.parse(userData);
-
-    if (!user.village || !user.pincode) return;
-
-    const response = await fetch(
-      "https://api.harzo.in/api/delivery/check",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: user.village,
-          pincode: user.pincode,
-        }),
-      }
-    );
-
-    const deliveryData = await response.json();
-
-    if (deliveryData.available) {
-      await AsyncStorage.setItem(
-        "deliverySettings",
-        JSON.stringify(deliveryData)
+      const response = await fetch(
+        "https://api.harzo.in/api/delivery/check",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: user.village,
+            pincode: user.pincode,
+          }),
+        }
       );
+
+      const deliveryData = await response.json();
+
+      if (deliveryData.available) {
+        await AsyncStorage.setItem(
+          "deliverySettings",
+          JSON.stringify(deliveryData)
+        );
+      }
+    } catch (err) {
+      console.log(err);
     }
+  };
 
-  } catch (err) {
-    console.log(err);
-  }
+  const loadData = () => {
+    fetch("https://api.harzo.in/api/product-categories")
+      .then((res) => res.json())
+      .then((data) => {
+        setCategories(data.categories || []);
+      })
+      .catch((err) => {
+        console.log("CATEGORY ERROR", err);
+      });
 
-}; 
+    fetch("https://api.harzo.in/api/all-products")
+      .then((res) => res.json())
+      .then((data) => {
+        setProducts(data.products || []);
+      })
+      .catch((err) => {
+        console.log("PRODUCT ERROR", err);
+      });
+  };
 
- const fetchProducts = () => {
+  useEffect(() => {
+    refreshDeliverySettings();
+    loadData();
+  }, []);
 
-  fetch("https://api.harzo.in/api/products")
-    .then(res => res.json())
-    .then(data => {
+  const onRefresh = () => {
+    setRefreshing(true);
 
-      console.log("DATA:", data);
+    loadData();
 
-      setProducts(data);
-
+    setTimeout(() => {
       setRefreshing(false);
-
-    })
-    .catch(err => {
-
-      console.log("API ERROR:", err);
-
-      setRefreshing(false);
-
-    });
-};
-
-useEffect(() => {
-refreshDeliverySettings();
-  fetchProducts();
-
-}, []);
-
-const onRefresh = () => {
-
-  setRefreshing(true);
-
-  fetchProducts();
-};
-
-  // ✅ HELPER (image nikalne ke liye)
-const getImage = (name) => {
-  if (!products || products.length === 0) {
-    return "https://via.placeholder.com/100";
-  }
-
-  const product = products.find(
-    (p) => (p?.subCategory || p?.subcategory) === name
-  );
+    }, 1000);
+  };
 
   return (
-    product?.images?.thumbnail ||
-    product?.images?.[0] ||
-    "https://via.placeholder.com/100"
+    <View style={{ flex: 1 }}>
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: 190 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+      >
+<Header />
+<BannerSlider />
+
+
+
+{categories.map((category) => (
+  <ProductRow
+    key={category._id}
+    title={category.name}
+    products={products.filter((p) => {
+      const productCategory =
+        p?.categoryId?.name ||
+        p?.categoryName ||
+        "";
+
+      return (
+        productCategory.trim().toLowerCase() ===
+        category.name.trim().toLowerCase()
+      );
+    })}
+  />
+))}
+      </ScrollView>
+
+      <ViewCartBar />
+    </View>
   );
-};
-
-  // ✅ AB sections niche (IMPORTANT FIX)
- const getSections = () => [
-    {
-  title: "Beverages",
-  data: [
-    { name: "Soft Drinks", image: getImage("Soft Drinks") },
-    { name: "Juices", image: getImage("Juices") },
-    { name: "Energy", image: getImage("Energy") },
-    { name: "Water", image: getImage("Water") },
-    { name: "Soda", image: getImage("Soda") },
-    { name: "Cold Coffee", image: getImage("Cold Coffee") }
-  ]
-},
-    {
-  title: "Snacks",
-  data: [
-    { name: "Chips", image: getImage("Chips") },
-    { name: "Namkeen", image: getImage("Namkeen") },
-    { name: "Biscuits", image: getImage("Biscuits") },
-    { name: "Sweets", image: getImage("Sweets") },
-    { name: "Chocolates", image: getImage("Chocolates") },
-    { name: "Cookies", image: getImage("Cookies") }
-  ]
-},
-    {
-  title: "Grocery",
-  data: [
-    { name: "Atta", image: getImage("Atta") },
-    { name: "Rice", image: getImage("Rice") },
-    { name: "Dal", image: getImage("Dal") },
-    { name: "Oil", image: getImage("Oil") },
-    { name: "Salt", image: getImage("Salt") },
-    { name: "Masala", image: getImage("Masala") }
-  ]
-},
-    {
-  title: "Dairy",
-  data: [
-    { name: "Milk", image: getImage("Milk") },
-    { name: "Curd", image: getImage("Curd") },
-    { name: "Bread", image: getImage("Bread") },
-    { name: "Eggs", image: getImage("Eggs") },
-    { name: "Butter", image: getImage("Butter") },
-    { name: "Paneer", image: getImage("Paneer") }
-  ]
-},
-    {
-      title: "Personal Care",
-      data: [
-        { name: "Shampoo", image: getImage("Shampoo") },
-        { name: "Soap", image: getImage("Soap") },
-        { name: "Facewash", image: getImage("Facewash") },
-        { name: "Cream", image: getImage("Cream") },
-        { name: "Toothpaste", image: getImage("Toothpaste") },
-        { name: "Perfume", image: getImage("Perfume") }
-      ]
-    },
-    {
-      title: "Household",
-      data: [
-        { name: "Detergent", image: getImage("Detergent") },
-        { name: "Floor Cleaner", image: getImage("Floor Cleaner") },
-        { name: "Dishwash", image: getImage("Dishwash") },
-        { name: "Phenyl", image: getImage("Phenyl") },
-        { name: "Glass Cleaner", image: getImage("Glass Cleaner") },
-        { name: "Toilet Cleaner", image: getImage("Toilet Cleaner") }
-      ]
-    }
-  ];
-
-return (
-  <View style={{ flex: 1 }}>
-
-    <ScrollView
-      contentContainerStyle={{ paddingBottom: 100 }}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-        />
-      }
-    > 
-      <Header />
-      <CategoryList />
-      <BannerSlider />
-      <ProductRow products={products} />
-      <SmallBannerSlider />
-
-      <View style={{ padding: 10 }}>
-        {getSections().map((section, index) => (
-          <View key={index} style={{ marginBottom: 20 }}>
-
-            <Text style={{
-              fontSize: 18,
-              fontWeight: "bold",
-              marginBottom: 10
-            }}>
-              {section.title}
-            </Text>
-
-            <View style={{
-              flexDirection: "row",
-              flexWrap: "wrap",
-              justifyContent: "space-between"
-            }}>
-              {section.data.map((item, i) => (
-                <TouchableOpacity
-                  key={i}
-                  onPress={() =>
-                 router.push({
-                pathname: "/category",
-                params: {
-                category: section.title,
-               subCategory: item.name,
-               products: JSON.stringify(products) // 🔥 MUST ADD
-              }
-              })
-                  }
-                  style={{
-                    width: "30%",
-                    marginBottom: 15,
-                    alignItems: "center"
-                  }}
-                >
-                  <View style={{
-                    width: 90,
-                    height: 90,
-                    borderRadius: 15,
-                    backgroundColor: "#f1f5f9",
-                    justifyContent: "center",
-                    alignItems: "center"
-                  }}>
-                    <Image
-                      source={{ uri: item.image }}
-                      style={{ width: 80, height: 80 }}
-                    />
-                  </View>
-
-                  <Text style={{
-                    marginTop: 5,
-                    fontSize: 13,
-                    fontWeight: "bold",
-                    textAlign: "center"
-                  }}>
-                    {item.name}
-                  </Text>
-
-                </TouchableOpacity>
-              ))}
-            </View>
-
-          </View>
-        ))}
-      </View>
-
-  </ScrollView>
-
- <ViewCartBar />
-
-</View>
-);
 }
-
-const styles = StyleSheet.create({});

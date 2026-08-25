@@ -158,6 +158,14 @@ else if (
     weightInKg = value / 1000;
   }
 
+else if (
+  weightText.includes("pcs") ||
+  weightText.includes("pc") ||
+  weightText.includes("piece")
+) {
+  weightInKg = value * 0.06;
+}  
+
   const qty =
     item.quantity ||
     item.qty ||
@@ -205,6 +213,8 @@ if (
     "Minimum Order",
     `Minimum order is ₹${deliverySettings.minimumOrder}`
   );
+
+  return;
 }
 
 // Heavy weight charge
@@ -323,7 +333,7 @@ const orderData = {
 items: cart.map((item) => ({
 
   productId:
-    item._id || "",
+    item._id || item.id || "",
 
   name:
     item.name || "",
@@ -335,12 +345,12 @@ items: cart.map((item) => ({
     item.quantityText ||
     "",
 
-  price:
+  price: Number(
+    item.sellingPrice ||
     item.price ||
-    item.pricing?.mrp ||
-    item.pricing?.salePrice ||
-    item.pricing?.price ||
-    0,
+    item.mrp ||
+    0
+  ),
 
   qty:
     item.quantity ||
@@ -349,11 +359,8 @@ items: cart.map((item) => ({
 
   image:
     item.image ||
-    item.thumbnail ||
-    item.images?.thumbnail ||
-    item.images?.[0]?.url ||
-    item.images?.[0]?.thumbnail ||
-    "https://via.placeholder.com/100",
+    item.images?.[0] ||
+    "",
 
 })),
 
@@ -696,55 +703,69 @@ Heavy Charge
     styles.onlineCard,
     storeClosed && { opacity: 0.5 },
   ]}
-  onPress={() => {
+  onPress={async () => {
 
           try {
 
-            const options = {
+const response = await fetch(
+  "https://api.harzo.in/api/payment/create-order",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      amount: finalTotal,
+    }),
+  }
+);
 
-              description:
-                "Harzo Demo Payment",
+const result = await response.json();
 
-              image:
-                "https://harzo.in/favicon.png",
+console.log("RAZORPAY ORDER:", result); 
 
-              currency: "INR",
+if (!result.success) {
+  Alert.alert("Order Create Failed");
+  return;
+}
 
-              key:
-                "rzp_test_1DP5mmOlF5G5ag",
+const options = {
+  description: "Harzo Demo Payment",
+  image: "https://harzo.in/favicon.png",
+  currency: "INR",
 
-              amount:
-                finalTotal * 100,
+  key: "rzp_live_TSXcvAvdJTapt6",
 
-              name: "Harzo",
+  order_id: result.order.id,
 
-              prefill: {
-                email:
-                  "test@harzo.in",
-                contact:
-                  "9999999999",
-                name:
-                  "Harzo User",
-              },
+  amount: finalTotal * 100,
 
-              theme: {
-                color: "#2563eb",
-              },
-            };
+  name: "Harzo",
+
+  prefill: {
+    email: "test@harzo.in",
+    contact: "9999999999",
+    name: "Harzo User",
+  },
+
+  theme: {
+    color: "#2563eb",
+  },
+};
 
             Razorpay.open(options)
 
-              .then((data) => {
+.then((paymentData) => {
 
-                Alert.alert(
-                  "Payment Success",
-                  data?.razorpay_payment_id ||
-                    "Success"
-                );
+  Alert.alert(
+    "Payment Success",
+    paymentData?.razorpay_payment_id || "Success"
+  );
 
-                placeOrder("Razorpay");
-              })
+  placeOrder("Razorpay");
+})
 
+            
               .catch((error) => {
 
                 console.log(

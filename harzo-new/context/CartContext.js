@@ -198,21 +198,17 @@ export const CartProvider = ({
 
   // ✅ TOTAL
 
-  const total = cart.reduce(
-
-    (sum, item) =>
-
-      sum +
-
-      (
-        item?.pricing?.sellingPrice ||
-        item?.price ||
-        0
-      ) * item.quantity,
-
-    0
-  );
-
+const total = cart.reduce(
+  (sum, item) =>
+    sum +
+    (
+      item?.sellingPrice ||
+      item?.pricing?.sellingPrice ||
+      item?.price ||
+      0
+    ) * item.quantity,
+  0
+);
   return (
 
     <CartContext.Provider

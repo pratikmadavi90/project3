@@ -26,32 +26,48 @@ export default function ProductCard({ product }) {
         {product?.name || "No Name"}
       </Text>
 
-      <Text style={styles.price}>
-        ₹{product?.pricing?.sellingPrice || 0}
-      </Text>
+<View
+  style={{
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 5,
+  }}
+>
+  <View>
+    <Text style={styles.price}>
+      ₹{product?.pricing?.sellingPrice || 0}
+    </Text>
 
-      <Text style={styles.discount}>
-        ₹{product?.pricing?.mrp || ""}
-      </Text>
+    <Text style={styles.discount}>
+      ₹{product?.pricing?.mrp || ""}
+    </Text>
+  </View>
 
-      {/* 🔥 ADD BUTTON */}
-      <TouchableOpacity
-        style={styles.addBtn}
-        activeOpacity={0.7}
-        onPressIn={() => {
-          console.log("CLICKED");
-          addToCart(product);
-        }}
-      >
-        <Text
-          style={{
-            color: "#fff",
-            fontWeight: "bold",
-          }}
-        >
-          ADD
-        </Text>
-      </TouchableOpacity>
+  <TouchableOpacity
+    style={{
+      backgroundColor: "green",
+      paddingHorizontal: 10,
+      height: 26,
+      borderRadius: 5,
+      justifyContent: "center",
+      alignItems: "center",
+    }}
+    onPress={() => addToCart(product)}
+  >
+    <Text
+      style={{
+        color: "#fff",
+        fontSize: 10,
+        fontWeight: "bold",
+      }}
+    >
+      ADD
+    </Text>
+  </TouchableOpacity>
+</View>
+
+
     </View>
   );
 }
@@ -90,13 +106,13 @@ const styles = StyleSheet.create({
     textDecorationLine: "line-through",
   },
 
-  addBtn: {
-    backgroundColor: "green",
-    marginTop: 5,
-    padding: 6,
-    alignItems: "center",
-    borderRadius: 6,
-    zIndex: 999,
-    elevation: 5,
-  },
+addBtn: {
+  backgroundColor: "green",
+  marginTop: 4,
+  height: 28,
+  alignItems: "center",
+  justifyContent: "center",
+  borderRadius: 4,
+},
+
 });

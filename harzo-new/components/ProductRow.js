@@ -1,144 +1,104 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
+
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 
-export default function ProductRow({ products }) {
+export default function ProductRow({
+  products = [],
+  title,
+}) {
   const router = useRouter();
 
-  // CATEGORY GROUP
-  const grouped = products.reduce((acc, item) => {
-    const category = item.category || "Other";
-    if (!acc[category]) acc[category] = [];
-    acc[category].push(item);
-    return acc;
-  }, {});
+  const displayProducts = products.slice(0, 8);
 
-  const categoryNames = {
-  Beverages: "Drinks & Juice",
-  Snacks: "Chips & Namkeen",
-  Grocery: "Daily Grocery",
-  Dairy: "Dairy, Bread & Eggs",
-};
+  if (displayProducts.length === 0) {
+    return null;
+  }
 
   return (
-    <View style={styles.container}>
-      {Object.keys(grouped).map((category) => {
-        const items = grouped[category];
+    <View style={styles.section}>
+      <Text style={styles.sectionTitle}>
+        {title}
+      </Text>
 
-        return (
+      <View style={styles.grid}>
+        {displayProducts.map((item) => (
           <TouchableOpacity
-            key={category}
+            key={item._id}
             style={styles.card}
-          onPress={() => {
-
-  console.log("🛍️ PRODUCTROW → CATEGORY", {
-    category: category,
-    productsCount: items.length,
-    firstSubCategory:
-      items?.[0]?.subCategory ||
-      items?.[0]?.subcategory,
-  });
-
-const firstSubCategory =
-  items?.[0]?.subCategory ||
-  items?.[0]?.subcategory ||
-  "";
-
-router.push({
-  pathname: "/category",
-  params: {
-    category: category,
-    subCategory: firstSubCategory,
-    products: JSON.stringify(items),
-  },
-});
-
-}}
+            onPress={() =>
+              router.push({
+                pathname: "/category",
+                params: {
+                  category: title,
+                },
+              })
+            }
           >
-            {/* 🔥 IMAGE GRID */}
-            <View style={styles.imageGrid}>
-              {items.slice(0, 4).map((item, index) => (
-                <View key={index} style={styles.imageBox}>
-                  <Image
-                    source={{
-                      uri:
-                        item.images?.thumbnail ||
-                        item.image ||
-                        "https://via.placeholder.com/100",
-                    }}
-                    style={styles.image}
-                  />
-                </View>
-              ))}
-            </View>
+            <Image
+              source={{
+                uri:
+                  item?.images?.[0] ||
+                  "https://via.placeholder.com/150",
+              }}
+              style={styles.image}
+              contentFit="contain"
+            />
 
-
-
-            {/* CATEGORY NAME */}
-            <Text style={styles.title}>
-            {categoryNames[category] || category}
+            <Text
+              numberOfLines={2}
+              style={styles.name}
+            >
+              {item.name}
             </Text>
           </TouchableOpacity>
-        );
-      })}
+        ))}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  section: {
+    marginTop: 15,
+    paddingHorizontal: 10,
+  },
+
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    marginBottom: 10,
+  },
+
+  grid: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    paddingHorizontal: 12,
-    paddingTop: 10,
   },
 
   card: {
-    width: "48%",
+    width: "23%",
     backgroundColor: "#fff",
-    borderRadius: 16,
-    padding: 12,
-    marginBottom: 15,
-    marginHorizontal: 2,
-
-    elevation: 6,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 6,
-  },
-
-  imageGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    marginBottom: 6,
-  },
-
-  // 🔥 MOST IMPORTANT
-  imageBox: {
-    width: "48%",
-    height: 70,
-    backgroundColor: "#f5f5f5",
     borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 6,
+    padding: 6,
+    marginBottom: 10,
 
-    borderWidth: 1,
-    borderColor: "#eee",
+    elevation: 2,
   },
 
   image: {
-    width: "105%",
-    height: "105%",
-    resizeMode: "contain",
+    width: "100%",
+    height: 55,
   },
 
-  title: {
+  name: {
+    fontSize: 10,
     textAlign: "center",
-    fontWeight: "600",
-    marginTop: 6,
-    fontSize: 13,
+    marginTop: 4,
   },
 });
