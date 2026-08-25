@@ -206,7 +206,9 @@ if (categoryId) {
 
 if (maxOrderQuantity !== undefined) {
   product.maxOrderQuantity = Number(maxOrderQuantity);
-}  
+} 
+
+console.log("maxOrderQuantity from req.body =", maxOrderQuantity);
 
     product.description =
       description || product.description;
