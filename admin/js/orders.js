@@ -283,17 +283,15 @@ async function viewOrder(id) {
 
     </div>
 
-    <div class="bill-summary total-final">
+<div class="bill-summary">
+  <div>Payment Method</div>
+  <div>${order.payment?.method || "N/A"}</div>
+</div>
 
-      <div>
-        To Pay
-      </div>
-
-      <div>
-        ₹${total}
-      </div>
-
-    </div>
+<div class="bill-summary">
+  <div>Payment Status</div>
+  <div>${order.payment?.status || "N/A"}</div>
+</div>
 
     <div class="bill-status">
 
