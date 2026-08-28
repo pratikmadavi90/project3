@@ -6,6 +6,16 @@ const orderSchema = new mongoose.Schema({
 
   userId: String,
 
+ cancelStreak: {
+  type: Number,
+  default: 0
+},
+
+codBlocked: {
+  type: Boolean,
+  default: false
+}, 
+
   userEmail: String,
 
   user: {

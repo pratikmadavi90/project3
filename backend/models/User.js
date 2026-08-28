@@ -15,10 +15,20 @@ userId: {
 
   address: { type: String },
 
-  city: { type: String },        // ✅ ADD
-  pincode: { type: String },     // ✅ ADD
+  city: { type: String },        
+  pincode: { type: String },     
 
   isBlocked: { type: Boolean, default: false },
+
+ cancelStreak: {
+  type: Number,
+  default: 0
+},
+
+codBlocked: {
+  type: Boolean,
+  default: false
+}, 
 
 }, { timestamps: true });
 

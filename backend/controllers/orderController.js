@@ -52,6 +52,15 @@ if (!user) {
   });
 }
 
+if (
+  req.body.payment?.method === "Cash On Delivery" &&
+  user.codBlocked
+) {
+  return res.status(400).json({
+    message: "COD blocked. Please pay online."
+  });
+}
+
 
 
 const onlineDeliveryBoys =
@@ -381,6 +390,19 @@ if (status === "Delivered") {
 
     await product.save();
   }
+
+const user = await User.findOne({
+  userId: order.userId
+});
+
+if (user) {
+
+  user.cancelStreak = 0;
+  user.codBlocked = false;
+
+  await user.save();
+}  
+
 }
     
     if (!order) {
@@ -479,15 +501,32 @@ exports.assignDelivery = async (req, res) => {
 // ❌ CANCEL ORDER
 exports.cancelOrder = async (req, res) => {
   try {
-    const order = await Order.findByIdAndUpdate(
-      req.params.id,
-      { status: "Cancelled" },
-      { new: true }
-    );
+const order = await Order.findById(req.params.id);
 
-    if (!order) {
-      return res.status(404).json({ message: "Order not found" });
-    }
+if (!order) {
+  return res.status(404).json({
+    message: "Order not found"
+  });
+}
+
+const user = await User.findOne({
+  userId: order.userId
+});
+
+if (user) {
+
+  user.cancelStreak += 1;
+
+  if (user.cancelStreak >= 2) {
+    user.codBlocked = true;
+  }
+
+  await user.save();
+}
+
+order.status = "Cancelled";
+
+await order.save();
 
     res.json({
       message: "Order Cancelled",
