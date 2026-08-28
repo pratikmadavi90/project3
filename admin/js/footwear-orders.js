@@ -204,11 +204,17 @@ ${order.size}
 <div class="payment-box">
 
 <h3>
-Payment Method
+Payment Details
 </h3>
 
 <p>
-${order.paymentMethod}
+<b>Method:</b>
+${order.paymentMethod || "N/A"}
+</p>
+
+<p>
+<b>Status:</b>
+${order.paymentStatus || "N/A"}
 </p>
 
 </div>
