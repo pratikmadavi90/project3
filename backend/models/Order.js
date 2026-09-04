@@ -44,15 +44,7 @@ codBlocked: {
 
   finalAmount: Number,
 
-deliveryCharge: {
-  type: Number,
-  default: 0
-},
 
-heavyCharge: {
-  type: Number,
-  default: 0
-},
 
   payment: {
     method: String,
