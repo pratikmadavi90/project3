@@ -118,26 +118,29 @@ exports.getWeeklyStats = async (req, res) => {
         )
       })`;
 
-      result[dayName] = {
+result[dayName] = {
 
-        label:dateLabel,
+  label:dateLabel,
 
-        date:
-        date.toISOString(),
+  date:date.toISOString(),
 
-        total:0,
+  total:0,
 
-        pending:0,
+  pending:0,
 
-        processing:0,
+  processing:0,
 
-        delivered:0,
+  delivered:0,
 
-        cancelled:0,
+  cancelled:0,
 
-        revenue:0
+  revenue:0,
 
-      };
+  codRevenue:0,
+
+  onlineRevenue:0
+
+};
 
     }
 
@@ -158,6 +161,29 @@ exports.getWeeklyStats = async (req, res) => {
 
   result[dayName].revenue +=
   order.totalAmount || 0;
+
+  const amount =
+order.totalAmount || 0;
+
+if (
+  order.payment?.method ===
+  "Cash On Delivery"
+) {
+
+  result[dayName]
+  .codRevenue += amount;
+
+}
+
+if (
+  order.payment?.method ===
+  "Razorpay"
+) {
+
+  result[dayName]
+  .onlineRevenue += amount;
+
+}
 
   const status =
   (order.status || "")
