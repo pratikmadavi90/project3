@@ -1,5 +1,5 @@
 const FootwearOrder = require("../models/FootwearOrder");
-const DeliveryBoy = require("../models/DeliveryBoy");
+
 
 // ==========================
 // CREATE ORDER
@@ -7,29 +7,8 @@ const DeliveryBoy = require("../models/DeliveryBoy");
 exports.createFootwearOrder = async (req, res) => {
   try {
     
- const onlineDeliveryBoys =
-await DeliveryBoy.find({
-  online: true,
-  status: "Active"
-});
 
-let assignedDeliveryBoy = null;
-
-if (onlineDeliveryBoys.length > 0) {
-  assignedDeliveryBoy =
-    onlineDeliveryBoys[0];
-}   
-
-const order = await FootwearOrder.create({
-
-  ...req.body,
-
-  deliveryBoyId:
-    assignedDeliveryBoy
-      ? assignedDeliveryBoy.deliveryId
-      : ""
-
-});
+    const order = await FootwearOrder.create(req.body);
 
     res.status(201).json({
       success: true,

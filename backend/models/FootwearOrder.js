@@ -113,11 +113,6 @@ deliveryBoyId: {
   default: "",
 },
 
-orderType: {
-  type: String,
-  default: "Footwear"
-},
-
 deliveredAt: {
   type: Date,
   default: null,
