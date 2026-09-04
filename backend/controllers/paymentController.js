@@ -1,5 +1,6 @@
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
+const User = require("../models/User");
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -11,7 +12,25 @@ const razorpay = new Razorpay({
 exports.createRazorpayOrder = async (req, res) => {
   try {
 
-    const { amount } = req.body;
+    const { amount, userEmail } = req.body;
+
+    const user = await User.findOne({
+  email: userEmail
+});
+
+if (!user) {
+  return res.status(404).json({
+    success: false,
+    message: "User not found"
+  });
+}
+
+if (user.isBlocked) {
+  return res.status(403).json({
+    success: false,
+    message: "Your account has been blocked by admin"
+  });
+}
 
     if (!amount || Number(amount) <= 0) {
       return res.status(400).json({
