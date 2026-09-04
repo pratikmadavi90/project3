@@ -311,6 +311,8 @@ exports.updateStatus = async (req, res) => {
   try {
     const { status, staffId } = req.body;
 
+console.log("NEW STATUS =", status);
+
     if (!status) {
       return res.status(400).json({ message: "Status required" });
     }
