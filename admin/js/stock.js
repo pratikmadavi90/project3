@@ -9,8 +9,8 @@ const headers = {
 
 // 🔹 Stock status class
 function getStockClass(p) {
-  const qty = p.stock?.quantity || 0;
-  const limit = p.stock?.lowStockLimit || 0;
+  const qty = p.stock || 0;
+  const limit = 10;
 
   if (qty === 0) return "out-stock";
   if (qty <= limit) return "low-stock";
@@ -20,8 +20,8 @@ function getStockClass(p) {
 
 // 🔹 Stock text (real system)
 function getStockText(p) {
-  const qty = p.stock?.quantity || 0;
-  const limit = p.stock?.lowStockLimit || 0;
+  const qty = p.stock || 0;
+  const limit = 10;
 
   if (qty === 0) return "Out of Stock ❌";
   if (qty <= limit) return "Low Stock ⚠️";
@@ -64,7 +64,7 @@ async function loadProducts() {
           <td>${p.name}</td>
 
         <td class="${getStockClass(p)}">
-        ${p.stock.quantity}
+        ${p.stock}
         <br>
        <small>${getStockText(p)}</small>
         </td>
@@ -78,7 +78,7 @@ async function loadProducts() {
 </td>
 
           <td>
-            <input type="number" id="s-${p._id}" value="${p.stock.quantity}">
+            <input type="number" id="s-${p._id}" value="${p.stock}">
             <button onclick="updateStock('${p._id}')">Update</button>
           </td>
         </tr>
