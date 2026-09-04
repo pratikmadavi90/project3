@@ -1,4 +1,5 @@
 const Order = require("../models/Order");
+const FootwearOrder =require("../models/FootwearOrder");
 const { applyOffer } = require("../utils/offerHelper");
 const User = require("../models/User");
 const Product = require("../models/AllProduct");
@@ -599,6 +600,20 @@ await Order.find({
   }
 });
 
+const footwearOrders =
+await FootwearOrder.find({
+  deliveryBoyId: deliveryBoyId,
+  createdAt:{
+    $gte:startOfDay,
+    $lte:endOfDay
+  }
+});
+
+const allOrders = [
+  ...orders,
+  ...footwearOrders
+];
+
 console.log(
 "FOUND ORDERS =",
 orders
@@ -649,16 +664,16 @@ res.json({
 
 success:true,
 
-totalOrders:orders.length,
+totalOrders: allOrders.length,
 
 deliveredOrders:
-orders.filter(
-o=>o.status==="Delivered"
+allOrders.filter(
+o => o.status === "Delivered"
 ).length,
 
 pendingOrders:
-orders.filter(
-o=>
+allOrders.filter(
+o =>
 [
 "Pending",
 "Delivery Accepted",
@@ -670,7 +685,7 @@ o=>
 
 liveOrder,
 
-orders
+orders: allOrders
 
 });
 
