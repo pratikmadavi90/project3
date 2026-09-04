@@ -23,6 +23,8 @@ async function loadStats() {
     document.getElementById("totalProducts").innerText = data.totalProducts || 0;
     document.getElementById("totalOrders").innerText = data.totalOrders || 0;
     document.getElementById("totalRevenue").innerText = "₹" + (data.revenue || 0);
+    document.getElementById("codRevenue").innerText ="₹" + (data.codRevenue || 0);
+    document.getElementById("onlineRevenue").innerText ="₹" + (data.onlineRevenue || 0);
 
   } catch (err) {
     console.error("Stats error:", err);
