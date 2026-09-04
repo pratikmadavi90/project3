@@ -158,6 +158,10 @@ const order = new Order({
 
   ...req.body,
 
+ deliveryCharge: req.body.deliveryCharge || 0,
+
+heavyCharge: req.body.heavyCharge || 0, 
+
   userId:user.userId,
 
   finalAmount,
