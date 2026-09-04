@@ -1,4 +1,5 @@
 const Otp = require("../models/Otp");
+const User = require("../models/User");
 
 exports.sendOtp = async (req, res) => {
   try {
@@ -39,5 +40,54 @@ exports.sendOtp = async (req, res) => {
       error: err.message,
     });
 
+  }
+};
+
+
+
+
+exports.verifyOtp = async (req, res) => {
+  try {
+    const { phone, otp } = req.body;
+
+    const otpRecord = await Otp.findOne({ phone, otp });
+
+    if (!otpRecord) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid OTP"
+      });
+    }
+
+    if (otpRecord.expiresAt < new Date()) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP Expired"
+      });
+    }
+
+    let user = await User.findOne({ phone });
+
+    if (!user) {
+      user = await User.create({
+        userId: "USR" + Date.now(),
+        name: "New User",
+        phone
+      });
+    }
+
+    await Otp.deleteMany({ phone });
+
+    res.json({
+      success: true,
+      message: "Login Successful",
+      user
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: err.message
+    });
   }
 };
