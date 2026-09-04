@@ -1049,6 +1049,11 @@ exports.acceptOrder = async (req, res) => {
         { new: true }
       );
 
+ console.log(
+  "AFTER ACCEPT STATUS =",
+  order.status
+);     
+
     res.json({
       success: true,
       order
