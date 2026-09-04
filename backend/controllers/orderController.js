@@ -52,6 +52,16 @@ if (!user) {
   });
 }
 
+// User Block Check
+if (
+  user.status === "Blocked" ||
+  user.isBlocked === true
+) {
+  return res.status(403).json({
+    message: "Your account has been blocked by admin"
+  });
+}
+
 if (
   req.body.payment?.method === "Cash On Delivery" &&
   user.codBlocked
