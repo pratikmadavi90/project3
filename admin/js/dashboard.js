@@ -237,6 +237,10 @@ Cancelled: ${stats.cancelled}
 
 <p>Revenue: ₹${stats.revenue}</p>
 
+<p>COD Revenue: ₹${stats.codRevenue || 0}</p>
+
+<p>Online Revenue: ₹${stats.onlineRevenue || 0}</p>
+
 `;
 
 const res =
