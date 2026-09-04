@@ -1,4 +1,4 @@
-const Product = require("../models/Product");
+const Product = require("../models/AllProduct");
 const Order = require("../models/Order");
 const User = require("../models/User");
 
@@ -45,10 +45,10 @@ res.json({
 // 🔹 Low stock
 exports.getLowStock = async (req, res) => {
   const data = await Product.find({
-    $expr: {
-      $lte: ["$stock.quantity", "$stock.lowStockLimit"]
-    }
-  }).limit(5);
+    stock: { $lte: 10 }
+  })
+  .sort({ stock: 1 })
+  .limit(5);
 
   res.json(data);
 };
