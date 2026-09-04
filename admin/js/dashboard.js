@@ -85,6 +85,42 @@ async function loadOrders() {
   }
 }
 
+async function loadTopProducts() {
+  try {
+
+    const res = await fetch(
+      `${API}/top-products`,
+      { headers }
+    );
+
+    const data = await res.json();
+
+    const list =
+      document.getElementById("topProducts");
+
+    list.innerHTML = "";
+
+    data.forEach(p => {
+
+      list.innerHTML += `
+        <li>
+          ${p.name}
+          (${p.sold} sold)
+        </li>
+      `;
+
+    });
+
+  } catch (err) {
+
+    console.error(
+      "Top Products Error:",
+      err
+    );
+
+  }
+}
+
 // 🔹 Dummy Graph (abhi simple, baad me real karenge)
 async function loadChart() {
 
@@ -309,7 +345,7 @@ loadLowStock();
 loadUsers();
 loadOrders();
 loadChart();
-
+loadTopProducts();
 
 window.onclick = (e) => {
 
