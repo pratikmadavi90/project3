@@ -9,16 +9,37 @@ exports.getStats = async (req, res) => {
 
   const orders = await Order.find();
   let revenue = 0;
+  let codRevenue = 0;
+   let onlineRevenue = 0;
 
-  orders.forEach(o => {
-    revenue += o.totalAmount || 0;
-  });
+orders.forEach(o => {
 
-  res.json({
-    totalProducts,
-    totalOrders,
-    revenue
-  });
+  const amount = o.totalAmount || 0;
+
+  revenue += amount;
+
+  if (
+    o.payment?.method === "Cash On Delivery"
+  ) {
+    codRevenue += amount;
+  }
+
+  if (
+    o.payment?.method === "Razorpay"
+  ) {
+    onlineRevenue += amount;
+  }
+
+});   
+
+
+res.json({
+  totalProducts,
+  totalOrders,
+  revenue,
+  codRevenue,
+  onlineRevenue
+});
 };
 
 // 🔹 Low stock
