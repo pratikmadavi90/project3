@@ -53,10 +53,7 @@ if (!user) {
 }
 
 // User Block Check
-if (
-  user.status === "Blocked" ||
-  user.isBlocked === true
-) {
+if (user.isBlocked) {
   return res.status(403).json({
     message: "Your account has been blocked by admin"
   });
