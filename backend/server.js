@@ -184,7 +184,7 @@ app.use("/api/all-products",allProductRoutes);
 app.use("/api/product-categories",productCategoryRoutes);
 app.use("/api/otp", otpRoutes);
 app.use("/api/support-settings",require("./routes/supportSettingsRoutes"));
-
+app.use("/api/footwear-settings",require("./routes/footwearSettingsRoutes"));
 
 
 
