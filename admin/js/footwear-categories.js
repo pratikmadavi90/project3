@@ -82,6 +82,33 @@ data.categories.forEach((category) => {
   }
 }
 
+
+async function loadFootwearSettings() {
+  try {
+    const res = await fetch(SETTINGS_API, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await res.json();
+
+    console.log(
+      "FOOTWEAR SETTINGS:",
+      data
+    );
+
+    footwearToggle.checked =
+      data.enabled || false;
+
+  } catch (error) {
+    console.error(
+      "FOOTWEAR SETTINGS ERROR:",
+      error
+    );
+  }
+}
+
 // Add Category
 async function addCategory() {
 
