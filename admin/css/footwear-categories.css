@@ -85,3 +85,23 @@ body {
   background: #dc2626;
   color: white;
 }
+
+
+#footwearToggle{
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  accent-color: #22c55e;
+}
+
+.header label{
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.header div:last-child{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

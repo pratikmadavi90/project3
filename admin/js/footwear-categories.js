@@ -1,6 +1,14 @@
 const API =
   "https://api.harzo.in/api/footwear/categories";
 
+const SETTINGS_API =
+"https://api.harzo.in/api/footwear-settings";
+
+const footwearToggle =
+document.getElementById(
+  "footwearToggle"
+);
+
 const token =
   localStorage.getItem("adminToken");
 
@@ -12,6 +20,7 @@ document
   .addEventListener("click", addCategory);
 
 loadCategories();
+loadFootwearSettings();
 
 // Load Categories
 async function loadCategories() {
