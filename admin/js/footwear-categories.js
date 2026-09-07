@@ -105,6 +105,37 @@ async function loadFootwearSettings() {
   }
 }
 
+footwearToggle.addEventListener(
+  "change",
+  async () => {
+    try {
+      await fetch(
+        SETTINGS_API,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type":
+              "application/json",
+            Authorization:
+              `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            enabled:
+              footwearToggle.checked,
+          }),
+        }
+      );
+
+      console.log(
+        "Saved:",
+        footwearToggle.checked
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  }
+);
+
 // Add Category
 async function addCategory() {
 
