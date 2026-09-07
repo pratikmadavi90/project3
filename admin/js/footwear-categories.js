@@ -93,19 +93,15 @@ async function loadFootwearSettings() {
 
     const data = await res.json();
 
-    console.log(
-      "FOOTWEAR SETTINGS:",
-      data
-    );
+    console.log("FOOTWEAR SETTINGS:", data);
 
     footwearToggle.checked =
-      data.enabled || false;
+      data.settings?.enabled ??
+      data.enabled ??
+      false;
 
   } catch (error) {
-    console.error(
-      "FOOTWEAR SETTINGS ERROR:",
-      error
-    );
+    console.error(error);
   }
 }
 
