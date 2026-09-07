@@ -108,6 +108,20 @@ async function loadFootwearSettings() {
 footwearToggle.addEventListener(
   "change",
   async () => {
+
+    const code = prompt(
+      "Enter Security Code"
+    );
+
+    if (code !== "9373352985") {
+      alert("Invalid Code");
+
+      footwearToggle.checked =
+        !footwearToggle.checked;
+
+      return;
+    }
+
     try {
       await fetch(
         SETTINGS_API,
@@ -126,10 +140,6 @@ footwearToggle.addEventListener(
         }
       );
 
-      console.log(
-        "Saved:",
-        footwearToggle.checked
-      );
     } catch (error) {
       console.error(error);
     }
