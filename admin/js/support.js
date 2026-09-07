@@ -1,4 +1,6 @@
 const API = "https://api.harzo.in/api/support";
+const SETTINGS_API =
+"https://api.harzo.in/api/support-settings";
 
 async function loadTickets() {
 
@@ -225,4 +227,65 @@ console.log(err);
 
 }
 
+async function loadSupportNumbers() {
+
+try {
+
+const res = await fetch(SETTINGS_API);
+
+const data = await res.json();
+
+document.getElementById("callNumber1").value =
+data.callNumber1 || "";
+
+document.getElementById("callNumber2").value =
+data.callNumber2 || "";
+
+} catch(err) {
+
+console.log(err);
+
+}
+
+}
+
+async function saveSupportNumbers() {
+
+try {
+
+const callNumber1 =
+document.getElementById("callNumber1").value;
+
+const callNumber2 =
+document.getElementById("callNumber2").value;
+
+await fetch(SETTINGS_API, {
+
+method: "PUT",
+
+headers: {
+"Content-Type": "application/json",
+Authorization:
+"Bearer " + localStorage.getItem("adminToken")
+},
+
+body: JSON.stringify({
+callNumber1,
+callNumber2
+})
+
+});
+
+alert("Numbers Saved Successfully");
+
+} catch(err) {
+
+console.log(err);
+alert("Save Failed");
+
+}
+
+}
+
 loadTickets();
+loadSupportNumbers();
