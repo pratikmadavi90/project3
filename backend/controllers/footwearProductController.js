@@ -36,9 +36,13 @@ exports.addProduct = async (req, res) => {
       category,
       name,
       brand,
-      size: Array.isArray(size)
+size: size
+  ? (
+      Array.isArray(size)
         ? size
-        : size.split(","),
+        : size.split(",")
+    )
+  : [],
       mrp,
       sellingPrice,
       stock,
