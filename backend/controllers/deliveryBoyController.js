@@ -492,7 +492,66 @@ exports.getTopPerformers = async (req, res) => {
         deliveryBoyId:boy.deliveryId,
         status:"Delivered"
       });
+      
+const todayOrders = await Order.find({
+  deliveryBoyId,
+  createdAt: {
+    $gte: startOfDay,
+    $lte: endOfDay
+  }
+});
 
+const weekOrders = await Order.find({
+  deliveryBoyId,
+  createdAt: {
+    $gte: startOfWeek
+  }
+});
+
+const monthOrders = await Order.find({
+  deliveryBoyId,
+  createdAt: {
+    $gte: startOfMonth
+  }
+});
+
+const todayDeliveryCharge =
+  todayOrders.reduce(
+    (sum, o) => sum + (o.deliveryCharge || 0),
+    0
+  );
+
+const todayHeavyCharge =
+  todayOrders.reduce(
+    (sum, o) => sum + (o.heavyCharge || 0),
+    0
+  );
+
+const weekDeliveryCharge =
+  weekOrders.reduce(
+    (sum, o) => sum + (o.deliveryCharge || 0),
+    0
+  );
+
+const weekHeavyCharge =
+  weekOrders.reduce(
+    (sum, o) => sum + (o.heavyCharge || 0),
+    0
+  );
+
+const monthDeliveryCharge =
+  monthOrders.reduce(
+    (sum, o) => sum + (o.deliveryCharge || 0),
+    0
+  );
+
+const monthHeavyCharge =
+  monthOrders.reduce(
+    (sum, o) => sum + (o.heavyCharge || 0),
+    0
+  );
+
+      
       data.push({
 
         name:boy.name,
@@ -523,7 +582,10 @@ exports.getTopPerformers = async (req, res) => {
         monthDelivered * 20,
 
         totalEarning:
-        totalDelivered * 20
+        totalDelivered * 20,
+
+       deliveryCharge,
+        heavyCharge
 
       });
 
@@ -646,6 +708,40 @@ const todayCancelled = await Order.countDocuments({
       status: "Delivered"
     });
 
+
+// Today's Delivery Charge
+const todayDeliveryChargeData =
+await Order.aggregate([
+  {
+    $match: {
+      deliveryBoyId,
+      status: "Delivered",
+      deliveredAt: {
+        $gte: startOfDay,
+        $lte: endOfDay
+      }
+    }
+  },
+  {
+    $group: {
+      _id: null,
+      totalDeliveryCharge: {
+        $sum: "$deliveryCharge"
+      },
+      totalHeavyCharge: {
+        $sum: "$heavyCharge"
+      }
+    }
+  }
+]);
+
+const todayDeliveryCharge =
+todayDeliveryChargeData[0]?.totalDeliveryCharge || 0;
+
+const todayHeavyCharge =
+todayDeliveryChargeData[0]?.totalHeavyCharge || 0;
+
+
    const pendingOrders =
 await Order.countDocuments({
   deliveryBoyId,
@@ -716,6 +812,10 @@ await Order.countDocuments({
   cancelledOrders,
 
   todayEarning: todayDelivered * 20,
+
+  todayDeliveryCharge,
+
+todayHeavyCharge,
 
   weekEarning: weekDelivered * 20,
 
