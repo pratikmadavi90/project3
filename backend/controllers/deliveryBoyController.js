@@ -528,7 +528,7 @@ todayOrders.reduce(
 
 const todayHeavyCharge =
 todayOrders.reduce(
-  (sum, o) => sum + (o.heavyWeightCharge || 0),
+  (sum, o) => sum + (o.heavyCharge || 0),
   0
 );
 
@@ -718,27 +718,27 @@ const todayCancelled = await Order.countDocuments({
 // Today's Delivery Charge
 const todayDeliveryChargeData =
 await Order.aggregate([
-  {
-    $match: {
-      deliveryBoyId,
-      status: "Delivered",
-      deliveredAt: {
-        $gte: startOfDay,
-        $lte: endOfDay
-      }
-    }
-  },
-  {
-    $group: {
-      _id: null,
-      totalDeliveryCharge: {
-        $sum: "$deliveryCharge"
-      },
-totalHeavyCharge: {
-  $sum: "$heavyWeightCharge"
-}
+{
+  $match:{
+    deliveryBoyId,
+    status:"Delivered",
+    deliveredAt:{
+      $gte:startOfDay,
+      $lte:endOfDay
     }
   }
+},
+{
+  $group:{
+    _id:null,
+    totalDeliveryCharge:{
+      $sum:"$deliveryCharge"
+    },
+    totalHeavyCharge:{
+      $sum:"$heavyCharge"
+    }
+  }
+}
 ]);
 
 const todayDeliveryCharge =
