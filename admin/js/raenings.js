@@ -91,6 +91,10 @@ async function loadTopPerformers() {
 
 <td>₹${boy.monthEarning}</td>
 
+<td>₹${boy.deliveryCharge}</td>
+
+<td>₹${boy.heavyCharge}</td>
+
 <td>
 
 ${boy.online
@@ -227,6 +231,10 @@ ${d.online
 
 
 <p><b>Today Delivered:</b> ${p.todayDelivered}</p>
+<p><b>Today's Delivery Charge:</b> ₹${p.todayDeliveryCharge}</p>
+
+<p><b>Today's Heavy Charge:</b> ₹${p.todayHeavyCharge}</p>
+
 <p><b>Today Pending:</b> ${p.todayPending}</p>
 
 <p><b>Today Cancelled:</b> ${p.todayCancelled}</p>
@@ -234,9 +242,16 @@ ${d.online
 
 <p><b>Week Delivered:</b> ${p.weekDelivered}</p>
 <p><b>Week Earnings:</b> ₹${p.weekEarning}</p>
+<p><b>Week Delivery Charge:</b> ₹${p.weekDeliveryCharge}</p>
+
+<p><b>Week Heavy Charge:</b> ₹${p.weekHeavyCharge}</p>
+
 
 <p><b>Month Delivered:</b> ${p.monthDelivered}</p>
 <p><b>Month Earnings:</b> ₹${p.monthEarning}</p>
+<p><b>Month Delivery Charge:</b> ₹${p.monthDeliveryCharge}</p>
+
+<p><b>Month Heavy Charge:</b> ₹${p.monthHeavyCharge}</p>
 
 <p><b>Total Delivered:</b> ${p.totalDelivered}</p>
 <p><b>Total Pending:</b> ${p.pendingOrders}</p>
