@@ -460,6 +460,11 @@ exports.getTopPerformers = async (req, res) => {
 
     for(const boy of boys){
 
+const deliveryBoyId = boy.deliveryId;
+
+const endOfDay = new Date();
+endOfDay.setHours(23,59,59,999);      
+
       const todayDelivered =
       await Order.countDocuments({
         deliveryBoyId:boy.deliveryId,
@@ -584,8 +589,9 @@ const monthHeavyCharge =
         totalEarning:
         totalDelivered * 20,
 
-       deliveryCharge,
-        heavyCharge
+        deliveryCharge: monthDeliveryCharge,
+        
+        heavyCharge: monthHeavyCharge 
 
       });
 
