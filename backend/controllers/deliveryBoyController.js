@@ -521,40 +521,40 @@ const monthOrders = await Order.find({
 });
 
 const todayDeliveryCharge =
-  todayOrders.reduce(
-    (sum, o) => sum + (o.deliveryCharge || 0),
-    0
-  );
+todayOrders.reduce(
+  (sum, o) => sum + (o.deliveryCharge || 0),
+  0
+);
 
 const todayHeavyCharge =
-  todayOrders.reduce(
-    (sum, o) => sum + (o.heavyCharge || 0),
-    0
-  );
+todayOrders.reduce(
+  (sum, o) => sum + (o.heavyWeightCharge || 0),
+  0
+);
 
 const weekDeliveryCharge =
-  weekOrders.reduce(
-    (sum, o) => sum + (o.deliveryCharge || 0),
-    0
-  );
+weekOrders.reduce(
+  (sum, o) => sum + (o.deliveryCharge || 0),
+  0
+);
 
 const weekHeavyCharge =
-  weekOrders.reduce(
-    (sum, o) => sum + (o.heavyCharge || 0),
-    0
-  );
+weekOrders.reduce(
+  (sum, o) => sum + (o.heavyWeightCharge || 0),
+  0
+);
 
 const monthDeliveryCharge =
-  monthOrders.reduce(
-    (sum, o) => sum + (o.deliveryCharge || 0),
-    0
-  );
+monthOrders.reduce(
+  (sum, o) => sum + (o.deliveryCharge || 0),
+  0
+);
 
 const monthHeavyCharge =
-  monthOrders.reduce(
-    (sum, o) => sum + (o.heavyCharge || 0),
-    0
-  );
+monthOrders.reduce(
+  (sum, o) => sum + (o.heavyWeightCharge || 0),
+  0
+);
 
       
       data.push({
@@ -734,9 +734,9 @@ await Order.aggregate([
       totalDeliveryCharge: {
         $sum: "$deliveryCharge"
       },
-      totalHeavyCharge: {
-        $sum: "$heavyCharge"
-      }
+totalHeavyCharge: {
+  $sum: "$heavyWeightCharge"
+}
     }
   }
 ]);
