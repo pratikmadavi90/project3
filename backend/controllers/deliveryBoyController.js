@@ -590,7 +590,7 @@ const monthHeavyCharge =
         totalDelivered * 20,
 
         deliveryCharge: monthDeliveryCharge,
-        
+
         heavyCharge: monthHeavyCharge 
 
       });
@@ -747,6 +747,12 @@ todayDeliveryChargeData[0]?.totalDeliveryCharge || 0;
 const todayHeavyCharge =
 todayDeliveryChargeData[0]?.totalHeavyCharge || 0;
 
+const weekDeliveryCharge = 0;
+const weekHeavyCharge = 0;
+
+const monthDeliveryCharge = 0;
+const monthHeavyCharge = 0;
+
 
    const pendingOrders =
 await Order.countDocuments({
@@ -819,9 +825,14 @@ await Order.countDocuments({
 
   todayEarning: todayDelivered * 20,
 
-  todayDeliveryCharge,
+todayDeliveryCharge,
 
 todayHeavyCharge,
+weekDeliveryCharge,
+weekHeavyCharge,
+
+monthDeliveryCharge,
+monthHeavyCharge,
 
   weekEarning: weekDelivered * 20,
 
