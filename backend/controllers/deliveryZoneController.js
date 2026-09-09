@@ -122,6 +122,7 @@ res.json({
   available: true,
   area: zone.name,
   deliveryCharge: zone.charge,
+  deliveryBoyCharge: zone.deliveryBoyCharge,
   deliveryTime: zone.time,
   freeDeliveryAbove: zone.freeDeliveryAbove,
   minimumOrder: zone.minimumOrder,

@@ -162,6 +162,9 @@ const order = new Order({
 
 heavyCharge: req.body.heavyCharge || 0, 
 
+deliveryBoyCharge:
+req.body.deliveryBoyCharge || 0,
+
   userId:user.userId,
 
   finalAmount,
