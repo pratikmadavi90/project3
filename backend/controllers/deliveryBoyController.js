@@ -825,7 +825,7 @@ await Order.countDocuments({
 
   cancelledOrders,
 
-  todayEarning: todayDelivered * 20,
+todayEarning: todayDeliveryCharge,
 
 todayDeliveryCharge,
 
