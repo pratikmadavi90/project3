@@ -528,7 +528,7 @@ todayOrders.reduce(
 
 const todayHeavyCharge =
 todayOrders.reduce(
-  (sum, o) => sum + (o.heavyCharge || 0),
+  (sum, o) => sum + (o.heavyWeightCharge || 0),
   0
 );
 
@@ -591,7 +591,9 @@ monthOrders.reduce(
 
         deliveryCharge: monthDeliveryCharge,
 
-        heavyCharge: monthHeavyCharge 
+        heavyCharge: monthHeavyCharge, 
+ 
+        todayHeavyCharge,
 
       });
 
@@ -734,9 +736,9 @@ await Order.aggregate([
     totalDeliveryCharge:{
       $sum:"$deliveryCharge"
     },
-    totalHeavyCharge:{
-      $sum:"$heavyCharge"
-    }
+totalHeavyCharge:{
+  $sum:"$heavyWeightCharge"
+}
   }
 }
 ]);
