@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { useState } from "react";
 import {
   View,
@@ -9,6 +11,10 @@ import {
 import { useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
+import RazorpayCheckout from "react-native-razorpay";
+
+const Razorpay = RazorpayCheckout;
+
 
 export default function FootwearCheckout() {
   const { product } = useLocalSearchParams();
@@ -38,6 +44,70 @@ const placeOrder = async () => {
     const userData =
       await AsyncStorage.getItem("user");
 
+const user = userData
+  ? JSON.parse(userData)
+  : null;      
+
+if (paymentMethod === "Pay Online") {
+
+  const paymentResponse = await fetch(
+    "https://api.harzo.in/api/payment/create-order",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        amount: sellingPrice,
+      }),
+    }
+  );
+
+  const paymentResult =
+    await paymentResponse.json();
+
+  if (!paymentResult.success) {
+    Alert.alert("Order Create Failed");
+    return;
+  }
+
+  const options = {
+    description: "Footwear Order Payment",
+    image: "https://harzo.in/favicon.png",
+    currency: "INR",
+
+    key: "rzp_live_TSXcvAvdJTapt6",
+
+    order_id: paymentResult.order.id,
+
+    amount: sellingPrice * 100,
+
+    name: "Harzo",
+
+prefill: {
+  email: user?.email || "",
+  contact: user?.phone || "",
+  name: user?.name || "",
+},
+
+    theme: {
+      color: "#2563eb",
+    },
+  };
+
+  try {
+
+    await Razorpay.open(options);
+
+  } catch (error) {
+
+    Alert.alert("Payment Cancelled");
+    return;
+
+  }
+}
+
+
     if (!userData) {
       Alert.alert(
         "Error",
@@ -46,8 +116,6 @@ const placeOrder = async () => {
       return;
     }
 
-    const user =
-      JSON.parse(userData);
 
 const orderData = {
 

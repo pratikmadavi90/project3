@@ -14,9 +14,11 @@ export default function FootwearProductsScreen() {
 
   const [products, setProducts] = useState([]);
 
-  useEffect(() => {
+useEffect(() => {
+  if (categoryId) {
     loadProducts();
-  }, []);
+  }
+}, [categoryId]);
 
  useFocusEffect(
   useCallback(() => {
@@ -36,13 +38,14 @@ export default function FootwearProductsScreen() {
 ); 
 
   const loadProducts = async () => {
+    setProducts([]);
     const data = await getFootwearProducts();
 
 const filteredProducts =
   (data.products || []).filter(
     (item: any) =>
-      item.category?._id === categoryId ||
-      item.category?.name === categoryName
+      String(item.category?._id) ===
+      String(categoryId)
   );
 
     setProducts(filteredProducts);

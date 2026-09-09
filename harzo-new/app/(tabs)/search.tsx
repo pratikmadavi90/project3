@@ -74,44 +74,38 @@ export default function SearchScreen() {
     await AsyncStorage.removeItem("recentSearch");
   };
 
-  const searchProducts = async (text: string) => {
-    setQuery(text);
+const searchProducts = async (text: string) => {
+  setQuery(text);
 
-    if (!text.trim()) {
-      setData([]);
-      return;
-    }
+  console.log("SEARCH =", text);
 
-    try {
-      const res = await fetch(
-        `${API}/products/search?q=${text}&category=${category}`
-      );
+  try {
+const res = await fetch(
+  `${API}/all-products/search?q=${text}`
+);
 
-      const json = await res.json();
+    const json = await res.json();
 
-      if (Array.isArray(json)) {
-        setData(json);
-        saveRecent(text);
-      } else {
-        setData([]);
-      }
-    } catch (e) {
-      console.log("Search error:", e);
-      setData([]);
-    }
-  };
+    console.log("SEARCH RESPONSE =", json);
+
+    setData(Array.isArray(json) ? json : []);
+  } catch (e) {
+    console.log("SEARCH ERROR =", e);
+  }
+};
 
   const openProduct = (item: any) => {
-    if (!item?._id) return;
+  console.log("OPEN PRODUCT CLICKED");
+  console.log(item);
 
-    router.push({
-      pathname: "/product-detail",
-      params: {
-        item: JSON.stringify(item),
-        allProducts: JSON.stringify([...data, ...trending]),
-      },
-    });
-  };
+router.push({
+  pathname: "../product-detail",
+  params: {
+    item: JSON.stringify(item),
+    allProducts: JSON.stringify([...data, ...trending]),
+  },
+});
+};
 
   const renderItem = ({ item }: any) => {
     if (!item) return null;
@@ -121,14 +115,14 @@ export default function SearchScreen() {
         style={styles.card}
         onPress={() => openProduct(item)}
       >
-        <Image
-          source={{
-            uri:
-              item?.images?.thumbnail ||
-              "https://dummyimage.com/60x60/cccccc/000000.png",
-          }}
-          style={styles.img}
-        />
+<Image
+  source={{
+    uri:
+      item?.images?.[0] ||
+      "https://dummyimage.com/60x60/cccccc/000000.png",
+  }}
+  style={styles.img}
+/>
 
         <View style={{ flex: 1 }}>
           <Text style={styles.name}>{item?.name || "No Name"}</Text>
@@ -138,15 +132,15 @@ export default function SearchScreen() {
           ) : null}
 
           <View style={styles.priceRow}>
-            <Text style={styles.price}>
-              ₹{item?.pricing?.sellingPrice || 0}
-            </Text>
+<Text style={styles.price}>
+  ₹{item?.sellingPrice || 0}
+</Text>
 
-            {item?.pricing?.mrp ? (
-              <Text style={styles.mrp}>
-                ₹{item.pricing.mrp}
-              </Text>
-            ) : null}
+{item?.mrp ? (
+  <Text style={styles.mrp}>
+    ₹{item.mrp}
+  </Text>
+) : null}
           </View>
         </View>
       </TouchableOpacity>

@@ -28,6 +28,7 @@ export default function BannerSlider() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const scrollRef = useRef(null);
+  const autoSlideRef = useRef(null);
   const router = useRouter();
 
   // ✅ CURRENT INDEX
@@ -77,7 +78,9 @@ useEffect(() => {
 
   // ✅ CLICK HANDLER
 const handleBannerClick = async (banner) => {
-  console.log("Banner Click Data:", banner);
+  if (!banner?.redirectType || !banner?.redirectValue) {
+  return;
+}
 
   if (!banner) return;
 
@@ -115,28 +118,29 @@ router.push({
 };
 
   // ✅ AUTO SLIDE FIX
-  useEffect(() => {
-    if (sliderBanners.length === 0) return;
+useEffect(() => {
+  if (sliderBanners.length === 0) return;
 
-    const interval = setInterval(() => {
-      let nextIndex = currentIndex.current + 1;
+  autoSlideRef.current = setInterval(() => {
 
-      // ✅ LAST BANNER FIX
-      if (nextIndex >= sliderBanners.length) {
-        nextIndex = 0;
-      }
+    let nextIndex = currentIndex.current + 1;
 
-      currentIndex.current = nextIndex;
-      setActiveIndex(nextIndex);
+    if (nextIndex >= sliderBanners.length) {
+      nextIndex = 0;
+    }
 
-      scrollRef.current?.scrollTo({
-        x: nextIndex * (bannerWidth + SPACING),
-        animated: true,
-      });
-    }, 3000);
+    currentIndex.current = nextIndex;
+    setActiveIndex(nextIndex);
 
-    return () => clearInterval(interval);
-  }, [sliderBanners]);
+    scrollRef.current?.scrollTo({
+      x: nextIndex * (bannerWidth + SPACING),
+      animated: true,
+    });
+
+  }, 3000);
+
+  return () => clearInterval(autoSlideRef.current);
+}, [sliderBanners]);
 
   // ✅ MANUAL SWIPE INDEX
   const handleScroll = (event) => {
@@ -156,11 +160,36 @@ router.push({
 
   return (
     <View style={styles.container}>
-      <ScrollView
-        ref={scrollRef}
-        horizontal
-        snapToInterval={bannerWidth + SPACING}
-        decelerationRate="fast"
+<ScrollView
+  ref={scrollRef}
+  horizontal
+
+  onTouchStart={() => {
+    clearInterval(autoSlideRef.current);
+  }}
+
+  onTouchEnd={() => {
+    autoSlideRef.current = setInterval(() => {
+
+      let nextIndex = currentIndex.current + 1;
+
+      if (nextIndex >= sliderBanners.length) {
+        nextIndex = 0;
+      }
+
+      currentIndex.current = nextIndex;
+      setActiveIndex(nextIndex);
+
+      scrollRef.current?.scrollTo({
+        x: nextIndex * (bannerWidth + SPACING),
+        animated: true,
+      });
+
+    }, 3000);
+  }}
+
+  snapToInterval={bannerWidth + SPACING}
+  decelerationRate="fast"
         snapToAlignment="start"
         disableIntervalMomentum={true}
         showsHorizontalScrollIndicator={false}

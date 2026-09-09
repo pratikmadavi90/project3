@@ -40,7 +40,7 @@ useFocusEffect(
 ); 
 
   const [currentImage, setCurrentImage] = useState(0);
-  const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const images = item?.images || [];
 
   const discount =
@@ -199,9 +199,18 @@ useFocusEffect(
     marginTop: 10,
   }}
 >
-  {[5, 6, 7, 8, 9, 10, 11].map((size) => (
+{[5, 6, 7, 8, 9, 10, 11, 12].map((size) => {
+  const stock =
+    item?.sizeStock?.[size] ||
+    item?.sizeStock?.[String(size)] ||
+    0;
+
+  const available = stock > 0;
+
+  return (
     <TouchableOpacity
       key={size}
+      disabled={!available}
       onPress={() => setSelectedSize(size)}
       style={{
         width: 45,
@@ -212,10 +221,16 @@ useFocusEffect(
           selectedSize === size
             ? "#16a34a"
             : "#ddd",
+
         backgroundColor:
-          selectedSize === size
+          !available
+            ? "#f1f1f1"
+            : selectedSize === size
             ? "#16a34a"
             : "#fff",
+
+        opacity: available ? 1 : 0.4,
+
         justifyContent: "center",
         alignItems: "center",
         marginRight: 8,
@@ -234,7 +249,8 @@ useFocusEffect(
         {size}
       </Text>
     </TouchableOpacity>
-  ))}
+  );
+})}
 </View>
 
         {/* Stock */}
@@ -248,9 +264,11 @@ useFocusEffect(
             fontWeight: "700",
           }}
         >
-          {item?.stock > 0
-            ? "In Stock"
-            : "Out Of Stock"}
+{selectedSize
+  ? `Stock: ${
+      item?.sizeStock?.[selectedSize] || 0
+    }`
+  : "Select Size"}
         </Text>
 
         {/* Description */}

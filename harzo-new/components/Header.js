@@ -12,6 +12,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { router } from "expo-router";
+import { showSupportCallOptions } from "../services/supportService";
 
 import { useFocusEffect } from "expo-router";
 
@@ -79,6 +80,15 @@ if (deliveryTime) {
   return (
     <View style={styles.header}>
 
+
+ <TouchableOpacity
+  onPress={showSupportCallOptions}
+  style={styles.callIconBox}
+>
+  <Text style={styles.callIcon}>📞</Text>
+</TouchableOpacity> 
+
+
       {/* TOP ROW */}
       <View style={styles.topRow}>
 
@@ -133,6 +143,27 @@ if (deliveryTime) {
 }
 
 const styles = StyleSheet.create({
+
+callIconBox: {
+  position: "absolute",
+  top: 70,
+  right: 18,
+
+  width: 42,
+  height: 42,
+  borderRadius: 21,
+
+  backgroundColor: "#FFFFFF",
+
+  justifyContent: "center",
+  alignItems: "center",
+
+  elevation: 3,
+},
+
+callIcon: {
+  fontSize: 18,
+}, 
 
  header: {
   backgroundColor: "#facc15",

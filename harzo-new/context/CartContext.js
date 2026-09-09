@@ -79,21 +79,28 @@ export const CartProvider = ({
 
       // ALREADY EXISTS
 
-      if (existing) {
+if (existing) {
 
-        return prevCart.map((item) =>
+  const maxQty =
+    product.maxOrderQuantity || 10;
 
-          item._id === product._id
+  if (existing.quantity >= maxQty) {
+    alert(`Maximum ${maxQty} quantity allowed`);
+    return prevCart;
+  }
 
-            ? {
-                ...item,
-                quantity:
-                  item.quantity + 1,
-              }
+  return prevCart.map((item) =>
 
-            : item
-        );
-      }
+    item._id === product._id
+
+      ? {
+          ...item,
+          quantity: item.quantity + 1,
+        }
+
+      : item
+  );
+}
 
       // NEW PRODUCT
 
@@ -120,24 +127,33 @@ export const CartProvider = ({
 
   // ✅ INCREASE
 
-  const increaseQty = (id) => {
+const increaseQty = (id) => {
 
-    setCart((prevCart) =>
+  setCart((prevCart) => {
 
-      prevCart.map((item) =>
+    return prevCart.map((item) => {
 
-        item._id === id
+      if (item._id !== id) {
+        return item;
+      }
 
-          ? {
-              ...item,
-              quantity:
-                item.quantity + 1,
-            }
+      const maxQty =
+        item.maxOrderQuantity || 10;
 
-          : item
-      )
-    );
-  };
+      if (item.quantity >= maxQty) {
+        alert(
+          `Maximum ${maxQty} quantity allowed`
+        );
+        return item;
+      }
+
+      return {
+        ...item,
+        quantity: item.quantity + 1,
+      };
+    });
+  });
+};
 
   // ✅ DECREASE
 

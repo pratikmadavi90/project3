@@ -7,6 +7,15 @@ import {
 } from "react-native";
 
 export default function ProductBox({ item, onPress }) {
+const discountPercent =
+  item?.mrp > 0
+    ? Math.round(
+        ((item.mrp - item.sellingPrice) /
+          item.mrp) *
+          100
+      )
+    : 0;
+
   return (
 <TouchableOpacity
   style={{
@@ -73,6 +82,18 @@ export default function ProductBox({ item, onPress }) {
       >
         ₹{item?.sellingPrice}
       </Text>
+
+<Text
+  style={{
+    marginLeft: 55,
+    fontSize: 12,
+    fontWeight: "700",
+    color: "#000",
+  }}
+>
+  {discountPercent}% OFF
+</Text>
+
     </View>
   </View>
 </TouchableOpacity>

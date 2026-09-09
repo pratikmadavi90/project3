@@ -249,17 +249,86 @@ setTimeout(() => {
         })
       }
     >
+
+ {item?.stock <= 0 && (
+  <View
+    style={{
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: "rgba(0,0,0,0.45)",
+      justifyContent: "center",
+      alignItems: "center",
+      borderRadius: 10,
+      zIndex: 999,
+    }}
+  >
+    <Text
+      style={{
+        color: "#fff",
+        fontWeight: "bold",
+        fontSize: 14,
+      }}
+    >
+      OUT OF STOCK
+    </Text>
+  </View>
+)}   
       
+<View style={{ position: "relative" }}>
+
 <Image
   source={{
-uri:
-  item?.images?.[0] ||
-  "https://dummyimage.com/300x300/cccccc/000000"
+    uri:
+      item?.images?.[0] ||
+      "https://dummyimage.com/300x300/cccccc/000000"
   }}
   style={styles.image}
   contentFit="contain"
   cachePolicy="memory-disk"
 />
+
+{item?.mrp > item?.sellingPrice && (
+  <View
+    style={{
+      position: "absolute",
+      top: 0,
+      left: -3,
+      backgroundColor: "#000",
+      paddingHorizontal: 6,
+      paddingVertical: 3,
+      borderRadius: 5,
+      zIndex: 20,
+    }}
+  >
+    <Text
+      style={{
+        color: "#fff",
+        fontSize: 10,
+        fontWeight: "bold",
+      }}
+    >
+      {Math.round(
+        ((item.mrp - item.sellingPrice) /
+          item.mrp) *
+          100
+      )}
+      % OFF
+    </Text>
+  </View>
+)}
+
+{item?.stock > 0 && item?.stock <= 5 && (
+  <View style={styles.lowStock}>
+    <Text style={styles.lowStockText}>
+      Only {item.stock} Left
+    </Text>
+  </View>
+)}
+
+</View>
 
             <Text
               numberOfLines={2}
@@ -353,49 +422,59 @@ uri:
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        onPress={() => increaseQty(item._id)}
-        style={{
-          backgroundColor: "#00C853",
-          width: 28,
-          height: 28,
-          borderRadius: 6,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Text
-          style={{
-            color: "#fff",
-            fontWeight: "bold",
-            fontSize: 16,
-          }}
-        >
-          +
-        </Text>
-      </TouchableOpacity>
+<TouchableOpacity
+  onPress={() => {
+    if (cartItem.quantity >= item.stock) {
+      return;
+    }
+
+    increaseQty(item._id);
+  }}
+  style={{
+    backgroundColor: "#00C853",
+    width: 28,
+    height: 28,
+    borderRadius: 6,
+    justifyContent: "center",
+    alignItems: "center",
+  }}
+>
+  <Text
+    style={{
+      color: "#fff",
+      fontWeight: "bold",
+      fontSize: 16,
+    }}
+  >
+    +
+  </Text>
+</TouchableOpacity>
+
     </View>
   </View>
 ) : (
 
-  <TouchableOpacity
-    onPress={() => addToCart(item)}
-    style={{
-      backgroundColor: "#00C853",
-      paddingHorizontal: 14,
-      paddingVertical: 4,
-      borderRadius: 4,
-    }}
-  >
-    <Text
-      style={{
-        color: "#fff",
-        fontSize: 11,
-        fontWeight: "700",
-      }}
-    >
-      ADD
+<TouchableOpacity
+  disabled={item?.stock <= 0}
+  onPress={() => addToCart(item)}
+  style={{
+    backgroundColor:
+      item?.stock <= 0 ? "#ccc" : "#00C853",
+    paddingHorizontal: 14,
+    paddingVertical: 4,
+    borderRadius: 4,
+  }}
+>
+<Text
+  style={{
+    color: "#fff",
+    fontSize: 11,
+    fontWeight: "700",
+  }}
+>
+  {item?.stock <= 0 ? "OUT" : "ADD"}
 </Text>
+
   </TouchableOpacity>
 )}
 
@@ -432,7 +511,7 @@ title: {
 
 card: {
   width: "48%",
-  height: 270, 
+  height: 278, 
   backgroundColor: "#fff",
   margin: "1%",
   padding: 10,
@@ -466,4 +545,39 @@ weight: {
     fontWeight: "bold",
     fontSize: 18,
   },
+
+ outOfStock: {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  right: 0,
+  backgroundColor: "red",
+  paddingVertical: 4,
+  alignItems: "center",
+},
+
+outOfStockText: {
+  color: "#fff",
+  fontSize: 11,
+  fontWeight: "bold",
+},
+
+lowStock: {
+  position: "absolute",
+  top: 8,
+  right: 8,
+  backgroundColor: "#ff9800",
+  paddingHorizontal: 8,
+  paddingVertical: 3,
+  borderRadius: 5,
+  zIndex: 10,
+},
+
+lowStockText: {
+  color: "#fff",
+  fontSize: 11,
+  fontWeight: "bold",
+}, 
+
+
 });

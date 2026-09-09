@@ -63,6 +63,8 @@ export default function Payment() {
 
       const result = await response.json();
 
+
+
      if (result.available) {
   setDeliverySettings(result);
 
@@ -204,28 +206,16 @@ if (
 
 
 
-// ✅ Minimum Order Check
-if (
-  deliverySettings?.minimumOrder > 0 &&
-  total < deliverySettings.minimumOrder
-) {
-  Alert.alert(
-    "Minimum Order",
-    `Minimum order is ₹${deliverySettings.minimumOrder}`
-  );
-
-  return;
-}
 
 // Heavy weight charge
 
 heavyCharge = 0;
 
-if (totalKg > 10) {
+if (totalKg > 20) {
 
   heavyCharge =
   Math.ceil(
-    (totalKg - 10) / 10
+    (totalKg - 20) / 10
   ) * 20;
 
 }
@@ -272,10 +262,6 @@ if (
   deliverySettings?.minimumOrder > 0 &&
   total < deliverySettings.minimumOrder
 ) {
-  Alert.alert(
-    "Minimum Order",
-    `Minimum order is ₹${deliverySettings.minimumOrder}`
-  );
   return;
 }
 
@@ -307,6 +293,8 @@ const uniqueOrderId =
 
 const orderData = {
 
+  
+
   id: uniqueOrderId,
 
   // ✅ ORDER ID
@@ -335,6 +323,8 @@ items: cart.map((item) => ({
   productId:
     item._id || item.id || "",
 
+
+    
   name:
     item.name || "",
 
@@ -368,6 +358,10 @@ items: cart.map((item) => ({
 
   finalAmount: finalTotal,
 
+  deliveryCharge: deliveryCharge,
+
+  heavyWeightCharge: heavyCharge,
+
   payment: {
     method: method,
     status:
@@ -380,6 +374,7 @@ items: cart.map((item) => ({
 
   createdAt: new Date(),
 };
+
 
 
 
@@ -422,8 +417,6 @@ if (!response.ok) {
         JSON.stringify(existingOrders)
       );
 
-  console.log("ORDER API STATUS:", response.status);
-  console.log("ORDER API RESPONSE:", result);
 
 } catch (e) {
 
@@ -619,6 +612,40 @@ Heavy Charge
 
       </View>
 
+{
+  deliverySettings?.minimumOrder > 0 &&
+  total < deliverySettings.minimumOrder && (
+    <View
+      style={{
+        backgroundColor: "#FEE2E2",
+        padding: 12,
+        borderRadius: 10,
+        marginBottom: 15,
+      }}
+    >
+      <Text
+        style={{
+          color: "#B91C1C",
+          fontWeight: "bold",
+        }}
+      >
+        Minimum Order ₹{deliverySettings.minimumOrder}
+      </Text>
+
+      <Text
+        style={{
+          color: "#B91C1C",
+          marginTop: 5,
+        }}
+      >
+        Add ₹
+        {deliverySettings.minimumOrder - total}
+        more to place order.
+      </Text>
+    </View>
+  )
+}
+
       {/* PAYMENT */}
 
       <Text style={styles.sectionTitle}>
@@ -657,7 +684,14 @@ Heavy Charge
       {/* COD */}
 
 <TouchableOpacity
-  disabled={storeClosed}
+  disabled={
+  storeClosed ||
+  (
+    deliverySettings?.minimumOrder > 0 &&
+    total < deliverySettings.minimumOrder
+  )
+}
+
   style={[
     styles.paymentCard,
     styles.codCard,
@@ -697,7 +731,14 @@ Heavy Charge
       {/* ONLINE */}
 
 <TouchableOpacity
-  disabled={storeClosed}
+  disabled={
+    storeClosed ||
+    (
+      deliverySettings?.minimumOrder > 0 &&
+      total < deliverySettings.minimumOrder
+    )
+  }
+
   style={[
     styles.paymentCard,
     styles.onlineCard,
@@ -707,6 +748,12 @@ Heavy Charge
 
           try {
 
+const userData = await AsyncStorage.getItem("user");
+
+const user = userData
+  ? JSON.parse(userData)
+  : null;            
+
 const response = await fetch(
   "https://api.harzo.in/api/payment/create-order",
   {
@@ -714,9 +761,11 @@ const response = await fetch(
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      amount: finalTotal,
-    }),
+body: JSON.stringify({
+  amount: finalTotal,
+  userEmail: user?.email,
+}),
+
   }
 );
 
@@ -730,8 +779,10 @@ if (!result.success) {
 }
 
 const options = {
-  description: "Harzo Demo Payment",
+  description: "Harzo Order Payment",
+
   image: "https://harzo.in/favicon.png",
+
   currency: "INR",
 
   key: "rzp_live_TSXcvAvdJTapt6",
@@ -742,11 +793,11 @@ const options = {
 
   name: "Harzo",
 
-  prefill: {
-    email: "test@harzo.in",
-    contact: "9999999999",
-    name: "Harzo User",
-  },
+prefill: {
+email: user?.email,
+contact: user?.phone,
+name: user?.name,
+},
 
   theme: {
     color: "#2563eb",

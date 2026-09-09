@@ -136,19 +136,48 @@ const cartItem = cart.find(
             i.toString()
           }
           renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() => {
-                setZoomImage(item);
-                setZoomVisible(true);
-              }}
-            >
-<Image
-  source={{ uri: item }}
-  style={styles.image}
-  contentFit="contain"
-  cachePolicy="memory-disk"
-/>
-            </TouchableOpacity>
+<View style={{ position: "relative" }}>
+  <TouchableOpacity
+    onPress={() => {
+      setZoomImage(item);
+      setZoomVisible(true);
+    }}
+  >
+    <Image
+      source={{ uri: item }}
+      style={styles.image}
+      contentFit="contain"
+      cachePolicy="memory-disk"
+    />
+  </TouchableOpacity>
+
+  {product?.stock <= 0 && (
+    <View
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: "rgba(0,0,0,0.45)",
+        justifyContent: "center",
+        alignItems: "center",
+        zIndex: 999,
+      }}
+    >
+      <Text
+        style={{
+          color: "#fff",
+          fontWeight: "bold",
+          fontSize: 18,
+        }}
+      >
+        OUT OF STOCK
+      </Text>
+    </View>
+  )}
+</View>
+
           )}
         />
 
@@ -181,6 +210,61 @@ const cartItem = cart.find(
             {product?.weight ||
               "N/A"}
           </Text>
+
+{product?.mrp > product?.sellingPrice && (
+  <View
+    style={{
+      backgroundColor: "#000",
+      alignSelf: "flex-start",
+      paddingHorizontal: 8,
+      paddingVertical: 4,
+      borderRadius: 4,
+      marginTop: 10,
+      marginBottom: 8,
+    }}
+  >
+    <Text
+      style={{
+        color: "#fff",
+        fontSize: 12,
+        fontWeight: "bold",
+      }}
+    >
+      {Math.round(
+        ((product.mrp - product.sellingPrice) /
+          product.mrp) *
+          100
+      )}
+      % OFF
+    </Text>
+  </View>
+)}
+
+
+{product?.stock > 0 &&
+  product?.stock <= 5 && (
+    <View
+      style={{
+        backgroundColor: "#ff9800",
+        alignSelf: "flex-start",
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        borderRadius: 4,
+        marginBottom: 8,
+      }}
+    >
+      <Text
+        style={{
+          color: "#fff",
+          fontSize: 12,
+          fontWeight: "bold",
+        }}
+      >
+        Only {product.stock} Left
+      </Text>
+    </View>
+)}
+
 
 <View style={styles.priceRow}>
   <Text style={styles.mrp}>
@@ -243,9 +327,17 @@ const cartItem = cart.find(
     </Text>
 
     <TouchableOpacity
-      onPress={() =>
-        increaseQty(product._id)
-      }
+onPress={() => {
+  if (
+    cartItem.quantity >=
+    product.stock
+  ) {
+    return;
+  }
+
+  increaseQty(product._id);
+}}
+
       style={{
         backgroundColor: "green",
         width: 36,
@@ -267,30 +359,45 @@ const cartItem = cart.find(
     </TouchableOpacity>
   </View>
 ) : (
-  <TouchableOpacity
-    onPress={() => addToCart(product)}
+<TouchableOpacity
+  disabled={product?.stock <= 0}
+  onPress={() => {
+    if (product?.stock <= 0) return;
+    addToCart(product);
+  }}
+  style={{
+    backgroundColor:
+      product?.stock <= 0 ? "#ccc" : "#00C853",
+    marginTop: 15,
+    width: 90,
+    height: 38,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "flex-start",
+  }}
+>
+  <Text
     style={{
-      backgroundColor: "#00C853",
-      marginTop: 15,
-      width: 90,
-      height: 38,
-      borderRadius: 8,
-      justifyContent: "center",
-      alignItems: "center",
-      alignSelf: "flex-start",
+      color: "#fff",
+      fontWeight: "bold",
+      fontSize: 15,
     }}
   >
-    <Text
-      style={{
-        color: "#fff",
-        fontWeight: "bold",
-        fontSize: 15,
-      }}
-    >
-      ADD
-    </Text>
-  </TouchableOpacity>
+    {product?.stock <= 0 ? "OUT" : "ADD"}
+  </Text>
+</TouchableOpacity>
 )}
+
+<Text
+  style={{
+    marginTop: 20,
+    fontSize: 18,
+    fontWeight: "700",
+  }}
+>
+  Description
+</Text>
 
           <Text style={styles.desc}>
             {product?.description ||
