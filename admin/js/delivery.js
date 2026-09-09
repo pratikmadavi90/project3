@@ -9,6 +9,7 @@ async function addArea() {
   const name = document.getElementById("areaName").value;
   const pincode = document.getElementById("pincode").value;
   const charge = document.getElementById("charge").value;
+  const deliveryBoyCharge =document.getElementById("deliveryBoyCharge").value;
   const time = document.getElementById("time").value;
   const freeDeliveryAbove = document.getElementById("freeDeliveryAbove").value;
   const minimumOrder = document.getElementById("minimumOrder").value;
@@ -18,15 +19,16 @@ async function addArea() {
     return alert("Area name aur charge required hai");
   }
 
-  const data = {
-    name,
-    pincode,
-    charge,
-    time,
-    freeDeliveryAbove,
-    minimumOrder,
-    storeTiming
-  };
+const data = {
+  name,
+  pincode,
+  charge,
+  deliveryBoyCharge,
+  time,
+  freeDeliveryAbove,
+  minimumOrder,
+  storeTiming
+};
 
   // ✏️ UPDATE
   if (editingId) {
@@ -66,6 +68,7 @@ document.getElementById("saveBtn").innerText = "➕ Add Area";
   document.getElementById("areaName").value = "";
   document.getElementById("pincode").value = "";
   document.getElementById("charge").value = "";
+  document.getElementById("deliveryBoyCharge").value = "";
   document.getElementById("time").value = "";
   document.getElementById("freeDeliveryAbove").value = "";
   document.getElementById("minimumOrder").value = "";
@@ -109,6 +112,8 @@ list.innerHTML += `
 <td>${area.pincode || "-"}</td>
 
 <td>₹${area.charge || 0}</td>
+
+<td>₹${area.deliveryBoyCharge || 0}</td>
 
 <td>${area.time || "-"}</td>
 
@@ -165,6 +170,7 @@ function editArea(id) {
   document.getElementById("areaName").value = area.name || "";
   document.getElementById("pincode").value = area.pincode || "";
   document.getElementById("charge").value = area.charge || "";
+  document.getElementById("deliveryBoyCharge").value = area.deliveryBoyCharge || "";
   document.getElementById("time").value = area.time || "";
   document.getElementById("freeDeliveryAbove").value = area.freeDeliveryAbove || "";
   document.getElementById("minimumOrder").value = area.minimumOrder || "";
