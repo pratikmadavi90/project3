@@ -16,6 +16,11 @@ const deliveryZoneSchema = new mongoose.Schema({
     required: true
   },
 
+  deliveryBoyCharge: {
+  type: Number,
+  default: 0
+},
+
   // ⏱️ Delivery Time
   time: {
     type: String
@@ -32,6 +37,8 @@ const deliveryZoneSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+
+  
 
  storeTiming: {
   type: String,

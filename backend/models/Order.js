@@ -55,6 +55,11 @@ heavyWeightCharge: {
   default: 0
 },
 
+deliveryBoyCharge: {
+  type: Number,
+  default: 0
+},
+
 
   payment: {
     method: String,
