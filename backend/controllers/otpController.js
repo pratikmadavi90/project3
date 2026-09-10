@@ -1,5 +1,14 @@
 const Otp = require("../models/Otp");
 const User = require("../models/User");
+const { SNSClient, PublishCommand } = require("@aws-sdk/client-sns");
+
+const sns = new SNSClient({
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
+});
 
 exports.sendOtp = async (req, res) => {
   try {
@@ -27,6 +36,14 @@ exports.sendOtp = async (req, res) => {
     });
 
     console.log("OTP:", otp);
+
+await sns.send(
+  new PublishCommand({
+    Message: `Your HARZO OTP is ${otp}`,
+    PhoneNumber: `+91${phone}`,
+  })
+);
+
 
     res.json({
       success: true,
