@@ -44,6 +44,7 @@ await sns.send(
   })
 );
 
+console.log("SNS RESULT:", result);
 
     res.json({
       success: true,
@@ -51,6 +52,9 @@ await sns.send(
     });
 
   } catch (err) {
+
+  console.log("SNS ERROR:", err);
+
 
     res.status(500).json({
       success: false,
