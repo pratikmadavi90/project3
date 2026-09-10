@@ -45,6 +45,9 @@ await sns.send(
 );
 
 
+console.log("PHONE:", phone);
+console.log("OTP:", otp);
+console.log("SNS RESULT:", result);
 
     res.json({
       success: true,
