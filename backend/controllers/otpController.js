@@ -44,7 +44,7 @@ await sns.send(
   })
 );
 
-console.log("SNS RESULT:", result);
+console.log(result);
 
     res.json({
       success: true,
