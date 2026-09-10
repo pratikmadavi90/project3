@@ -3,7 +3,7 @@ const User = require("../models/User");
 const { SNSClient, PublishCommand } = require("@aws-sdk/client-sns");
 
 const sns = new SNSClient({
-  region: process.env.AWS_REGION,
+  region: "us-east-2",
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
