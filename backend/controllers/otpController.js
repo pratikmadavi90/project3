@@ -53,7 +53,7 @@ console.log(result);
 
   } catch (err) {
 
-  console.log("SNS ERROR:", err);
+  
 
 
     res.status(500).json({
