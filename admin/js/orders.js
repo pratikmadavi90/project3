@@ -83,6 +83,14 @@ async function getOrders() {
           View
         </button>
       </td>
+
+<td>
+  <button class="print-btn"
+    onclick="printLabel('${order._id}')">
+    🖨 Print
+  </button>
+</td>   
+
     `;
 
     table.appendChild(row);
@@ -312,6 +320,100 @@ function closePopup() {
     "orderPopup"
   ).style.display = "none";
 }
+
+async function printLabel(id) {
+
+  const res = await fetch(`${API}/${id}`, {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    }
+  });
+
+  const order = await res.json();
+
+  const customerName =
+    order.user?.name || "-";
+
+  const phone =
+    order.user?.phone || "-";
+
+  const address =
+    order.address?.fullAddress || "-";
+
+  const printWindow = window.open("", "", "width=300,height=600");
+
+  printWindow.document.write(`
+    <html>
+    <head>
+      <title>Label</title>
+
+      <style>
+        body{
+          font-family:Arial;
+          padding:10px;
+          width:58mm;
+        }
+
+        h3{
+          margin:0;
+          text-align:center;
+        }
+
+        .line{
+          margin-top:8px;
+          font-size:13px;
+        }
+
+        hr{
+          margin:8px 0;
+        }
+      </style>
+    </head>
+
+    <body>
+
+      <h3>HARZO</h3>
+
+      <hr>
+
+      <div class="line">
+        <b>Order:</b>
+        ${order.orderId}
+      </div>
+
+      <div class="line">
+        <b>Name:</b>
+        ${customerName}
+      </div>
+
+      <div class="line">
+        <b>Phone:</b>
+        ${phone}
+      </div>
+
+      <div class="line">
+        <b>Address:</b>
+        ${address}
+      </div>
+
+      <div class="line">
+        <b>Date:</b>
+        ${new Date(order.createdAt).toLocaleString()}
+      </div>
+
+    </body>
+    </html>
+  `);
+
+  printWindow.document.close();
+
+  printWindow.focus();
+
+  setTimeout(() => {
+    printWindow.print();
+  }, 500);
+}
+
 
 // 🚀 LOAD DATA
 getOrders();

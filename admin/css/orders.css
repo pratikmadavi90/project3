@@ -149,3 +149,12 @@ button {
   font-size: 13px;
   font-weight: bold;
 }
+
+.print-btn{
+  background:#2563eb;
+  color:white;
+  padding:6px 10px;
+  border:none;
+  border-radius:5px;
+  cursor:pointer;
+}
