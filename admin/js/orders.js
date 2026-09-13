@@ -340,6 +340,40 @@ async function printLabel(id) {
   const address =
     order.address?.fullAddress || "-";
 
+const paymentMethod =
+order.payment?.method || "Cash On Delivery";
+
+const isCOD =
+paymentMethod.toLowerCase().includes("cash");
+
+let paymentHTML = "";
+
+if (isCOD) {
+
+  paymentHTML = `
+    <div class="line payment-box">
+      Payment: COD
+    </div>
+
+    <div class="line payment-box">
+      COLLECT ₹${order.finalAmount || order.totalAmount || 0}
+    </div>
+  `;
+
+} else {
+
+  paymentHTML = `
+    <div class="line payment-box">
+      Payment: ONLINE
+    </div>
+
+    <div class="line payment-box">
+      PAID ✅
+    </div>
+  `;
+
+}    
+
   const printWindow = window.open("", "", "width=300,height=600");
 
   printWindow.document.write(`
@@ -395,6 +429,12 @@ async function printLabel(id) {
         <b>Address:</b>
         ${address}
       </div>
+
+<div class="line total-box">
+  Total: ₹${order.finalAmount || order.totalAmount || 0}
+</div>
+
+${paymentHTML}
 
       <div class="line">
         <b>Date:</b>
