@@ -45,13 +45,19 @@ console.log("API RESPONSE =", orders);
         ).toLocaleDateString()}
       </td>
 
-      <td>
-        <button
-          onclick="viewOrder('${order._id}')"
-        >
-          View
-        </button>
-      </td>
+<td>
+  <button onclick="viewOrder('${order._id}')">
+    View
+  </button>
+</td>
+
+<td>
+  <button onclick="printLabel('${order._id}')">
+    🖨 Print
+  </button>
+</td>
+
+
     `;
 
     table.appendChild(row);
@@ -300,6 +306,139 @@ function closePopup() {
   ).style.display =
     "none";
 
+}
+
+async function printLabel(id) {
+
+  const res = await fetch(`${API}/${id}`, {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    }
+  });
+
+  const order = await res.json();
+
+  const customerName =
+    order.user?.name || "-";
+
+  const phone =
+    order.user?.phone || "-";
+
+  const address =
+    order.address?.fullAddress || "-";
+
+const paymentMethod =
+order.payment?.method || "Cash On Delivery";
+
+const isCOD =
+paymentMethod.toLowerCase().includes("cash");
+
+let paymentHTML = "";
+
+if (isCOD) {
+
+  paymentHTML = `
+    <div class="line payment-box">
+      Payment: COD
+    </div>
+
+    <div class="line payment-box">
+      COLLECT ₹${order.finalAmount || order.totalAmount || 0}
+    </div>
+  `;
+
+} else {
+
+  paymentHTML = `
+    <div class="line payment-box">
+      Payment: ONLINE
+    </div>
+
+    <div class="line payment-box">
+      PAID ✅
+    </div>
+  `;
+
+}    
+
+  const printWindow = window.open("", "", "width=300,height=600");
+
+  printWindow.document.write(`
+    <html>
+    <head>
+      <title>Label</title>
+
+      <style>
+        body{
+          font-family:Arial;
+          padding:10px;
+          width:58mm;
+        }
+
+        h3{
+          margin:0;
+          text-align:center;
+        }
+
+        .line{
+          margin-top:8px;
+          font-size:13px;
+        }
+
+        hr{
+          margin:8px 0;
+        }
+      </style>
+    </head>
+
+    <body>
+
+      <h3>HARZO</h3>
+
+      <hr>
+
+      <div class="line">
+        <b>Order:</b>
+        ${order.orderId}
+      </div>
+
+      <div class="line">
+        <b>Name:</b>
+        ${customerName}
+      </div>
+
+      <div class="line">
+        <b>Phone:</b>
+        ${phone}
+      </div>
+
+      <div class="line">
+        <b>Address:</b>
+        ${address}
+      </div>
+
+<div class="line total-box">
+  Total: ₹${order.finalAmount || order.totalAmount || 0}
+</div>
+
+${paymentHTML}
+
+      <div class="line">
+        <b>Date:</b>
+        ${new Date(order.createdAt).toLocaleString()}
+      </div>
+
+    </body>
+    </html>
+  `);
+
+  printWindow.document.close();
+
+  printWindow.focus();
+
+  setTimeout(() => {
+    printWindow.print();
+  }, 500);
 }
 
 // LOAD
