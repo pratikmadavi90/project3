@@ -279,6 +279,8 @@ Cancelled: ${stats.cancelled}
 
 `;
 
+
+
 const res =
 await fetch(
 `${API}/day-orders?day=${day}`,
@@ -289,6 +291,51 @@ headers
 
 const orders =
 await res.json();
+
+const groceryPending =
+groceryOrders.filter(o =>
+(o.status || "").toLowerCase() === "pending"
+).length;
+
+const groceryDelivered =
+groceryOrders.filter(o =>
+(o.status || "").toLowerCase() === "delivered"
+).length;
+
+const groceryCancelled =
+groceryOrders.filter(o =>
+(o.status || "").toLowerCase() === "cancelled"
+).length;
+
+const footwearPending =
+footwearOrders.filter(o =>
+(o.status || "").toLowerCase() === "pending"
+).length;
+
+const footwearDelivered =
+footwearOrders.filter(o =>
+(o.status || "").toLowerCase() === "delivered"
+).length;
+
+const footwearCancelled =
+footwearOrders.filter(o =>
+(o.status || "").toLowerCase() === "cancelled"
+).length;
+
+
+let groceryOrders =
+orders.filter(
+o => !String(
+o.orderId || ""
+).startsWith("FWO")
+);
+
+let footwearOrders =
+orders.filter(
+o => String(
+o.orderId || ""
+).startsWith("FWO")
+);
 
 const container =
 document.getElementById(
