@@ -318,6 +318,10 @@ Update Status
 
 `;
 
+setTimeout(() => {
+  document.getElementById("statusSelect").value = order.status;
+}, 100);
+
   document.getElementById(
     "orderPopup"
   ).style.display =
