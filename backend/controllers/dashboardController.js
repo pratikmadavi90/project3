@@ -215,29 +215,31 @@ result[dayName] = {
 
   result[dayName].total++;
 
-  result[dayName].revenue +=
-  order.totalAmount || 0;
-
-  const amount =
+const amount =
 order.totalAmount || 0;
 
 if (
-  order.payment?.method ===
-  "Cash On Delivery"
+  (order.status || "")
+  .trim()
+  .toLowerCase() ===
+  "delivered"
 ) {
 
-  result[dayName]
-  .codRevenue += amount;
+  result[dayName].revenue += amount;
 
-}
+  if (
+    order.payment?.method ===
+    "Cash On Delivery"
+  ) {
+    result[dayName].codRevenue += amount;
+  }
 
-if (
-  order.payment?.method ===
-  "Razorpay"
-) {
-
-  result[dayName]
-  .onlineRevenue += amount;
+  if (
+    order.payment?.method ===
+    "Razorpay"
+  ) {
+    result[dayName].onlineRevenue += amount;
+  }
 
 }
 
