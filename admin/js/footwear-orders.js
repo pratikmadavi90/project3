@@ -37,7 +37,52 @@ console.log("API RESPONSE =", orders);
 
       <td>${order.address || "-"}</td>
 
-      <td>${order.status || "Pending"}</td>
+<td>
+<select
+onchange="updateStatus('${order._id}', this.value)"
+style="
+padding:6px;
+border-radius:6px;
+"
+>
+
+<option value="Pending"
+${order.status === "Pending" ? "selected" : ""}>
+Pending
+</option>
+
+<option value="Accepted"
+${order.status === "Accepted" ? "selected" : ""}>
+Accepted
+</option>
+
+<option value="Packing"
+${order.status === "Packing" ? "selected" : ""}>
+Packing
+</option>
+
+<option value="Packed"
+${order.status === "Packed" ? "selected" : ""}>
+Packed
+</option>
+
+<option value="Out for Delivery"
+${order.status === "Out for Delivery" ? "selected" : ""}>
+Out for Delivery
+</option>
+
+<option value="Delivered"
+${order.status === "Delivered" ? "selected" : ""}>
+Delivered
+</option>
+
+<option value="Cancelled"
+${order.status === "Cancelled" ? "selected" : ""}>
+Cancelled
+</option>
+
+</select>
+</td>
 
       <td>
         ${new Date(
