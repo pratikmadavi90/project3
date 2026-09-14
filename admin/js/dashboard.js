@@ -292,6 +292,22 @@ headers
 const orders =
 await res.json();
 
+
+
+let groceryOrders =
+orders.filter(
+o => !String(
+o.orderId || ""
+).startsWith("FWO")
+);
+
+let footwearOrders =
+orders.filter(
+o => String(
+o.orderId || ""
+).startsWith("FWO")
+);
+
 const groceryPending =
 groceryOrders.filter(o =>
 (o.status || "").toLowerCase() === "pending"
@@ -323,19 +339,6 @@ footwearOrders.filter(o =>
 ).length;
 
 
-let groceryOrders =
-orders.filter(
-o => !String(
-o.orderId || ""
-).startsWith("FWO")
-);
-
-let footwearOrders =
-orders.filter(
-o => String(
-o.orderId || ""
-).startsWith("FWO")
-);
 
 const container =
 document.getElementById(
