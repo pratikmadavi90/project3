@@ -28,11 +28,13 @@ const totalOrders =
 
     revenue += amount;
 
-    if (
-      o.payment?.method === "Cash On Delivery"
-    ) {
-      codRevenue += amount;
-    }
+if (
+  (o.paymentMethod || "")
+    .toLowerCase()
+    .includes("cash")
+) {
+  codRevenue += amount;
+}
 
     if (
       o.payment?.method === "Razorpay"
@@ -64,12 +66,13 @@ footwearOrdersData.forEach(o => {
       codRevenue += amount;
     }
 
-    if (
-      o.paymentMethod ===
-      "Pay Online"
-    ) {
-      onlineRevenue += amount;
-    }
+if (
+  (o.paymentMethod || "")
+    .toLowerCase()
+    .includes("online")
+) {
+  onlineRevenue += amount;
+}
 
   }
 
