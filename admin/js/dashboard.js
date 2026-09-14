@@ -295,11 +295,46 @@ document.getElementById(
 "orderModalOrders"
 );
 
+let groceryHTML = "";
+let footwearHTML = "";
+
 container.innerHTML="";
 
-orders.forEach(order=>{
+container.innerHTML = `
 
-container.innerHTML += `
+<div style="
+display:flex;
+gap:20px;
+align-items:flex-start;
+">
+
+<div style="flex:1">
+
+<h2 style="color:#00ff88">
+🛒 Grocery Orders
+</h2>
+
+${groceryHTML}
+
+</div>
+
+<div style="flex:1">
+
+<h2 style="color:#00ff88">
+👟 Footwear Orders
+</h2>
+
+${footwearHTML}
+
+</div>
+
+</div>
+
+`;
+
+orders.forEach(order => {
+
+const html = `
 
 <div class="order-item">
 
@@ -307,12 +342,12 @@ container.innerHTML += `
 
 <p>
 Customer:
-${order.user?.name || "N/A"}
+${order.customerName || order.user?.name || "N/A"}
 </p>
 
 <p>
 Phone:
-${order.user?.phone || ""}
+${order.phone || order.user?.phone || ""}
 </p>
 
 <p>
@@ -320,11 +355,27 @@ Amount:
 ₹${order.totalAmount || 0}
 </p>
 
-<p>Status: ${order.status || "Pending"}</p>
+<p>
+Status:
+${order.status || "Pending"}
+</p>
 
 </div>
 
 `;
+
+if (
+String(order.orderId || "")
+.startsWith("FWO")
+) {
+
+footwearHTML += html;
+
+} else {
+
+groceryHTML += html;
+
+}
 
 });
 

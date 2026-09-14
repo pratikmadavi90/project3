@@ -316,19 +316,20 @@ async function printLabel(id) {
     }
   });
 
-  const order = await res.json();
+const data = await res.json();
+const order = data.order;
 
-  const customerName =
-    order.user?.name || "-";
+const customerName =
+  order.customerName || "-";
 
-  const phone =
-    order.user?.phone || "-";
+const phone =
+  order.phone || "-";
 
-  const address =
-    order.address?.fullAddress || "-";
+const address =
+  order.address || "-";
 
 const paymentMethod =
-order.payment?.method || "Cash On Delivery";
+order.paymentMethod || "Cash On Delivery";
 
 const isCOD =
 paymentMethod.toLowerCase().includes("cash");
@@ -343,7 +344,7 @@ if (isCOD) {
     </div>
 
     <div class="line payment-box">
-      COLLECT ₹${order.finalAmount || order.totalAmount || 0}
+      COLLECT ₹${order.totalAmount || 0}
     </div>
   `;
 
@@ -418,7 +419,7 @@ if (isCOD) {
       </div>
 
 <div class="line total-box">
-  Total: ₹${order.finalAmount || order.totalAmount || 0}
+  Total: ₹${order.totalAmount || 0}
 </div>
 
 ${paymentHTML}
