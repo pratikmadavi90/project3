@@ -300,37 +300,7 @@ let footwearHTML = "";
 
 container.innerHTML="";
 
-container.innerHTML = `
 
-<div style="
-display:flex;
-gap:20px;
-align-items:flex-start;
-">
-
-<div style="flex:1">
-
-<h2 style="color:#00ff88">
-🛒 Grocery Orders
-</h2>
-
-${groceryHTML}
-
-</div>
-
-<div style="flex:1">
-
-<h2 style="color:#00ff88">
-👟 Footwear Orders
-</h2>
-
-${footwearHTML}
-
-</div>
-
-</div>
-
-`;
 
 orders.forEach(order => {
 
@@ -378,6 +348,38 @@ groceryHTML += html;
 }
 
 });
+
+container.innerHTML = `
+
+<div style="
+display:flex;
+gap:20px;
+align-items:flex-start;
+">
+
+<div style="flex:1">
+
+<h2 style="color:#00ff88">
+🛒 Grocery Orders
+</h2>
+
+${groceryHTML || "<p>No Grocery Orders</p>"}
+
+</div>
+
+<div style="flex:1">
+
+<h2 style="color:#00ff88">
+👟 Footwear Orders
+</h2>
+
+${footwearHTML || "<p>No Footwear Orders</p>"}
+
+</div>
+
+</div>
+
+`;
 
 }
 
