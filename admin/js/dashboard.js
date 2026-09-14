@@ -450,6 +450,16 @@ loadOrders();
 loadChart();
 loadTopProducts();
 
+
+// Auto Refresh Every 15 Seconds
+setInterval(() => {
+  loadStats();
+  loadLowStock();
+  loadUsers();
+  loadOrders();
+  loadTopProducts();
+}, 15000);
+
 window.onclick = (e) => {
 
 const modal =
