@@ -230,20 +230,19 @@ if (
 
   result[dayName].revenue += amount;
 
-  if (
-    order.payment?.method ===
-    "Cash On Delivery"
-  ) {
-    result[dayName].codRevenue += amount;
-  }
+if (
+  order.payment?.method === "Cash On Delivery" ||
+  order.paymentMethod === "Cash On Delivery"
+) {
+  result[dayName].codRevenue += amount;
+}
 
-  if (
-    order.payment?.method ===
-    "Razorpay"
-  ) {
-    result[dayName].onlineRevenue += amount;
-  }
-
+if (
+  order.payment?.method === "Razorpay" ||
+  order.paymentMethod === "Pay Online"
+) {
+  result[dayName].onlineRevenue += amount;
+}
 }
 
   const status =
