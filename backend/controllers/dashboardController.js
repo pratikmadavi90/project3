@@ -20,25 +20,29 @@ const totalOrders =
   let codRevenue = 0;
    let onlineRevenue = 0;
 
-orders.forEach(o => {
+   orders.forEach(o => {
 
   const amount = o.totalAmount || 0;
 
-  revenue += amount;
+  if (o.status === "Delivered") {
 
-  if (
-    o.payment?.method === "Cash On Delivery"
-  ) {
-    codRevenue += amount;
+    revenue += amount;
+
+    if (
+      o.payment?.method === "Cash On Delivery"
+    ) {
+      codRevenue += amount;
+    }
+
+    if (
+      o.payment?.method === "Razorpay"
+    ) {
+      onlineRevenue += amount;
+    }
+
   }
 
-  if (
-    o.payment?.method === "Razorpay"
-  ) {
-    onlineRevenue += amount;
-  }
-
-});   
+});
 
 
 const footwearOrdersData =
@@ -49,20 +53,24 @@ footwearOrdersData.forEach(o => {
   const amount =
     o.totalAmount || 0;
 
-  revenue += amount;
+  if (o.status === "Delivered") {
 
-  if (
-    o.paymentMethod ===
-    "Cash On Delivery"
-  ) {
-    codRevenue += amount;
-  }
+    revenue += amount;
 
-  if (
-    o.paymentMethod ===
-    "Pay Online"
-  ) {
-    onlineRevenue += amount;
+    if (
+      o.paymentMethod ===
+      "Cash On Delivery"
+    ) {
+      codRevenue += amount;
+    }
+
+    if (
+      o.paymentMethod ===
+      "Pay Online"
+    ) {
+      onlineRevenue += amount;
+    }
+
   }
 
 });
