@@ -227,26 +227,46 @@ ${order.paymentStatus || "N/A"}
 
 <div class="action-buttons">
 
+<select
+id="statusSelect"
+style="
+padding:10px;
+border-radius:8px;
+margin-right:10px;
+"
+>
+
+<option value="Pending">Pending</option>
+
+<option value="Accepted">Accepted</option>
+
+<option value="Packing">Packing</option>
+
+<option value="Packed">Packed</option>
+
+<option value="Out for Delivery">
+Out for Delivery
+</option>
+
+<option value="Delivered">
+Delivered
+</option>
+
+<option value="Cancelled">
+Cancelled
+</option>
+
+</select>
+
 <button
 class="accept-btn"
 onclick="
 updateStatus(
 '${order._id}',
-'Accepted'
+document.getElementById('statusSelect').value
 )"
 >
-Accept Order
-</button>
-
-<button
-class="delivered-btn"
-onclick="
-updateStatus(
-'${order._id}',
-'Delivered'
-)"
->
-Delivered
+Update Status
 </button>
 
 </div>
