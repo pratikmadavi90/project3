@@ -17,6 +17,11 @@ userId: {
   sparse: true
 },
 
+deviceId: {
+  type: String,
+  default: "",
+},
+
   address: { type: String },
 
   city: { type: String },        
@@ -33,6 +38,8 @@ codBlocked: {
   type: Boolean,
   default: false
 }, 
+
+
 
 }, { timestamps: true });
 
