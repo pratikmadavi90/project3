@@ -1,11 +1,19 @@
 const Product = require("../models/AllProduct");
 const Order = require("../models/Order");
 const User = require("../models/User");
+const FootwearOrder = require("../models/FootwearOrder");
 
 // 🔹 Dashboard stats
 exports.getStats = async (req, res) => {
   const totalProducts = await Product.countDocuments();
-  const totalOrders = await Order.countDocuments();
+const groceryOrders =
+  await Order.countDocuments();
+
+const footwearOrders =
+  await FootwearOrder.countDocuments();
+
+const totalOrders =
+  groceryOrders + footwearOrders;
 
   const orders = await Order.find();
   let revenue = 0;
@@ -31,6 +39,33 @@ orders.forEach(o => {
   }
 
 });   
+
+
+const footwearOrdersData =
+  await FootwearOrder.find();
+
+footwearOrdersData.forEach(o => {
+
+  const amount =
+    o.totalAmount || 0;
+
+  revenue += amount;
+
+  if (
+    o.paymentMethod ===
+    "Cash On Delivery"
+  ) {
+    codRevenue += amount;
+  }
+
+  if (
+    o.paymentMethod ===
+    "Pay Online"
+  ) {
+    onlineRevenue += amount;
+  }
+
+});
 
 
 res.json({
@@ -87,13 +122,26 @@ exports.getWeeklyStats = async (req, res) => {
       23,59,59,999
     );
 
-    const orders =
-    await Order.find({
-      createdAt:{
-        $gte:monday,
-        $lte:sunday
-      }
-    });
+const groceryOrders =
+await Order.find({
+  createdAt:{
+    $gte:monday,
+    $lte:sunday
+  }
+});
+
+const footwearOrders =
+await FootwearOrder.find({
+  createdAt:{
+    $gte:monday,
+    $lte:sunday
+  }
+});
+
+const orders = [
+  ...groceryOrders,
+  ...footwearOrders
+];
 
     const result = {};
 
@@ -285,15 +333,30 @@ sunday.setHours(
   23,59,59,999
 );
 
-const orders =
+const groceryOrders =
 await Order.find({
   createdAt:{
     $gte:monday,
     $lte:sunday
   }
-}).sort({
-  createdAt:-1
 });
+
+const footwearOrders =
+await FootwearOrder.find({
+  createdAt:{
+    $gte:monday,
+    $lte:sunday
+  }
+});
+
+const orders = [
+  ...groceryOrders,
+  ...footwearOrders
+].sort(
+  (a,b) =>
+  new Date(b.createdAt) -
+  new Date(a.createdAt)
+);
 
 
     let filtered =
