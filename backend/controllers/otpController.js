@@ -69,7 +69,13 @@ await sns.send(
 
 exports.verifyOtp = async (req, res) => {
   try {
+
+   console.log("REQ BODY:", req.body);
+
     const { phone, otp } = req.body;
+
+ const allOtp = await Otp.find({ phone });
+console.log("DB OTP:", allOtp);   
 
     const otpRecord = await Otp.findOne({ phone, otp });
 
