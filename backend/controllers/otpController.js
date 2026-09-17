@@ -70,15 +70,28 @@ await sns.send(
 exports.verifyOtp = async (req, res) => {
   try {
 
-   console.log("REQ BODY:", req.body);
-
     const { phone, otp } = req.body;
 
- const allOtp = await Otp.find({ phone });
-console.log("DB OTP:", allOtp);   
+    console.log("========== OTP DEBUG ==========");
+    console.log("PHONE FROM APP:", phone);
+    console.log("OTP FROM APP:", otp);
+
+    const allOtp = await Otp.find({ phone });
+    console.log("DB RECORDS:", JSON.stringify(allOtp, null, 2));
 
     const otpRecord = await Otp.findOne({ phone, otp });
+    console.log("MATCHED OTP:", otpRecord);
 
+    console.log("CURRENT TIME:", new Date());
+
+    if (otpRecord) {
+      console.log("EXPIRES AT:", otpRecord.expiresAt);
+      console.log("IS EXPIRED:", otpRecord.expiresAt < new Date());
+    }
+
+    console.log("================================");
+
+    // Niche tumhara existing code
     if (!otpRecord) {
       return res.status(400).json({
         success: false,
