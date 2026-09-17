@@ -9,7 +9,11 @@ userId: {
 
   name: { type: String, required: true },
 
-  email: { type: String, unique: true },
+email: {
+  type: String,
+  unique: true,
+  sparse: true
+},
 
   phone: {
   type: String,
