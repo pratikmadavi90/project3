@@ -193,9 +193,42 @@ console.log(
   typeof exports.getUserFootwearOrderDetails
 );
 
+
+
+
+// ==========================
+// DELIVERY DASHBOARD
+// ==========================
 exports.deliveryDashboard = async (req, res) => {
-  res.json({
-    success: true,
-    orders: []
-  });
+  try {
+
+    const orders = await FootwearOrder.find({
+      status: {
+        $in: [
+          "Pending",
+          "Accepted",
+          "Delivery Accepted",
+          "Staff Accepted",
+          "Packing",
+          "Packed",
+          "Out for Delivery"
+        ]
+      }
+    }).sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      orders
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+
+  }
 };
