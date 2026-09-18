@@ -216,10 +216,24 @@ exports.deliveryDashboard = async (req, res) => {
       }
     }).sort({ createdAt: -1 });
 
-    res.json({
-      success: true,
-      orders
-    });
+ const formattedOrders = orders.map(order => ({
+  ...order.toObject(),
+
+  user: {
+    name: order.customerName,
+    phone: order.phone
+  },
+
+  address: {
+    city: order.city,
+    fullAddress: order.address
+  }
+}));   
+
+res.json({
+  success: true,
+  orders: formattedOrders
+});
 
   } catch (error) {
 
