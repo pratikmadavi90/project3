@@ -220,6 +220,22 @@ exports.deliveryDashboard = async (req, res) => {
   status: "Pending"
 }).sort({ createdAt: -1 });   
 
+const formattedLiveOrder = liveOrder
+? {
+    ...liveOrder.toObject(),
+
+    user: {
+      name: liveOrder.customerName,
+      phone: liveOrder.phone
+    },
+
+    address: {
+      city: liveOrder.city,
+      fullAddress: liveOrder.address
+    }
+  }
+: null;
+
  const formattedOrders = orders.map(order => ({
   ...order.toObject(),
 
@@ -237,7 +253,7 @@ exports.deliveryDashboard = async (req, res) => {
 res.json({
   success: true,
   orders: formattedOrders,
-  liveOrder
+  liveOrder: formattedLiveOrder
 });
 
   } catch (error) {
