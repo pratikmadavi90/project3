@@ -192,3 +192,10 @@ console.log(
   "getUserFootwearOrderDetails =",
   typeof exports.getUserFootwearOrderDetails
 );
+
+exports.deliveryDashboard = async (req, res) => {
+  res.json({
+    success: true,
+    orders: []
+  });
+};

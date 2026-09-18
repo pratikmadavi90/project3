@@ -9,6 +9,7 @@ const {
   getUserFootwearOrders,
   getUserFootwearOrderDetails,
   updateFootwearOrderStatus,
+  deliveryDashboard,
 } = require("../controllers/footwearOrderController");
 
 // Create Order
@@ -21,6 +22,11 @@ router.post(
 router.get(
   "/all",
   getAllFootwearOrders
+);
+
+router.get(
+  "/delivery-dashboard",
+  deliveryDashboard
 );
 
 router.get(
