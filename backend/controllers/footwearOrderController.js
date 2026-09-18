@@ -216,6 +216,10 @@ exports.deliveryDashboard = async (req, res) => {
       }
     }).sort({ createdAt: -1 });
 
+ const liveOrder = await FootwearOrder.findOne({
+  status: "Pending"
+}).sort({ createdAt: -1 });   
+
  const formattedOrders = orders.map(order => ({
   ...order.toObject(),
 
@@ -232,7 +236,8 @@ exports.deliveryDashboard = async (req, res) => {
 
 res.json({
   success: true,
-  orders: formattedOrders
+  orders: formattedOrders,
+  liveOrder
 });
 
   } catch (error) {
