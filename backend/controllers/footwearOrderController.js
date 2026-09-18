@@ -1,4 +1,6 @@
 const FootwearOrder = require("../models/FootwearOrder");
+const DeliveryBoy = require("../models/DeliveryBoy");
+const User = require("../models/User");
 
 
 // ==========================
@@ -6,9 +8,62 @@ const FootwearOrder = require("../models/FootwearOrder");
 // ==========================
 exports.createFootwearOrder = async (req, res) => {
   try {
-    
 
-    const order = await FootwearOrder.create(req.body);
+ const onlineDeliveryBoys =
+await DeliveryBoy.find({
+  online: true,
+  status: "Active"
+});
+
+let assignedDeliveryBoy = null;
+
+if (onlineDeliveryBoys.length > 0) {
+
+  let minOrders = Number.MAX_SAFE_INTEGER;
+
+  for (const boy of onlineDeliveryBoys) {
+
+    const activeOrders =
+    await FootwearOrder.countDocuments({
+
+      deliveryBoyId: boy.deliveryId,
+
+      status: {
+        $in: [
+          "Pending",
+          "Delivery Accepted",
+          "Staff Accepted",
+          "Packing",
+          "Packed",
+          "Out for Delivery"
+        ]
+      }
+
+    });
+
+    if (activeOrders < minOrders) {
+      minOrders = activeOrders;
+      assignedDeliveryBoy = boy;
+    }
+  }
+}   
+
+const order = await FootwearOrder.create({
+
+  ...req.body,
+
+  deliveryBoyId: assignedDeliveryBoy
+    ? assignedDeliveryBoy.deliveryId
+    : "",
+
+  deliveryBoy: assignedDeliveryBoy
+    ? {
+        name: assignedDeliveryBoy.name,
+        phone: assignedDeliveryBoy.mobile
+      }
+    : {}
+
+});
 
     res.status(201).json({
       success: true,
@@ -59,6 +114,7 @@ exports.getUserFootwearOrders = async (req, res) => {
 
     const orders = await FootwearOrder.find({
       email: email,
+
     }).sort({ createdAt: -1 });
 
     res.json({
@@ -202,23 +258,50 @@ console.log(
 exports.deliveryDashboard = async (req, res) => {
   try {
 
-    const orders = await FootwearOrder.find({
-      status: {
-        $in: [
-          "Pending",
-          "Accepted",
-          "Delivery Accepted",
-          "Staff Accepted",
-          "Packing",
-          "Packed",
-          "Out for Delivery"
-        ]
-      }
-    }).sort({ createdAt: -1 });
+const startOfDay = new Date();
+startOfDay.setHours(0, 0, 0, 0);
 
- const liveOrder = await FootwearOrder.findOne({
+const deliveryBoyId =
+String(req.query.deliveryBoyId);
+
+const endOfDay = new Date();
+endOfDay.setHours(23,59,59,999);
+
+const orders = await FootwearOrder.find({
+
+  deliveryBoyId: deliveryBoyId,
+
+  createdAt: {
+    $gte: startOfDay,
+    $lte: endOfDay
+  },
+
+  status: {
+    $in: [
+      "Pending",
+      "Accepted",
+      "Delivery Accepted",
+      "Staff Accepted",
+      "Packing",
+      "Packed",
+      "Out for Delivery"
+    ]
+  }
+
+}).sort({ createdAt: -1 });
+
+const liveOrder = await FootwearOrder.findOne({
+
+  deliveryBoyId: deliveryBoyId,
+
+  createdAt: {
+    $gte: startOfDay,
+    $lte: endOfDay
+  },
+
   status: "Pending"
-}).sort({ createdAt: -1 });   
+
+}).sort({ createdAt: 1 });
 
 const formattedLiveOrder = liveOrder
 ? {

@@ -113,6 +113,17 @@ deliveryBoyId: {
   default: "",
 },
 
+deliveryBoy: {
+  name: {
+    type: String,
+    default: "",
+  },
+  phone: {
+    type: String,
+    default: "",
+  },
+},
+
 deliveredAt: {
   type: Date,
   default: null,
