@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Footwear Inventory | HARZO Admin</title>
+
+  <link rel="stylesheet" href="footwear-inventory.css" />
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  />
+</head>
+
+<body>
+  <div class="inventory-page">
+
+    <!-- Header -->
+    <header class="page-header">
+      <div>
+        <div class="breadcrumb">HARZO / Footwear / Inventory</div>
+        <h1>Footwear Inventory</h1>
+        <p>Manage footwear stock, sizes and inventory movements.</p>
+      </div>
+
+      <button class="btn btn-primary" id="refreshBtn">
+        <i class="fa-solid fa-rotate"></i>
+        Refresh
+      </button>
+    </header>
+
+    <!-- Dashboard Cards -->
+    <section class="stats-grid">
+
+      <article class="stat-card">
+        <div class="stat-icon purple">
+          <i class="fa-solid fa-shoe-prints"></i>
+        </div>
+        <div>
+          <p>Total Products</p>
+          <h2 id="totalProducts">0</h2>
+          <span>Footwear products</span>
+        </div>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-icon green">
+          <i class="fa-solid fa-boxes-stacked"></i>
+        </div>
+        <div>
+          <p>Total Pairs</p>
+          <h2 id="totalPairs">0</h2>
+          <span>Available inventory</span>
+        </div>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-icon orange">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <div>
+          <p>Low Stock</p>
+          <h2 id="lowStockProducts">0</h2>
+          <span>Products needing attention</span>
+        </div>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-icon red">
+          <i class="fa-solid fa-circle-xmark"></i>
+        </div>
+        <div>
+          <p>Out of Stock</p>
+          <h2 id="outOfStockProducts">0</h2>
+          <span>Sizes unavailable</span>
+        </div>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-icon blue">
+          <i class="fa-solid fa-indian-rupee-sign"></i>
+        </div>
+        <div>
+          <p>Stock Value</p>
+          <h2 id="totalStockValue">₹0</h2>
+          <span>At selling price</span>
+        </div>
+      </article>
+
+    </section>
+
+    <!-- Inventory Table -->
+    <section class="inventory-panel">
+
+      <div class="panel-heading">
+        <div>
+          <h2>Stock Management</h2>
+          <p>Check stock by product and footwear size.</p>
+        </div>
+
+        <button class="btn btn-outline" id="historyBtn">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          Stock History
+        </button>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters">
+
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input
+            type="search"
+            id="searchInput"
+            placeholder="Search product or brand..."
+          />
+        </div>
+
+        <select id="categoryFilter">
+          <option value="">All Categories</option>
+        </select>
+
+        <select id="stockFilter">
+          <option value="all">All Stock</option>
+          <option value="IN_STOCK">In Stock</option>
+          <option value="LOW_STOCK">Low Stock</option>
+          <option value="OUT_OF_STOCK">Out of Stock</option>
+        </select>
+
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>PRODUCT</th>
+              <th>BRAND</th>
+              <th>CATEGORY</th>
+              <th>SIZE</th>
+              <th>STOCK</th>
+              <th>PRICE</th>
+              <th>STATUS</th>
+              <th>ACTION</th>
+            </tr>
+          </thead>
+
+          <tbody id="inventoryTableBody">
+            <tr>
+              <td colspan="8" class="loading-cell">
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                Loading inventory...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination">
+        <span id="paginationInfo">Showing 0 products</span>
+
+        <div>
+          <button class="page-btn" id="prevPage" disabled>
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+
+          <span id="currentPage">1</span>
+
+          <button class="page-btn" id="nextPage" disabled>
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- Stock Update Modal -->
+  <div class="modal-overlay" id="stockModal">
+    <div class="modal">
+
+      <div class="modal-header">
+        <div>
+          <h2>Manage Stock</h2>
+          <p>Update footwear inventory quantity.</p>
+        </div>
+
+        <button class="close-btn" id="closeModal" aria-label="Close">
+          &times;
+        </button>
+      </div>
+
+      <div class="product-preview">
+        <img id="modalProductImage" src="" alt="Product" />
+
+        <div>
+          <h3 id="modalProductName">Product Name</h3>
+          <p id="modalProductBrand">Brand</p>
+          <span id="modalProductCategory">Category</span>
+        </div>
+      </div>
+
+      <form id="stockUpdateForm">
+
+        <input type="hidden" id="modalProductId" />
+
+        <div class="form-group">
+          <label for="modalSize">Select Size</label>
+          <select id="modalSize" required>
+            <option value="">Select size</option>
+          </select>
+        </div>
+
+        <div class="current-stock">
+          <span>Current Stock</span>
+          <strong id="modalCurrentStock">0 pairs</strong>
+        </div>
+
+        <div class="form-group">
+          <label for="stockAction">Stock Action</label>
+          <select id="stockAction" required>
+            <option value="add">Add Stock (+)</option>
+            <option value="reduce">Reduce Stock (-)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="stockQuantity">Quantity (Pairs)</label>
+          <input
+            type="number"
+            id="stockQuantity"
+            min="1"
+            step="1"
+            placeholder="Enter quantity"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="stockReason">Reason</label>
+          <input
+            type="text"
+            id="stockReason"
+            placeholder="e.g. New stock received"
+            maxlength="200"
+          />
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" id="cancelModal">
+            Cancel
+          </button>
+
+          <button type="submit" class="btn btn-primary" id="saveStockBtn">
+            Save Changes
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+  <!-- Stock History Modal -->
+  <div class="modal-overlay" id="historyModal">
+    <div class="modal history-modal">
+
+      <div class="modal-header">
+        <div>
+          <h2>Stock History</h2>
+          <p>Recent inventory movements.</p>
+        </div>
+
+        <button class="close-btn" id="closeHistoryModal" aria-label="Close">
+          &times;
+        </button>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>DATE</th>
+              <th>PRODUCT</th>
+              <th>SIZE</th>
+              <th>TYPE</th>
+              <th>QUANTITY</th>
+              <th>PREVIOUS</th>
+              <th>NEW STOCK</th>
+            </tr>
+          </thead>
+
+          <tbody id="historyTableBody">
+            <tr>
+              <td colspan="7" class="loading-cell">
+                Stock history will appear here.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="footwear-inventory.js"></script>
+</body>
+</html>
