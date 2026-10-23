@@ -2,46 +2,94 @@ const mongoose = require("mongoose");
 const FootwearProduct = require("../models/FootwearProduct");
 const FootwearInventory = require("../models/FootwearInventory");
 
+
 // 1. Inventory Dashboard
 exports.getInventoryDashboard = async (req, res) => {
-  try {
-    const products = await FootwearProduct.find().lean();
+try {
+const products = await FootwearProduct.find()
+.select("name stock size sizeStock sellingPrice")
+.lean();
 
-    let totalPairs = 0;
-    let lowStockProducts = 0;
-    let outOfStockProducts = 0;
-    let totalStockValue = 0;
+let totalPairs = 0;
+let lowStockProducts = 0;
+let outOfStockProducts = 0;
+let totalStockValue = 0;
 
-    products.forEach((product) => {
-      const stock = Math.max(0, Number(product.stock) || 0);
+products.forEach((product) => {
+  const sizeStock = product.sizeStock || {};
 
-      totalPairs += stock;
-      totalStockValue += stock * (Number(product.sellingPrice) || 0);
+  // Product ke sabhi sizes ko collect karo.
+  const sizes = [
+    ...new Set([
+      ...(Array.isArray(product.size) ? product.size : []),
+      ...Object.keys(sizeStock),
+    ]),
+  ];
 
-      if (stock === 0) {
-        outOfStockProducts++;
-      } else if (stock <= 5) {
-        lowStockProducts++;
-      }
-    });
+  // Agar size-wise stock available nahi hai,
+  // to legacy product.stock ko use karo.
+  if (sizes.length === 0) {
+    const stock = Math.max(
+      0,
+      Number(product.stock) || 0
+    );
 
-    res.json({
-      success: true,
-      data: {
-        totalProducts: products.length,
-        totalPairs,
-        lowStockProducts,
-        outOfStockProducts,
-        totalStockValue,
-      },
-    });
-  } catch (error) {
-    console.error("Footwear inventory dashboard error:", error);
-    res.status(500).json({
-      success: false,
-      message: "Inventory dashboard load nahi hua.",
-    });
+    totalPairs += stock;
+    totalStockValue +=
+      stock * (Number(product.sellingPrice) || 0);
+
+    if (stock === 0) {
+      outOfStockProducts++;
+    } else if (stock <= 5) {
+      lowStockProducts++;
+    }
+
+    return;
   }
+
+  // Har footwear size ka stock alag calculate karo.
+  sizes.forEach((size) => {
+    const stock = Math.max(
+      0,
+      Number(sizeStock[size]) || 0
+    );
+
+    totalPairs += stock;
+
+    totalStockValue +=
+      stock * (Number(product.sellingPrice) || 0);
+
+    if (stock === 0) {
+      outOfStockProducts++;
+    } else if (stock <= 5) {
+      lowStockProducts++;
+    }
+  });
+});
+
+res.json({
+  success: true,
+  data: {
+    totalProducts: products.length,
+    totalPairs,
+    lowStockProducts,
+    outOfStockProducts,
+    totalStockValue,
+  },
+});
+
+} catch (error) {
+console.error(
+"Footwear inventory dashboard error:",
+error
+);
+
+res.status(500).json({
+  success: false,
+  message: "Inventory dashboard load nahi hua.",
+});
+
+}
 };
 
 // 2. Size-wise Stock List
