@@ -38,6 +38,7 @@ const paymentRoutes = require("./routes/paymentRoutes");
 const allProductRoutes = require("./routes/allProductRoutes");
 const productCategoryRoutes =require("./routes/productCategoryRoutes");
 const otpRoutes = require("./routes/otpRoutes");
+const footwearInventoryRoutes = require("./routes/footwearInventoryRoutes");
 
 
 
@@ -185,7 +186,7 @@ app.use("/api/product-categories",productCategoryRoutes);
 app.use("/api/otp", otpRoutes);
 app.use("/api/support-settings",require("./routes/supportSettingsRoutes"));
 app.use("/api/footwear-settings",require("./routes/footwearSettingsRoutes"));
-
+app.use("/api/footwear-inventory", footwearInventoryRoutes);
 
 
 // ✅ TEST MAIL ROUTE (YAHAN ADD KAR)
