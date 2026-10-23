@@ -1,124 +1,131 @@
 const FootwearOrder = require("../models/FootwearOrder");
 const DeliveryBoy = require("../models/DeliveryBoy");
 const User = require("../models/User");
-const FootwearProduct = require("../models/FootwearProduct");
+
 
 // ==========================
 // CREATE ORDER
 // ==========================
 exports.createFootwearOrder = async (req, res) => {
-  let stockDeducted = false;
-  let productId;
-  let selectedSize;
-
   try {
-    productId = req.body.productId;
-    selectedSize = String(req.body.size || "");
 
-    if (!productId || !selectedSize) {
-      return res.status(400).json({
-        success: false,
-        message: "Product ID and shoe size are required",
-      });
-    }
+ const onlineDeliveryBoys =
+await DeliveryBoy.find({
+  online: true,
+  status: "Active"
+});
 
-    // Check product and reduce selected size stock by 1
-    const product = await FootwearProduct.findOneAndUpdate(
-      {
-        _id: productId,
-        [`sizeStock.${selectedSize}`]: { $gt: 0 },
-      },
-      {
-        $inc: {
-          [`sizeStock.${selectedSize}`]: -1,
-          stock: -1,
-        },
-      },
-      { new: true }
-    );
+let assignedDeliveryBoy = null;
 
-    if (!product) {
-      return res.status(400).json({
-        success: false,
-        message: "Selected shoe size is out of stock",
-      });
-    }
+if (onlineDeliveryBoys.length > 0) {
 
-    stockDeducted = true;
+  let minOrders = Number.MAX_SAFE_INTEGER;
 
-    // Find an available delivery boy
-    const onlineDeliveryBoys = await DeliveryBoy.find({
-      online: true,
-      status: "Active",
-    });
+  for (const boy of onlineDeliveryBoys) {
 
-    let assignedDeliveryBoy = null;
-    let minOrders = Number.MAX_SAFE_INTEGER;
+    const activeOrders =
+    await FootwearOrder.countDocuments({
 
-    for (const boy of onlineDeliveryBoys) {
-      const activeOrders = await FootwearOrder.countDocuments({
-        deliveryBoyId: boy.deliveryId,
-        status: {
-          $in: [
-            "Pending",
-            "Delivery Accepted",
-            "Staff Accepted",
-            "Packing",
-            "Packed",
-            "Out for Delivery",
-          ],
-        },
-      });
+      deliveryBoyId: boy.deliveryId,
 
-      if (activeOrders < minOrders) {
-        minOrders = activeOrders;
-        assignedDeliveryBoy = boy;
+      status: {
+        $in: [
+          "Pending",
+          "Delivery Accepted",
+          "Staff Accepted",
+          "Packing",
+          "Packed",
+          "Out for Delivery"
+        ]
       }
-    }
 
-    // Create order
-    const order = await FootwearOrder.create({
-      ...req.body,
-      deliveryBoyId: assignedDeliveryBoy
-        ? assignedDeliveryBoy.deliveryId
-        : "",
-      deliveryBoy: assignedDeliveryBoy
-        ? {
-            name: assignedDeliveryBoy.name,
-            phone: assignedDeliveryBoy.mobile,
-          }
-        : {},
     });
+
+    if (activeOrders < minOrders) {
+      minOrders = activeOrders;
+      assignedDeliveryBoy = boy;
+    }
+  }
+}   
+
+const order = await FootwearOrder.create({
+
+  ...req.body,
+
+  deliveryBoyId: assignedDeliveryBoy
+    ? assignedDeliveryBoy.deliveryId
+    : "",
+
+  deliveryBoy: assignedDeliveryBoy
+    ? {
+        name: assignedDeliveryBoy.name,
+        phone: assignedDeliveryBoy.mobile
+      }
+    : {}
+
+});
 
     res.status(201).json({
       success: true,
       message: "Footwear order created successfully",
       order,
     });
-  } catch (error) {
-    console.log("CREATE FOOTWEAR ORDER ERROR:", error);
 
-    // Restore stock if order creation fails after deduction
-    if (stockDeducted && productId && selectedSize) {
-      try {
-        await FootwearProduct.updateOne(
-          { _id: productId },
-          {
-            $inc: {
-              [`sizeStock.${selectedSize}`]: 1,
-              stock: 1,
-            },
-          }
-        );
-      } catch (restoreError) {
-        console.log("STOCK RESTORE ERROR:", restoreError);
-      }
-    }
+  } catch (error) {
+
+    console.log("CREATE FOOTWEAR ORDER ERROR:", error);
 
     res.status(500).json({
       success: false,
       message: "Failed to create order",
       error: error.message,
+    });
+
+  }
+};
+
+
+exports.getUserFootwearOrderDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const order = await FootwearOrder.findById(id);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    res.json(order);
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+exports.getUserFootwearOrders = async (req, res) => {
+  try {
+    const { email } = req.params;
+
+    const orders = await FootwearOrder.find({
+      email: email,
+
+    }).sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      data: orders,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
     });
   }
 };
@@ -243,53 +250,7 @@ console.log(
 );
 
 
-// ==========================
-// GET USER ORDER DETAILS
-// ==========================
-exports.getUserFootwearOrderDetails = async (req, res) => {
-  try {
-    const { id } = req.params;
 
-    const order = await FootwearOrder.findById(id);
-
-    if (!order) {
-      return res.status(404).json({
-        success: false,
-        message: "Order not found",
-      });
-    }
-
-    res.json(order);
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
-
-// ==========================
-// GET USER ORDERS
-// ==========================
-exports.getUserFootwearOrders = async (req, res) => {
-  try {
-    const { email } = req.params;
-
-    const orders = await FootwearOrder.find({
-      email: email,
-    }).sort({ createdAt: -1 });
-
-    res.json({
-      success: true,
-      data: orders,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
 
 // ==========================
 // DELIVERY DASHBOARD
