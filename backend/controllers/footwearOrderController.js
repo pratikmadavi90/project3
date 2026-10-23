@@ -243,7 +243,53 @@ console.log(
 );
 
 
+// ==========================
+// GET USER ORDER DETAILS
+// ==========================
+exports.getUserFootwearOrderDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
 
+    const order = await FootwearOrder.findById(id);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    res.json(order);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// ==========================
+// GET USER ORDERS
+// ==========================
+exports.getUserFootwearOrders = async (req, res) => {
+  try {
+    const { email } = req.params;
+
+    const orders = await FootwearOrder.find({
+      email: email,
+    }).sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      data: orders,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 // ==========================
 // DELIVERY DASHBOARD
